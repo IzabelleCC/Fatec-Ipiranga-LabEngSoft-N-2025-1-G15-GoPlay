@@ -1,0 +1,61 @@
+# Ignore arquivos de build e binários
+bin/
+obj/
+Debug/
+Release/
+*.dll
+*.exe
+*.pdb
+*.appx
+*.appxbundle
+*.msix
+*.msixbundle
+
+# Ignore configurações do Visual Studio e Rider
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.sln.metaproj
+*.sln.metaproj.tmp
+
+# Ignore arquivos de cache e banco de dados temporário
+*.db
+*.db-shm
+*.db-wal
+*.log
+*.cache
+*.vsdx
+*.v9.bin
+
+# Ignore pacotes do NuGet
+packages/
+project.lock.json
+project.assets.json
+project.nuget.cache
+*.nuget.g.props
+*.nuget.g.targets
+
+# Ignore configurações de ambiente
+appsettings.Development.json
+secrets.json
+
+# Ignore arquivos gerados pelo Copilot
+CopilotIndices/
+
+# Ignore arquivos estáticos e temporários do .NET
+staticwebassets.removed.txt
+GeneratedMSBuildEditorConfig.editorconfig
+
+# Ignore arquivos do Teste Unitário
+TestResults/
+coverage/
+*.coverage
+*.trx
+*.csproj.user
+
+# Ignore outros arquivos do sistema operacional
+Thumbs.db
+.DS_Store

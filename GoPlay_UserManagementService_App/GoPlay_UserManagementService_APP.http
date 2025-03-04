@@ -1,0 +1,6 @@
+@GoPlay_UserManagementService_APP_HostAddress = http://localhost:5119
+
+GET {{GoPlay_UserManagementService_APP_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
