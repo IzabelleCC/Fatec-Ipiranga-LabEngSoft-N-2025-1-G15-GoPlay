@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics.CodeAnalysis;
+using GoPlay_UserManagementService_Core.Enum;
+
 
 namespace GoPlay_UserManagementService_Core.Entities
 {
@@ -14,16 +16,18 @@ namespace GoPlay_UserManagementService_Core.Entities
         public string Email { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
+        public UserTypeEnum UserType { get; set; }
         public string? InstagramPage { get; set; }
-        public int UserTypeId { get; set; }
-        public UserTypeEntity UserType { get; set; }
+        public string? Cpf { get; set; }
+        public string? Cnpj { get; set; }
+        public string? Gender { get; set; }
+        public DateOnly? BirthDate { get; set; }
+        public string? TShirtSize { get; set; }
 
-        public virtual PlayerEntity? Player { get; set; }
-        public virtual TournamentAdminEntity? TournamentAdmin { get; set; }
 
         public UserEntity()
         {
-            
+
         }
 
 

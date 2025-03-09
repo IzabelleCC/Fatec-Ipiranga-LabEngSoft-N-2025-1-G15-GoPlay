@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GoPlay_UserManagementService_Core.Enum
 {
-    public enum UserType
+    public enum UserTypeEnum
     {
         Player = 1,
 

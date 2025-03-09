@@ -14,15 +14,15 @@ namespace GoPlay_UserManagementService_Infra.Repository.Mapping
     /// Mapeamento da entidade Player
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class PlayerMap : IEntityTypeConfiguration<PlayerEntity>
+    public class UserMap : IEntityTypeConfiguration<UserEntity>
     {
         /// <summary>
         /// Configuração da entidade Player
         /// </summary>
         /// <param name="builder"></param>
-        public void Configure(EntityTypeBuilder<PlayerEntity> builder)
+        public void Configure(EntityTypeBuilder<UserEntity> builder)
         {
-            builder.ToTable("PLAYER");
+            builder.ToTable("USER");
 
             builder.HasKey(p => p.IdUser);
 
@@ -49,19 +49,24 @@ namespace GoPlay_UserManagementService_Infra.Repository.Mapping
             builder.Property(p => p.InstagramPage)
                 .HasColumnName("INSTAGRAMP_PAGE");
 
-            builder.Property(p => p.UserTypeId)
-                .HasColumnName("USER_TYPE_ID")
+            builder.Property(p => p.UserType)
+                .HasColumnName("USER_TYPE")
                 .IsRequired();
 
             builder.Property(p => p.Cpf)
-                .HasColumnName("CPF")
-                .IsRequired();
+                .HasColumnName("CPF");
+
+            builder.Property(p => p.Cnpj)
+                .HasColumnName("CNPJ");
 
             builder.Property(p => p.Gender)
                 .HasColumnName("GENDER");
 
             builder.Property(p => p.BirthDate)
-                .HasColumnName("BIRTH_DATE");
+                .HasColumnName("BIRTH_DATE")
+                .HasConversion(
+                    v => v.HasValue ? v.Value.ToDateTime(TimeOnly.MinValue) : (DateTime?)null,
+                    v => v.HasValue ? DateOnly.FromDateTime(v.Value) : (DateOnly?)null);
 
             builder.Property(p => p.TShirtSize)
                 .HasColumnName("TSHIRT_SIZE");

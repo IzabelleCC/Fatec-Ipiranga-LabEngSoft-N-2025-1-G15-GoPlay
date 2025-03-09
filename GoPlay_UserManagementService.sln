@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoPlay_UserManagementService_App", "GoPlay_UserManagementService_APP\GoPlay_UserManagementService_App.csproj", "{F146838E-AD2A-4EB6-9D78-A013039BE4F2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DCB4E241-AA65-4B73-B96E-368933CEE2C2} = {DCB4E241-AA65-4B73-B96E-368933CEE2C2}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoPlay_UserManagementService_Test", "GoPlay_UserManagementService_Test\GoPlay_UserManagementService_Test.csproj", "{C11B9CB6-B6BA-4B5B-9B87-4AA302DF2D06}"
 EndProject
@@ -41,5 +44,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E3753CEE-9C49-410B-93D9-2BD2F209710A}
 	EndGlobalSection
 EndGlobal
