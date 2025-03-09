@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace GoPlay_UserManagementService_Core.Entities
 {
-    public class TournamentAdmin : UserDto
+    public class TournamentAdminEntity : UserEntity
     {
         public string Cnpj { get; set; }
 
-        public TournamentAdmin()
+        public TournamentAdminEntity()
         {
             
         }
 
-        public TournamentAdmin(int idUser, string name, string email, string login, string password, string? instagramPage, int userTypeId, string cnpj)
+        public TournamentAdminEntity(int idUser, string name, string email, string login, string password, string? instagramPage, int userTypeId, string cnpj)
         {
             IdUser = idUser;
             Name = name;
