@@ -10,8 +10,7 @@ namespace GoPlay_UserManagementService_Infra
     [ExcludeFromCodeCoverage]
     public class GoPlayContext : DbContext
     {
-        public DbSet<PlayerEntity> PlayerEntity { get; set; }
-        public DbSet<TournamentAdminEntity> TournamentAdminEntity { get; set; }
+        public DbSet<UserEntity> Player { get; set; }
 
         private string _connectionString = "Host = localhost; Database=FATEC_GOPLAY;Username=postgres;Password=admin;Persist Security Info=True";
 
@@ -30,9 +29,7 @@ namespace GoPlay_UserManagementService_Infra
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new PlayerMap());
-            modelBuilder.ApplyConfiguration(new TournamentAdminMap());
-
+            modelBuilder.ApplyConfiguration(new UserMap());
             base.OnModelCreating(modelBuilder);
         }
 
