@@ -8,9 +8,15 @@
 
   <ItemGroup>
     <Folder Include="Business\Interfaces\" />
-    <Folder Include="Models\Dto\" />
     <Folder Include="Validators\" />
     <Folder Include="Repository\Interfaces\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Npgsql" Version="9.0.3" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageReference Include="Npgsql.Json.NET" Version="9.0.3" />
+    <PackageReference Include="Npgsql.OpenTelemetry" Version="9.0.3" />
   </ItemGroup>
 
 </Project>

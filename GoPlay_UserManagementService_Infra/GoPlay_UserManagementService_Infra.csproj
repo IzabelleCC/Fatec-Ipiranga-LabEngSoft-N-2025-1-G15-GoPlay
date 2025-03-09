@@ -11,4 +11,14 @@
     <Folder Include="Repository\Mapping\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.2" />
+    <PackageReference Include="Npgsql" Version="9.0.3" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageReference Include="Npgsql.Json.NET" Version="9.0.3" />
+    <PackageReference Include="Npgsql.OpenTelemetry" Version="9.0.3" />
+  </ItemGroup>
+
 </Project>

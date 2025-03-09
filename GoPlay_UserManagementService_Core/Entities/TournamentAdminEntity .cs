@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GoPlay_UserManagementService_Core.Entities
 {
-    public class TournamentAdmin : UserEntity
+    public class TournamentAdmin : UserDto
     {
         public string Cnpj { get; set; }
 
