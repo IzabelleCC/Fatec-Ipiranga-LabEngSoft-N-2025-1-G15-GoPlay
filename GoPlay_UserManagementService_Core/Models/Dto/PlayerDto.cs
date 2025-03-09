@@ -17,8 +17,8 @@ namespace GoPlay_UserManagementService_Core.Models.Dto
         public override string? InstagramPage { get; set; }
         public override int UserTypeId { get; set; }
         public string Cpf { get; set; }
-        public string Gender { get; set; }
-        public DateOnly BirthDate { get; set; }
+        public string? Gender { get; set; }
+        public DateOnly? BirthDate { get; set; }
         public string? TShirtSize { get; set; }
 
         protected PlayerDto()

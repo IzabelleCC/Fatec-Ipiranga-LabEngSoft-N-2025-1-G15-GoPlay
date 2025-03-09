@@ -10,8 +10,8 @@ namespace GoPlay_UserManagementService_Core.Entities
     public class PlayerEntity : UserEntity
     {
         public string Cpf { get; set; }
-        public string Gender { get; set; }
-        public DateOnly BirthDate { get; set; }
+        public string? Gender { get; set; }
+        public DateOnly? BirthDate { get; set; }
         public string? TShirtSize { get; set; }
 
         public PlayerEntity()

@@ -19,7 +19,7 @@ namespace GoPlay_UserManagementService_Core.Entities
         public UserTypeEntity UserType { get; set; }
 
         public virtual PlayerEntity? Player { get; set; }
-        public virtual TournamentAdmin? TournamentAdmin { get; set; }
+        public virtual TournamentAdminEntity? TournamentAdmin { get; set; }
 
         public UserEntity()
         {

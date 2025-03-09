@@ -18,7 +18,7 @@ namespace GoPlay_UserManagementService_Core.Models.Dto
         public virtual int UserTypeId { get; set; }
         public virtual UserTypeEntity UserType { get; set; }
         public virtual PlayerEntity? Player { get; set; }
-        public virtual TournamentAdmin? TournamentAdmin { get; set; }
+        public virtual TournamentAdminEntity? TournamentAdmin { get; set; }
 
         protected UserDto()
         {
