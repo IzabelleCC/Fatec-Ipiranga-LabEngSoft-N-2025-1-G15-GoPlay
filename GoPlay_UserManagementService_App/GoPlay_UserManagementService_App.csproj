@@ -1,26 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Npgsql" Version="9.0.3" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
-    <PackageReference Include="Npgsql.Json.NET" Version="9.0.3" />
-    <PackageReference Include="Npgsql.OpenTelemetry" Version="9.0.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\GoPlay_UserManagementService_Core\GoPlay_UserManagementService_Core.csproj" />
-    <ProjectReference Include="..\GoPlay_UserManagementService_Infra\GoPlay_UserManagementService_Infra.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Npgsql" Version="9.0.3" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+		<PackageReference Include="Npgsql.Json.NET" Version="9.0.3" />
+		<PackageReference Include="Npgsql.OpenTelemetry" Version="9.0.3" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="7.3.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.3.1" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\GoPlay_UserManagementService_Core\GoPlay_UserManagementService_Core.csproj" />
+		<ProjectReference Include="..\GoPlay_UserManagementService_Infra\GoPlay_UserManagementService_Infra.csproj" />
+	</ItemGroup>
 
 </Project>

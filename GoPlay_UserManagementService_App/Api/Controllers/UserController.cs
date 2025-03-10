@@ -19,7 +19,14 @@ namespace GoPlay_UserManagementService_App.Api.Controllers
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
+        /// <summary>
+        /// Adiciona Usuário
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Add([FromBody] UserRequestBase<UserCreateRequest> request, CancellationToken cancellationToken)
         {
             try
