@@ -19,7 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Api\Controllers\Models\" />
+    <ProjectReference Include="..\GoPlay_UserManagementService_Core\GoPlay_UserManagementService_Core.csproj" />
+    <ProjectReference Include="..\GoPlay_UserManagementService_Infra\GoPlay_UserManagementService_Infra.csproj" />
   </ItemGroup>
 
 </Project>
