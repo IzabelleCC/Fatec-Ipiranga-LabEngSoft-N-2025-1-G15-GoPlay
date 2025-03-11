@@ -62,24 +62,30 @@ namespace GoPlay_UserManagementService_Infra.Repository
             }
         }
 
-        public async Task Update(UserEntity entity)
+        public async Task Update(UserEntity entity, int id)
         {
             try
             {
-                var user = await _context.User.FirstOrDefaultAsync(u => u.IdUser == entity.IdUser);
+                _logger.LogInformation("Attempting to update user with ID: {IdUser}", id);
+
+                var user = await _context.User.AsNoTracking().FirstOrDefaultAsync(u => u.IdUser == id);
+
                 if (user != null)
                 {
+                    _logger.LogInformation("User found. Updating details.");
                     user.Name = entity.Name;
                     user.Email = entity.Email;
-                    user.Login = entity.Login;
                     user.Password = entity.Password;
-                    user.UserType = entity.UserType;
                     user.InstagramPage = entity.InstagramPage;
-                    user.CpfCnpj = entity.CpfCnpj;
                     user.Gender = entity.Gender;
                     user.BirthDate = entity.BirthDate;
                     user.TShirtSize = entity.TShirtSize;
+                    _context.User.Update(user);
                     await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    _logger.LogWarning("User with ID: {IdUser} not found.", entity.IdUser);
                 }
             }
             catch (Exception ex)

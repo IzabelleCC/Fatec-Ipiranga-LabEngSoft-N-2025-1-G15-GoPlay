@@ -11,8 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<GoPlayContext>((options) => {
     options
-        .UseNpgsql(builder.Configuration["ConnectionStrings:GoPlayDb"])
-        .UseLazyLoadingProxies();
+        .UseNpgsql(builder.Configuration["ConnectionStrings:GoPlayDb"]);
 });
 
 // Adicionar serviços ao contêiner.
