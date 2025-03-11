@@ -10,7 +10,7 @@ namespace GoPlay_UserManagementService_Infra
     [ExcludeFromCodeCoverage]
     public class GoPlayContext : DbContext
     {
-        public DbSet<UserEntity> Player { get; set; }
+        public DbSet<UserEntity> User { get; set; }
 
         private string _connectionString = "Host = localhost; Database=FATEC_GOPLAY;Username=postgres;Password=admin;Persist Security Info=True";
 

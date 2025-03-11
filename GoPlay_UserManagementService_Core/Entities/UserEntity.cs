@@ -18,10 +18,9 @@ namespace GoPlay_UserManagementService_Core.Entities
         public string Password { get; set; }
         public UserTypeEnum UserType { get; set; }
         public string? InstagramPage { get; set; }
-        public string? Cpf { get; set; }
-        public string? Cnpj { get; set; }
+        public string CpfCnpj { get; set; }
         public string? Gender { get; set; }
-        public DateOnly? BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
         public string? TShirtSize { get; set; }
 
 
