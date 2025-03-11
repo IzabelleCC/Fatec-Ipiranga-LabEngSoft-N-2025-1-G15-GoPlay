@@ -18,7 +18,7 @@ namespace GoPlay_UserManagementService_Core.Business.Interfaces
         /// <param name="entity"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task Update(UserEntity entity, CancellationToken cancellationToken);
+        Task Update(UserEntity entity, int id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Deleta Usuário
