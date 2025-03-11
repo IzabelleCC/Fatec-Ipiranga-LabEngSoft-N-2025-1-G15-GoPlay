@@ -3,9 +3,17 @@ using GoPlay_UserManagementService_Core.Business;
 using GoPlay_UserManagementService_Core.Business.Interfaces;
 using GoPlay_UserManagementService_Core.Entities;
 using GoPlay_UserManagementService_Core.Repository.Interfaces;
+using GoPlay_UserManagementService_Infra;
 using GoPlay_UserManagementService_Infra.Repository;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<GoPlayContext>((options) => {
+    options
+        .UseNpgsql(builder.Configuration["ConnectionStrings:GoPlayDb"])
+        .UseLazyLoadingProxies();
+});
 
 // Adicionar serviços ao contêiner.
 builder.Services.AddControllers();

@@ -53,20 +53,15 @@ namespace GoPlay_UserManagementService_Infra.Repository.Mapping
                 .HasColumnName("USER_TYPE")
                 .IsRequired();
 
-            builder.Property(p => p.Cpf)
-                .HasColumnName("CPF");
-
-            builder.Property(p => p.Cnpj)
-                .HasColumnName("CNPJ");
+            builder.Property(p => p.CpfCnpj)
+                .HasColumnName("CPFCNPJ")
+                .IsRequired();
 
             builder.Property(p => p.Gender)
                 .HasColumnName("GENDER");
 
             builder.Property(p => p.BirthDate)
-                .HasColumnName("BIRTH_DATE")
-                .HasConversion(
-                    v => v.HasValue ? v.Value.ToDateTime(TimeOnly.MinValue) : (DateTime?)null,
-                    v => v.HasValue ? DateOnly.FromDateTime(v.Value) : (DateOnly?)null);
+                .HasColumnName("BIRTH_DATE");
 
             builder.Property(p => p.TShirtSize)
                 .HasColumnName("TSHIRT_SIZE");

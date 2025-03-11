@@ -11,10 +11,9 @@ namespace GoPlay_UserManagementService_App.Api.Controllers.Models
         public string Password { get; set; }
         public int UserType { get; set; }
         public string? InstagramPage { get; set; }
-        public string? Cpf { get; set; }
-        public string? Cnpj { get; set; }
+        public string CpfCnpj { get; set; }
         public string? Gender { get; set; }
-        public DateOnly? BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
         public string? TShirtSize { get; set; }
 
         /// <summary>
@@ -36,9 +35,8 @@ namespace GoPlay_UserManagementService_App.Api.Controllers.Models
                                  string password,
                                  int userType,
                                  string? instagramPage,
-                                 string? cpf,
-                                 string? cnpj,
-                                 DateOnly? birthDate,
+                                 string cpfCnpj,
+                                 DateTime? birthDate,
                                  string? tShirtSize)
         {
             Name = name;
@@ -47,8 +45,7 @@ namespace GoPlay_UserManagementService_App.Api.Controllers.Models
             Password = password;
             UserType = userType;
             InstagramPage = instagramPage;
-            Cpf = cpf;
-            Cnpj = cnpj;
+            CpfCnpj = cpfCnpj;
             BirthDate = birthDate;
             TShirtSize = tShirtSize;
         }
@@ -62,9 +59,8 @@ namespace GoPlay_UserManagementService_App.Api.Controllers.Models
                 Password = Password,
                 UserType = (UserTypeEnum)UserType,
                 InstagramPage = InstagramPage,
-                Cpf = Cpf,
-                Cnpj = Cnpj,
-                BirthDate = BirthDate,
+                CpfCnpj = CpfCnpj,
+                BirthDate = BirthDate?.ToUniversalTime(),
                 TShirtSize = TShirtSize
             };
     }

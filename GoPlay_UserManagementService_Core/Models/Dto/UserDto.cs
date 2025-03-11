@@ -15,11 +15,10 @@ namespace GoPlay_UserManagementService_Core.Models.Dto
         public virtual string Login { get; set; }
         public virtual string Password { get; set; }
         public virtual int UserType { get; set; }
+        public virtual string CpfCnpj { get; set; }
         public virtual string? InstagramPage { get; set; }
-        public virtual string? Cpf { get; set; }
-        public virtual string? Cnpj { get; set; }
         public virtual string? Gender { get; set; }
-        public virtual DateOnly? BirthDate { get; set; }
+        public virtual DateTime? BirthDate { get; set; }
         public virtual string? TShirtSize { get; set; }
 
 
@@ -37,10 +36,9 @@ namespace GoPlay_UserManagementService_Core.Models.Dto
             Password = entity.Password;
             UserType = (int)entity.UserType;
             InstagramPage = entity.InstagramPage ?? string.Empty;
-            Cpf = entity.Cpf ?? string.Empty;
-            Cnpj = entity.Cnpj ?? string.Empty;
+            CpfCnpj = entity.CpfCnpj;
             Gender = entity.Gender ?? string.Empty;
-            BirthDate = entity.BirthDate ?? null;
+            BirthDate = entity.BirthDate?.ToUniversalTime() ?? null;
             TShirtSize = entity.TShirtSize ?? string.Empty;
         }
     }
