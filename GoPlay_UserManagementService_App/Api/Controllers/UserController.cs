@@ -41,6 +41,29 @@ namespace GoPlay_UserManagementService_App.Api.Controllers
         }
 
         /// <summary>
+        /// Realiza Login do Usuário
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> Login([FromBody] UserRequestBase<UserLoginRequest> request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var entity = request.Data.ToLoginEntity();
+                await _business.Login(entity,cancellationToken);
+                return Ok("Login realizado");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        /// <summary>
         /// Busca um usuário pelo Id
         /// </summary>
         /// <param name="id"></param>
