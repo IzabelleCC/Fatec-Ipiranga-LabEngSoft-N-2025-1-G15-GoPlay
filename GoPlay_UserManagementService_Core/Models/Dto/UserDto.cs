@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace GoPlay_UserManagementService_Core.Models.Dto
         public virtual int IdUser { get; set; }
         public virtual string Name { get; set; }
         public virtual string Email { get; set; }
-        public virtual string Login { get; set; }
+        public virtual string UserName { get; set; }
         public virtual string Password { get; set; }
         public virtual int UserType { get; set; }
         public virtual string CpfCnpj { get; set; }
@@ -29,11 +30,11 @@ namespace GoPlay_UserManagementService_Core.Models.Dto
         }
         protected UserDto(UserEntity entity)
         {
-            IdUser = entity.IdUser;
-            Name = entity.Name;
+            IdUser = int.Parse(entity.Id); 
+            UserName = entity.UserName;
             Email = entity.Email;
-            Login = entity.Login;
-            Password = entity.Password;
+            Name = entity.Name;
+            Password = entity.PasswordHash;
             UserType = (int)entity.UserType;
             InstagramPage = entity.InstagramPage ?? string.Empty;
             CpfCnpj = entity.CpfCnpj;

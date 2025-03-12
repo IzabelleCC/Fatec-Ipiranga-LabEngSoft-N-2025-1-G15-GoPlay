@@ -46,9 +46,9 @@ namespace GoPlay_UserManagementService_App.Api.Controllers.Models
         public UserEntity ToUserEntity()
             => new()
             {
-                Name = Name,
+                UserName = Name,
                 Email = Email,
-                Password = Password,
+                PasswordHash = Password,
                 InstagramPage = InstagramPage,
                 Gender = Gender,
                 BirthDate = BirthDate?.ToUniversalTime(),

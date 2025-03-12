@@ -1,7 +1,6 @@
 ﻿using GoPlay_UserManagementService_App.Api.Controllers.Models;
 using GoPlay_UserManagementService_Core.Business.Interfaces;
 using GoPlay_UserManagementService_Core.Repository.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoPlay_UserManagementService_App.Api.Controllers
