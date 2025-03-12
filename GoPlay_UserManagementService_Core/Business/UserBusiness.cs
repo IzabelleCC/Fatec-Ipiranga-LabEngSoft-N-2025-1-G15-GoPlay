@@ -37,13 +37,18 @@ namespace GoPlay_UserManagementService_Core.Business
             await _repository.Add(entity);
         }
 
+        public async Task Login (LoginEntity entity, CancellationToken cancellationToken)
+        {
+            await _repository.Login(entity);
+        }
+
         public async Task Update(UserEntity entity, int id, CancellationToken cancellationToken)
         {
-            //var validationResult = _validator.Validate(entity);
-            //if (!validationResult.IsValid)
-            //{
-            //    throw new ValidationException(validationResult.Errors);
-            //}
+            var validationResult = _validator.Validate(entity);
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
             await _repository.Update(entity, id);
         }
 

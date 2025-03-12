@@ -20,12 +20,9 @@ namespace GoPlay_UserManagementService_Core.Entities
         public DateTime? BirthDate { get; set; }
         public string? TShirtSize { get; set; }
 
-
         public UserEntity()
         {
 
         }
-
-
     }
 }
