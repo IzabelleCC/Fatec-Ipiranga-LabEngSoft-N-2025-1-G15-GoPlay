@@ -2,16 +2,16 @@
 using System.Diagnostics.CodeAnalysis;
 using GoPlay_UserManagementService_Core.Entities;
 using GoPlay_UserManagementService_Infra.Repository.Mapping;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 
 namespace GoPlay_UserManagementService_Infra
 {
     [ExcludeFromCodeCoverage]
-    public class GoPlayContext : DbContext
+    public class UserDbContext : IdentityDbContext<UserEntity>
     {
-        public DbSet<UserEntity> User { get; set; }
-
+        
         private string _connectionString = "Host = localhost; Database=FATEC_GOPLAY;Username=postgres;Password=admin;Persist Security Info=True";
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -19,11 +19,7 @@ namespace GoPlay_UserManagementService_Infra
             optionsBuilder.UseNpgsql(_connectionString);
         }
 
-        public GoPlayContext()
-        {
-        }
-
-        public GoPlayContext(DbContextOptions<GoPlayContext> options) : base(options)
+        public UserDbContext(DbContextOptions<UserDbContext> options) : base(options)
         {
         }
 

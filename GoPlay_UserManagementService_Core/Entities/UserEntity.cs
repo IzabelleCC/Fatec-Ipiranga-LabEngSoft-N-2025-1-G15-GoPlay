@@ -5,17 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics.CodeAnalysis;
 using GoPlay_UserManagementService_Core.Enum;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace GoPlay_UserManagementService_Core.Entities
 {
-    public class UserEntity 
+    public class UserEntity : IdentityUser
     {
-        public int IdUser { get; set; }
         public string Name { get; set; }
-        public string Email { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
         public UserTypeEnum UserType { get; set; }
         public string? InstagramPage { get; set; }
         public string CpfCnpj { get; set; }

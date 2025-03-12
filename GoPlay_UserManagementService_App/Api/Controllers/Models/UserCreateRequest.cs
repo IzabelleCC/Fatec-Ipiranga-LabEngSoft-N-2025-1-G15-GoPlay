@@ -1,16 +1,28 @@
-﻿using GoPlay_UserManagementService_Core.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using GoPlay_UserManagementService_Core.Entities;
 using GoPlay_UserManagementService_Core.Enum;
+using GoPlay_UserManagementService_Core.Models.Dto;
 
 namespace GoPlay_UserManagementService_App.Api.Controllers.Models
 {
     public class UserCreateRequest
     {
+        [Required]
         public string Name { get; set; }
+        [Required]
+        public string UserName { get; set; }
+        [Required]
         public string Email { get; set; }
-        public string Login { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
+        [Required]
+        [Compare ("Password")]
+        public string ConfirmPassword { get; set; }
+        [Required]
         public int UserType { get; set; }
         public string? InstagramPage { get; set; }
+        [Required]
         public string CpfCnpj { get; set; }
         public string? Gender { get; set; }
         public DateTime? BirthDate { get; set; }
@@ -31,7 +43,7 @@ namespace GoPlay_UserManagementService_App.Api.Controllers.Models
         /// <param name="tShirtSize"></param>
         public UserCreateRequest(string name,
                                  string email,
-                                 string login,
+                                 string userName,
                                  string password,
                                  int userType,
                                  string? instagramPage,
@@ -41,8 +53,8 @@ namespace GoPlay_UserManagementService_App.Api.Controllers.Models
                                  string? tShirtSize)
         {
             Name = name;
+            UserName = userName;
             Email = email;
-            Login = login;
             Password = password;
             UserType = userType;
             InstagramPage = instagramPage;
@@ -54,11 +66,11 @@ namespace GoPlay_UserManagementService_App.Api.Controllers.Models
 
         public UserEntity ToUserEntity()
             => new()
-            {
-                Name = Name,
+            {                
                 Email = Email,
-                Login = Login,
-                Password = Password,
+                UserName = UserName,
+                Name = Name,
+                PasswordHash = Password,
                 UserType = (UserTypeEnum)UserType,
                 InstagramPage = InstagramPage,
                 CpfCnpj = CpfCnpj,

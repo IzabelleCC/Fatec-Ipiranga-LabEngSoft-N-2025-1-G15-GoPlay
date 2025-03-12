@@ -22,49 +22,30 @@ namespace GoPlay_UserManagementService_Infra.Repository.Mapping
         /// <param name="builder"></param>
         public void Configure(EntityTypeBuilder<UserEntity> builder)
         {
-            builder.ToTable("USER");
-
-            builder.HasKey(p => p.IdUser);
-
-            builder.Property(p => p.IdUser)
-                .HasColumnName("ID_USER")
-                .IsRequired();
 
             builder.Property(p => p.Name)
-                .HasColumnName("NAME")
-                .IsRequired();
-
-            builder.Property(p => p.Email)
-                .HasColumnName("EMAIL")
-                .IsRequired();
-
-            builder.Property(p => p.Login)
-                .HasColumnName("LOGIN")
-                .IsRequired();
-
-            builder.Property(p => p.Password)
-                .HasColumnName("PASSWORD")
+                .HasColumnName("Name")
                 .IsRequired();
 
             builder.Property(p => p.InstagramPage)
-                .HasColumnName("INSTAGRAMP_PAGE");
+                .HasColumnName("InstagramPage");
 
             builder.Property(p => p.UserType)
-                .HasColumnName("USER_TYPE")
+                .HasColumnName("UserType")
                 .IsRequired();
 
             builder.Property(p => p.CpfCnpj)
-                .HasColumnName("CPFCNPJ")
+                .HasColumnName("CpfCnpj")
                 .IsRequired();
 
             builder.Property(p => p.Gender)
-                .HasColumnName("GENDER");
+                .HasColumnName("Gender");
 
             builder.Property(p => p.BirthDate)
-                .HasColumnName("BIRTH_DATE");
+                .HasColumnName("BirthDate");
 
             builder.Property(p => p.TShirtSize)
-                .HasColumnName("TSHIRT_SIZE");
+                .HasColumnName("TShirtSize");
         }
     }
 }
