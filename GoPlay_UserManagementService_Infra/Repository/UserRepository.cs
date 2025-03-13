@@ -17,14 +17,12 @@ namespace GoPlay_UserManagementService_Infra.Repository
         private readonly UserDbContext _context;
         private readonly ILogger<UserRepository> _logger;
         private readonly UserManager<UserEntity> _userManager;
-        private readonly SignInManager<UserEntity> _signInManeger;
 
-        public UserRepository(UserDbContext context, ILogger<UserRepository> logger, UserManager<UserEntity> userManager, SignInManager<UserEntity> signInManager)
+        public UserRepository(UserDbContext context, ILogger<UserRepository> logger, UserManager<UserEntity> userManager)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-            _signInManeger = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
         }
 
         public async Task Add(UserEntity entity)
@@ -40,23 +38,6 @@ namespace GoPlay_UserManagementService_Infra.Repository
             }
         }
 
-        public async Task Login(LoginEntity entity)
-        {
-            try
-            {
-                var result = await _signInManeger.PasswordSignInAsync(entity.UserName, entity.Password, false, false);
-
-                if (!result.Succeeded) 
-                {
-                    throw new InvalidOperationException("Usuário ou senha inválidos."); 
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while logging in.");
-                throw new InvalidOperationException("An error occurred while logging in.", ex);
-            }
-        }
 
         public async Task Delete(UserEntity entity)
         {

@@ -8,6 +8,7 @@ using GoPlay_UserManagementService_Core.Entities;
 using GoPlay_UserManagementService_Core.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using FluentValidation;
+using GoPlay_UserManagementService_Core.Services;
 
 namespace GoPlay_UserManagementService_Core.Business
 {
@@ -20,11 +21,13 @@ namespace GoPlay_UserManagementService_Core.Business
         private readonly IUserRepository _repository;
 
         private readonly IValidator<UserEntity> _validator;
+        private readonly UserService _service;
 
-        public UserBusiness(IUserRepository repository, IValidator<UserEntity> validator)
+        public UserBusiness(IUserRepository repository, IValidator<UserEntity> validator, UserService service)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
+            _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
         public async Task Add(UserEntity entity, CancellationToken cancellationToken)
@@ -39,7 +42,7 @@ namespace GoPlay_UserManagementService_Core.Business
 
         public async Task Login (LoginEntity entity, CancellationToken cancellationToken)
         {
-            await _repository.Login(entity);
+            await _service.Login(entity);
         }
 
         public async Task Update(UserEntity entity, int id, CancellationToken cancellationToken)
