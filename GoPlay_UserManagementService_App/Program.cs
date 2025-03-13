@@ -3,6 +3,7 @@ using GoPlay_UserManagementService_Core.Business;
 using GoPlay_UserManagementService_Core.Business.Interfaces;
 using GoPlay_UserManagementService_Core.Entities;
 using GoPlay_UserManagementService_Core.Repository.Interfaces;
+using GoPlay_UserManagementService_Core.Services;
 using GoPlay_UserManagementService_Infra;
 using GoPlay_UserManagementService_Infra.Repository;
 using Microsoft.AspNetCore.Identity;
@@ -29,6 +30,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IUserBusiness, UserBusiness>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IValidator<UserEntity>, UserEntityValidator>();
+
+builder.Services.AddScoped<UserService>();
 
 var app = builder.Build();
 

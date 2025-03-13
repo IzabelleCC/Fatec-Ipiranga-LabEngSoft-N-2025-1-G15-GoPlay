@@ -13,6 +13,5 @@ namespace GoPlay_UserManagementService_Core.Repository.Interfaces
         Task Update(UserEntity entity, int id);
         Task Delete(UserEntity entity);
         Task<UserEntity?> GetById(int id);
-        Task Login(LoginEntity entity);
     }
 }
