@@ -21,13 +21,12 @@ namespace GoPlay_UserManagementService_Core.Business
         private readonly IUserRepository _repository;
 
         private readonly IValidator<UserEntity> _validator;
-        private readonly UserService _service;
 
-        public UserBusiness(IUserRepository repository, IValidator<UserEntity> validator, UserService service)
+
+        public UserBusiness(IUserRepository repository, IValidator<UserEntity> validator)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
-            _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
         public async Task Add(UserEntity entity, CancellationToken cancellationToken)
@@ -39,12 +38,6 @@ namespace GoPlay_UserManagementService_Core.Business
             }
             await _repository.Add(entity);
         }
-
-        public async Task Login (LoginEntity entity, CancellationToken cancellationToken)
-        {
-            await _service.Login(entity);
-        }
-
         public async Task Update(UserEntity entity, int id, CancellationToken cancellationToken)
         {
             var validationResult = _validator.Validate(entity);

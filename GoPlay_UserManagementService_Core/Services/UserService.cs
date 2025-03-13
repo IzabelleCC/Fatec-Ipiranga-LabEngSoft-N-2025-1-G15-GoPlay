@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GoPlay_UserManagementService_Core.Entities;
 using GoPlay_UserManagementService_Core.Repository.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace GoPlay_UserManagementService_Core.Services
@@ -14,14 +15,16 @@ namespace GoPlay_UserManagementService_Core.Services
     {
         private readonly ILogger<UserEntity> _logger;
         private readonly SignInManager<UserEntity> _signInManeger;
+        private readonly TokenService _tokenService;
 
-        public UserService(ILogger<UserEntity> logger, SignInManager<UserEntity> signInManager)
+        public UserService(ILogger<UserEntity> logger, SignInManager<UserEntity> signInManager, TokenService tokenService)
         {
             _signInManeger = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
         }
 
-        public async Task Login(LoginEntity entity)
+        public async Task<string> Login(LoginEntity entity)
         {
             try
             {
@@ -32,6 +35,17 @@ namespace GoPlay_UserManagementService_Core.Services
                     throw new InvalidOperationException("Usuário ou senha inválidos.");
                 }
 
+                var user = await _signInManeger.UserManager.Users
+                    .FirstOrDefaultAsync(u => u.NormalizedUserName == entity.UserName.ToUpper());
+
+                if (user == null)
+                {
+                    throw new InvalidOperationException("Usuário não encontrado.");
+                }
+
+                var token = await _tokenService.GenerateToken(user);
+
+                return token;
             }
             catch (Exception ex)
             {
