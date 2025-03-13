@@ -28,12 +28,5 @@ namespace GoPlay_UserManagementService_Core.Business.Interfaces
         /// <returns></returns>
         Task Delete (UserEntity entity, CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Realiza Login do Usuário
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        Task Login(LoginEntity entity, CancellationToken cancellationToken);
     }
 }
