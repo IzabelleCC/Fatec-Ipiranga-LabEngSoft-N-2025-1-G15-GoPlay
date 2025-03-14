@@ -14,13 +14,12 @@ namespace GoPlay_UserManagementService_Infra.Repository
 {
     public class UserRepository : IUserRepository
     {
-        private readonly UserDbContext _context;
         private readonly ILogger<UserRepository> _logger;
         private readonly UserManager<UserEntity> _userManager;
 
-        public UserRepository(UserDbContext context, ILogger<UserRepository> logger, UserManager<UserEntity> userManager)
+
+        public UserRepository( ILogger<UserRepository> logger, UserManager<UserEntity> userManager)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
@@ -29,7 +28,7 @@ namespace GoPlay_UserManagementService_Infra.Repository
         {
             try
             {
-               await _userManager.CreateAsync(entity, entity.PasswordHash ?? string.Empty);
+               //await _userManager.CreateAsync(entity, entity.PasswordHash ?? string.Empty);
             }
             catch (Exception ex)
             {
@@ -43,8 +42,7 @@ namespace GoPlay_UserManagementService_Infra.Repository
         {
             try
             {
-                _context.Remove(entity);
-                await _context.SaveChangesAsync();
+                await _userManager.DeleteAsync(entity);
             }
             catch (Exception ex)
             {
@@ -53,12 +51,11 @@ namespace GoPlay_UserManagementService_Infra.Repository
             }
         }
 
-        public async Task<UserEntity?> GetById(int id)
+        public async Task<UserEntity?> GetById(string id)
         {
             try
             {
-                
-                 return await _context.FindAsync<UserEntity>(id);
+                 return await _userManager.FindByIdAsync(id);
             }
             catch (Exception ex)
             {
@@ -67,37 +64,31 @@ namespace GoPlay_UserManagementService_Infra.Repository
             }
         }
 
-        public async Task Update(UserEntity entity, int id)
+        public async Task Update(UserEntity entity)
         {
-            //try
-            //{
-            //    _logger.LogInformation("Attempting to update user with ID: {IdUser}", id);
-
-            //    var user = await _context.User.AsNoTracking().FirstOrDefaultAsync(u => u.IdUser == id);
-
-            //    if (user != null)
-            //    {
-            //        _logger.LogInformation("User found. Updating details.");
-            //        user.Name = entity.Name;
-            //        user.Email = entity.Email;
-            //        user.Password = entity.Password;
-            //        user.InstagramPage = entity.InstagramPage;
-            //        user.Gender = entity.Gender;
-            //        user.BirthDate = entity.BirthDate;
-            //        user.TShirtSize = entity.TShirtSize;
-            //        _context.User.Update(user);
-            //        await _context.SaveChangesAsync();
-            //    }
-            //    else
-            //    {
-            //        _logger.LogWarning("User with ID: {IdUser} not found.", entity.IdUser);
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    _logger.LogError(ex, "An error occurred while updating the entity.");
-            //    throw new InvalidOperationException("An error occurred while updating the entity.", ex);
-            //}
+            try
+            {
+                await _userManager.UpdateAsync(entity);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating the entity.");
+                throw new InvalidOperationException("An error occurred while updating the entity.", ex);
+            }
         }
+
+        public async Task<UserEntity?> GetByUserName(string userName)
+        {
+            try
+            {
+                return await _userManager.FindByNameAsync(userName); ;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving the entity.");
+                throw new InvalidOperationException("An error occurred while retrieving the entity.", ex);
+            }
+        }
+
     }
 }

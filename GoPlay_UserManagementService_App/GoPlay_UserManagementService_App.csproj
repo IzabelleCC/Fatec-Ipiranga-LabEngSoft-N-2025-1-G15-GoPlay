@@ -4,10 +4,11 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-	</PropertyGroup>
+	  <UserSecretsId>0525bba4-1338-44da-a3e7-92e23c29d55e</UserSecretsId>
+  </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.14" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.14" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2">
@@ -30,6 +31,9 @@
 	<ItemGroup>
 		<ProjectReference Include="..\GoPlay_UserManagementService_Core\GoPlay_UserManagementService_Core.csproj" />
 		<ProjectReference Include="..\GoPlay_UserManagementService_Infra\GoPlay_UserManagementService_Infra.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Authorization\" />
 	</ItemGroup>
 
 </Project>

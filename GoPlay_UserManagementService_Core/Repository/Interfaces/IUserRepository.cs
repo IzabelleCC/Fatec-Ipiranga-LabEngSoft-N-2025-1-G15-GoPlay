@@ -10,8 +10,9 @@ namespace GoPlay_UserManagementService_Core.Repository.Interfaces
     public interface IUserRepository
     {
         Task Add(UserEntity entity);
-        Task Update(UserEntity entity, int id);
+        Task Update(UserEntity entity);
         Task Delete(UserEntity entity);
-        Task<UserEntity?> GetById(int id);
+        Task<UserEntity?> GetById(string id);
+        Task<UserEntity?> GetByUserName(string userName);
     }
 }

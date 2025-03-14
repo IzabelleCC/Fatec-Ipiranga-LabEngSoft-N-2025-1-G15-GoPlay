@@ -38,19 +38,38 @@ namespace GoPlay_UserManagementService_Core.Business
             }
             await _repository.Add(entity);
         }
-        public async Task Update(UserEntity entity, int id, CancellationToken cancellationToken)
+        public async Task Update(UserEntity entity, CancellationToken cancellationToken)
         {
-            var validationResult = _validator.Validate(entity);
-            if (!validationResult.IsValid)
+            var entityToUpdate = await _repository.GetById(entity.Id);
+
+            if (entityToUpdate == null)
             {
-                throw new ValidationException(validationResult.Errors);
+                throw new InvalidOperationException("Usuário não encontrado.");
             }
-            await _repository.Update(entity, id);
+            entityToUpdate.Name = entity.Name;
+            entityToUpdate.Email = entity.Email;
+            entityToUpdate.InstagramPage = entity.InstagramPage;
+            entityToUpdate.Gender = entity.Gender;
+            entityToUpdate.BirthDate = entity.BirthDate;
+            entityToUpdate.TShirtSize = entity.TShirtSize;
+
+            await _repository.Update(entityToUpdate);
         }
 
-        public async Task Delete(UserEntity entity, CancellationToken cancellationToken)
+        public async Task Delete(string userName, CancellationToken cancellationToken)
         {
+            var entity = await _repository.GetByUserName(userName);
+
+            if (entity == null)
+            {
+                throw new InvalidOperationException("Usuário não encontrado.");
+            }
             await _repository.Delete(entity);
+        }
+
+        public async Task<UserEntity> GetByUserName(string userName, CancellationToken cancellationToken)
+        {
+            return await _repository.GetByUserName(userName);
         }
 
     }
