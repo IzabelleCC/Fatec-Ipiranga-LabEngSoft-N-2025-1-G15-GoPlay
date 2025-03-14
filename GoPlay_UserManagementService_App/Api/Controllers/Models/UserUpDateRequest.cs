@@ -7,7 +7,6 @@ namespace GoPlay_UserManagementService_App.Api.Controllers.Models
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public string Email { get; set; }
         public string? InstagramPage { get; set; }
         public string? Gender { get; set; }
         public DateTime? BirthDate { get; set; }
@@ -18,7 +17,6 @@ namespace GoPlay_UserManagementService_App.Api.Controllers.Models
         /// </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
-        /// <param name="email"></param>
         /// <param name="login"></param>
         /// <param name="userType"></param>
         /// <param name="instagramPage"></param>
@@ -28,7 +26,6 @@ namespace GoPlay_UserManagementService_App.Api.Controllers.Models
         /// <param name="tShirtSize"></param>
         public UserUpDateRequest(string id,
                                  string name,
-                                 string email,
                                  string? instagramPage,
                                  string? gender,
                                  DateTime? birthDate,
@@ -36,7 +33,6 @@ namespace GoPlay_UserManagementService_App.Api.Controllers.Models
         {
             Id = id;
             Name = name;
-            Email = email;
             InstagramPage = instagramPage;
             Gender = gender;
             BirthDate = birthDate;
@@ -47,8 +43,7 @@ namespace GoPlay_UserManagementService_App.Api.Controllers.Models
             => new()
             {
                 Id = Id,
-                UserName = Name,
-                Email = Email,
+                Name = Name,
                 InstagramPage = InstagramPage,
                 Gender = Gender,
                 BirthDate = BirthDate?.ToUniversalTime(),

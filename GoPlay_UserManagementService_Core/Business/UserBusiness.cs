@@ -47,7 +47,6 @@ namespace GoPlay_UserManagementService_Core.Business
                 throw new InvalidOperationException("Usuário não encontrado.");
             }
             entityToUpdate.Name = entity.Name;
-            entityToUpdate.Email = entity.Email;
             entityToUpdate.InstagramPage = entity.InstagramPage;
             entityToUpdate.Gender = entity.Gender;
             entityToUpdate.BirthDate = entity.BirthDate;
