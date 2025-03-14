@@ -22,7 +22,7 @@ namespace GoPlay_UserManagementService_App.Api.Controllers
         }
 
         /// <summary>
-        /// Adiciona Usuário
+        /// Adiciona um novo usuário
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
@@ -44,13 +44,13 @@ namespace GoPlay_UserManagementService_App.Api.Controllers
         }
 
         /// <summary>
-        /// Realiza Login do Usuário
+        /// Realiza login de um usuário
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("login")]
+        [Route("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Login(UserRequestBase<UserLoginRequest> request, CancellationToken cancellationToken)
         {
@@ -68,19 +68,19 @@ namespace GoPlay_UserManagementService_App.Api.Controllers
         }
 
         /// <summary>
-        /// Busca um usuário pelo Id
+        /// Busca um usuário pelo UserName
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("{id}")]
+        [Route("GetByUserName/{userName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetByUserName(string userName, CancellationToken cancellationToken)
         {
             try
             {
-                var entity = await _repository.GetById(id);
-                return Ok();
+                var entity = await _business.GetByUserName(userName, cancellationToken);
+                return Ok(entity);
             }
             catch (Exception ex)
             {
@@ -96,14 +96,13 @@ namespace GoPlay_UserManagementService_App.Api.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPut]
-        [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update(int id, [FromBody] UserRequestBase<UserUpDateRequest> request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update([FromBody] UserRequestBase<UserUpDateRequest> request, CancellationToken cancellationToken)
         {
             try
             {
                 var entity = request.Data.ToUserEntity();
-                await _business.Update(entity, id, cancellationToken);
+                await _business.Update(entity, cancellationToken);
                 return Ok();
             }
             catch (Exception ex)
@@ -113,14 +112,13 @@ namespace GoPlay_UserManagementService_App.Api.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}")]
+        [Route("{userName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete(string userName, CancellationToken cancellationToken)
         {
             try
             {
-                var entity = await _repository.GetById(id);
-                await _business.Delete(entity, cancellationToken);
+                await _business.Delete(userName, cancellationToken);
                 return Ok();
             }
             catch (Exception ex)

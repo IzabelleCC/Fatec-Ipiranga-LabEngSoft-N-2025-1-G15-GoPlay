@@ -18,7 +18,7 @@ namespace GoPlay_UserManagementService_Core.Business.Interfaces
         /// <param name="entity"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task Update(UserEntity entity, int id, CancellationToken cancellationToken);
+        Task Update(UserEntity entity, CancellationToken cancellationToken);
 
         /// <summary>
         /// Deleta Usuário
@@ -26,7 +26,15 @@ namespace GoPlay_UserManagementService_Core.Business.Interfaces
         /// <param name="entity"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task Delete (UserEntity entity, CancellationToken cancellationToken);
+        Task Delete (string userName, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Busca Usuário por UserName
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<UserEntity> GetByUserName (string userName, CancellationToken cancellationToken);
 
     }
 }

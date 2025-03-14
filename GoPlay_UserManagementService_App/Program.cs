@@ -1,3 +1,4 @@
+using System.Text;
 using FluentValidation;
 using GoPlay_UserManagementService_Core.Business;
 using GoPlay_UserManagementService_Core.Business.Interfaces;
@@ -6,14 +7,18 @@ using GoPlay_UserManagementService_Core.Repository.Interfaces;
 using GoPlay_UserManagementService_Core.Services;
 using GoPlay_UserManagementService_Infra;
 using GoPlay_UserManagementService_Infra.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var connectionString = builder.Configuration["ConnectionStrings:GoPlayDb"];
+
 builder.Services.AddDbContext<UserDbContext>((options) => {
     options
-        .UseNpgsql(builder.Configuration["ConnectionStrings:GoPlayDb"]);
+        .UseNpgsql(connectionString);
 });
 
 builder.Services
@@ -33,6 +38,21 @@ builder.Services.AddScoped<IValidator<UserEntity>, UserEntityValidator>();
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<TokenService>();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["SymmetricSecurityKey"])),
+        ValidateAudience = false,
+        ValidateIssuer = false,
+        ClockSkew = TimeSpan.Zero
+    };
+});
 
 var app = builder.Build();
 
