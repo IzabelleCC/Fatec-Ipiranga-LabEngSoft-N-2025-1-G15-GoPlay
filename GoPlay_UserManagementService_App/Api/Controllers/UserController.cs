@@ -1,7 +1,6 @@
 ﻿using GoPlay_UserManagementService_App.Api.Controllers.Models;
 using GoPlay_UserManagementService_Core.Business.Interfaces;
 using GoPlay_UserManagementService_Core.Repository.Interfaces;
-using GoPlay_UserManagementService_Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoPlay_UserManagementService_App.Api.Controllers
@@ -12,13 +11,11 @@ namespace GoPlay_UserManagementService_App.Api.Controllers
     {
         private readonly IUserBusiness _business;
         private readonly IUserRepository _repository;
-        private readonly UserService _service;
 
-        public UserController(IUserBusiness business, IUserRepository repository, UserService service)
+        public UserController(IUserBusiness business, IUserRepository repository)
         {
             _business = business ?? throw new ArgumentNullException(nameof(business));
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
         /// <summary>
@@ -36,30 +33,6 @@ namespace GoPlay_UserManagementService_App.Api.Controllers
                 var entity = request.Data.ToUserEntity();
                 await _business.Add(entity, cancellationToken);
                 return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Realiza login de um usuário
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("Login")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Login(UserRequestBase<UserLoginRequest> request, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var entity = request.Data.ToLoginEntity();
-                var token = await _service.Login(entity);
-
-                return Ok(token);
             }
             catch (Exception ex)
             {
