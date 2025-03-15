@@ -3,16 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoPlay_UserManagementService_App", "GoPlay_UserManagementService_APP\GoPlay_UserManagementService_App.csproj", "{F146838E-AD2A-4EB6-9D78-A013039BE4F2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoPlay_App", "GoPlay_APP\GoPlay_App.csproj", "{F146838E-AD2A-4EB6-9D78-A013039BE4F2}"
 	ProjectSection(ProjectDependencies) = postProject
 		{DCB4E241-AA65-4B73-B96E-368933CEE2C2} = {DCB4E241-AA65-4B73-B96E-368933CEE2C2}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoPlay_UserManagementService_Test", "GoPlay_UserManagementService_Test\GoPlay_UserManagementService_Test.csproj", "{C11B9CB6-B6BA-4B5B-9B87-4AA302DF2D06}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoPlay_Test", "GoPlay_Test\GoPlay_Test.csproj", "{C11B9CB6-B6BA-4B5B-9B87-4AA302DF2D06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoPlay_UserManagementService_Infra", "GoPlay_UserManagementService_Infra\GoPlay_UserManagementService_Infra.csproj", "{9D9403BF-F68F-489B-907E-AEF942827E05}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoPlay_Infra", "GoPlay_Infra\GoPlay_Infra.csproj", "{9D9403BF-F68F-489B-907E-AEF942827E05}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoPlay_UserManagementService_Core", "GoPlay_UserManagementService_Core\GoPlay_UserManagementService_Core.csproj", "{DCB4E241-AA65-4B73-B96E-368933CEE2C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoPlay_Core", "GoPlay_Core\GoPlay_Core.csproj", "{DCB4E241-AA65-4B73-B96E-368933CEE2C2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{54EF86D8-1861-4F82-A3EF-6C91758FA884}"
 	ProjectSection(SolutionItems) = preProject
