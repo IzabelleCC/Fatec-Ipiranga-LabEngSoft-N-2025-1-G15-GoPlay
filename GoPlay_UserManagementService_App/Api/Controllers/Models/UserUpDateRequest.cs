@@ -1,5 +1,4 @@
 ﻿using GoPlay_UserManagementService_Core.Entities;
-using GoPlay_UserManagementService_Core.Enum;
 
 namespace GoPlay_UserManagementService_App.Api.Controllers.Models
 {
