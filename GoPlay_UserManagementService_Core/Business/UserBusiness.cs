@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GoPlay_UserManagementService_Core.Business.Interfaces;
+﻿using GoPlay_UserManagementService_Core.Business.Interfaces;
 using GoPlay_UserManagementService_Core.Entities;
 using GoPlay_UserManagementService_Core.Repository.Interfaces;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using FluentValidation;
-using GoPlay_UserManagementService_Core.Services;
 
 namespace GoPlay_UserManagementService_Core.Business
 {
@@ -19,9 +12,7 @@ namespace GoPlay_UserManagementService_Core.Business
     {
 
         private readonly IUserRepository _repository;
-
         private readonly IValidator<UserEntity> _validator;
-
 
         public UserBusiness(IUserRepository repository, IValidator<UserEntity> validator)
         {

@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GoPlay_UserManagementService_Core.Entities;
+﻿using GoPlay_UserManagementService_Core.Entities;
 using GoPlay_UserManagementService_Core.Repository.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace GoPlay_UserManagementService_Infra.Repository
 {
@@ -18,7 +11,7 @@ namespace GoPlay_UserManagementService_Infra.Repository
         private readonly UserManager<UserEntity> _userManager;
 
 
-        public UserRepository( ILogger<UserRepository> logger, UserManager<UserEntity> userManager)
+        public UserRepository(ILogger<UserRepository> logger, UserManager<UserEntity> userManager)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
@@ -28,12 +21,12 @@ namespace GoPlay_UserManagementService_Infra.Repository
         {
             try
             {
-               //await _userManager.CreateAsync(entity, entity.PasswordHash ?? string.Empty);
+                //await _userManager.CreateAsync(entity, entity.PasswordHash ?? string.Empty);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while saving the entity changes.");
-               throw new InvalidOperationException("Erro ao salvar novo usuário.", ex);
+                throw new InvalidOperationException("Erro ao salvar novo usuário.", ex);
             }
         }
 
@@ -55,7 +48,7 @@ namespace GoPlay_UserManagementService_Infra.Repository
         {
             try
             {
-                 return await _userManager.FindByIdAsync(id);
+                return await _userManager.FindByIdAsync(id);
             }
             catch (Exception ex)
             {
