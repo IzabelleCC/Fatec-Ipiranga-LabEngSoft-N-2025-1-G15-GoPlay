@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <BaseOutputPath>C:\Users\Izabelle\Documents\Fatec\GoPlay\GoPlay_UserManagementService\GoPlay_UserManagementService_App\bin</BaseOutputPath>
+    <BaseOutputPath>C:\Users\Izabelle\Documents\Fatec\GoPlay\GoPlay_App\bin</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GoPlay_UserManagementService_Core\GoPlay_UserManagementService_Core.csproj" />
+    <ProjectReference Include="..\GoPlay_Core\GoPlay_Core.csproj" />
   </ItemGroup>
 
 </Project>
