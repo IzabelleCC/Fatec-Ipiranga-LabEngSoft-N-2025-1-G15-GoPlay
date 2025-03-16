@@ -8,6 +8,13 @@
   </PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Authorization\**" />
+	  <Content Remove="Authorization\**" />
+	  <EmbeddedResource Remove="Authorization\**" />
+	  <None Remove="Authorization\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.14" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.14" />
@@ -31,9 +38,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\GoPlay_Core\GoPlay_Core.csproj" />
 		<ProjectReference Include="..\GoPlay_Infra\GoPlay_Infra.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Authorization\" />
 	</ItemGroup>
 
 </Project>

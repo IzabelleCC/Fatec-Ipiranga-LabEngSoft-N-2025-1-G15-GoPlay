@@ -1,6 +1,6 @@
 ﻿using GoPlay_UserManagementService_Core.Entities;
 
-namespace GoPlay_UserManagementService_App.Api.Controllers.Models
+namespace GoPlay_App.Api.Controllers.UserController.Models
 {
     public class UserUpDateRequest
     {
