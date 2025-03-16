@@ -3,7 +3,7 @@ using GoPlay_UserManagementService_Core.Entities;
 using GoPlay_UserManagementService_Core.Enum;
 using GoPlay_UserManagementService_Core.Models.Dto;
 
-namespace GoPlay_UserManagementService_App.Api.Controllers.Models
+namespace GoPlay_App.Api.Controllers.UserController.Models
 {
     public class UserCreateRequest
     {

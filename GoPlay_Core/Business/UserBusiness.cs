@@ -8,7 +8,7 @@ namespace GoPlay_UserManagementService_Core.Business
     /// <summary>
     /// Classe de negócio de usuário
     /// </summary>
-    public class UserBusiness : IUserBusiness
+    public class UserBusiness : IUserBusiness<UserEntity>
     {
 
         private readonly IUserRepository _repository;

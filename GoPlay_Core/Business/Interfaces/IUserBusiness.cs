@@ -2,7 +2,7 @@
 
 namespace GoPlay_UserManagementService_Core.Business.Interfaces
 {
-    public interface IUserBusiness
+    public interface IUserBusiness<T> where T : UserEntity
     {
         /// <summary>
         /// Adiciona Usuário
@@ -10,7 +10,7 @@ namespace GoPlay_UserManagementService_Core.Business.Interfaces
         /// <param name="entity"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task Add(UserEntity entity, CancellationToken cancellationToken);
+        Task Add(T entity, CancellationToken cancellationToken);
 
         /// <summary>
         /// Atualiza Usuário
@@ -18,12 +18,12 @@ namespace GoPlay_UserManagementService_Core.Business.Interfaces
         /// <param name="entity"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task Update(UserEntity entity, CancellationToken cancellationToken);
+        Task Update(T entity, CancellationToken cancellationToken);
 
         /// <summary>
         /// Deleta Usuário
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="userName"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task Delete (string userName, CancellationToken cancellationToken);
@@ -31,10 +31,10 @@ namespace GoPlay_UserManagementService_Core.Business.Interfaces
         /// <summary>
         /// Busca Usuário por UserName
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="userName"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<UserEntity> GetByUserName (string userName, CancellationToken cancellationToken);
+        Task<T> GetByUserName (string userName, CancellationToken cancellationToken);
 
     }
 }

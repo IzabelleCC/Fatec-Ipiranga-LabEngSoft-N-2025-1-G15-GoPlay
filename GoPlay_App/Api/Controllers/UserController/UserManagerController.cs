@@ -1,18 +1,19 @@
-﻿using GoPlay_UserManagementService_App.Api.Controllers.Models;
+﻿using GoPlay_App.Api.Controllers.UserController.Models;
 using GoPlay_UserManagementService_Core.Business.Interfaces;
+using GoPlay_UserManagementService_Core.Entities;
 using GoPlay_UserManagementService_Core.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GoPlay_UserManagementService_App.Api.Controllers
+namespace GoPlay_App.Api.Controllers.UserController
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserManagerController : ControllerBase
     {
-        private readonly IUserBusiness _business;
+        private readonly IUserBusiness<UserEntity> _business;
         private readonly IUserRepository _repository;
 
-        public UserController(IUserBusiness business, IUserRepository repository)
+        public UserManagerController(IUserBusiness<UserEntity> business, IUserRepository repository)
         {
             _business = business ?? throw new ArgumentNullException(nameof(business));
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));

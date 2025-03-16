@@ -1,9 +1,9 @@
-﻿using GoPlay_UserManagementService_App.Api.Controllers.Models;
+﻿using GoPlay_App.Api.Controllers.UserController.Models;
 using GoPlay_UserManagementService_Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GoPlay_UserManagementService_App.Api.Controllers
+namespace GoPlay_App.Api.Controllers.UserController
 {
 
     [Route("api/[controller]")]
