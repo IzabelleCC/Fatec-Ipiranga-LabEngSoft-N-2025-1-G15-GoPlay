@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace GoPlay_UserManagementService_Infra.Migrations
 {
-    [DbContext(typeof(UserDbContext))]
+    [DbContext(typeof(GoPlayDbContext))]
     [Migration("20250312030611_GOP-15-Renomeia-Coluna-login-para-Name-em-AspNetUsers")]
     partial class GOP15RenomeiaColunaloginparaNameemAspNetUsers
     {

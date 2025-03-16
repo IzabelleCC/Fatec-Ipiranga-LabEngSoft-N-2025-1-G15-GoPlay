@@ -10,9 +10,9 @@ using Microsoft.Extensions.Configuration;
 namespace GoPlay_UserManagementService_Infra
 {
     [ExcludeFromCodeCoverage]
-    public class UserDbContext : IdentityDbContext<UserEntity>
+    public class GoPlayDbContext : IdentityDbContext<UserEntity>
     {
-        public UserDbContext(DbContextOptions<UserDbContext> options) : base(options)
+        public GoPlayDbContext(DbContextOptions<GoPlayDbContext> options) : base(options)
         {
         }
 

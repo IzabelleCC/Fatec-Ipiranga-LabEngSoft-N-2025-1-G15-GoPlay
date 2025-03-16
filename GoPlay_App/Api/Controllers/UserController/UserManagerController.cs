@@ -2,12 +2,14 @@
 using GoPlay_UserManagementService_Core.Business.Interfaces;
 using GoPlay_UserManagementService_Core.Entities;
 using GoPlay_UserManagementService_Core.Repository.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoPlay_App.Api.Controllers.UserController
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserManagerController : ControllerBase
     {
         private readonly IUserBusiness<UserEntity> _business;
@@ -22,11 +24,9 @@ namespace GoPlay_App.Api.Controllers.UserController
         /// <summary>
         /// Adiciona um novo usuário
         /// </summary>
-        /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [AllowAnonymous]
         public async Task<IActionResult> Add([FromBody] UserRequestBase<UserCreateRequest> request, CancellationToken cancellationToken)
         {
             try
@@ -44,10 +44,7 @@ namespace GoPlay_App.Api.Controllers.UserController
         /// <summary>
         /// Busca um usuário pelo UserName
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("GetByUserName/{userName}")]
+        [HttpGet("GetByUserName/{userName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetByUserName(string userName, CancellationToken cancellationToken)
         {
@@ -65,10 +62,6 @@ namespace GoPlay_App.Api.Controllers.UserController
         /// <summary>
         /// Atualiza um usuário
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Update([FromBody] UserRequestBase<UserUpDateRequest> request, CancellationToken cancellationToken)
@@ -85,8 +78,10 @@ namespace GoPlay_App.Api.Controllers.UserController
             }
         }
 
-        [HttpDelete]
-        [Route("{userName}")]
+        /// <summary>
+        /// Deleta um usuário
+        /// </summary>
+        [HttpDelete("{userName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Delete(string userName, CancellationToken cancellationToken)
         {

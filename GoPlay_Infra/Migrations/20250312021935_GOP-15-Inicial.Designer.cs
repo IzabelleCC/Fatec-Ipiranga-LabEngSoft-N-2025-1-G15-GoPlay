@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace GoPlay_UserManagementService_Infra.Migrations
 {
-    [DbContext(typeof(UserDbContext))]
+    [DbContext(typeof(GoPlayDbContext))]
     [Migration("20250312021935_GOP-15-Inicial")]
     partial class GOP15Inicial
     {
