@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Services\Interfaces\**" />
+    <EmbeddedResource Remove="Services\Interfaces\**" />
+    <None Remove="Services\Interfaces\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
@@ -21,10 +27,6 @@
     <PackageReference Include="Npgsql.Json.NET" Version="9.0.3" />
     <PackageReference Include="Npgsql.OpenTelemetry" Version="9.0.3" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.6.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\Interfaces\" />
   </ItemGroup>
 
 </Project>

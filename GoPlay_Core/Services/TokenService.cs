@@ -1,9 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using GoPlay_UserManagementService_Core.Entities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -17,27 +15,42 @@ namespace GoPlay_UserManagementService_Core.Services
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
+
         public async Task<string> GenerateToken(UserEntity user)
         {
-            Claim[] claims = new Claim[]
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            // Criando claims do usuário
+            var claims = new List<Claim>
             {
-                new Claim("Id", user.Id),
-                new Claim("UserName", user.UserName),
-                new Claim("Email", user.Email),
-                new Claim("LoginTimesTamp", DateTime.UtcNow.ToString())
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Role, user.UserType.ToString()),
+                new Claim("LoginTimeStamp", DateTime.UtcNow.ToString("o"))
             };
 
-            var chave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration ["SymmetricSecurityKey"]));
-            var signingCredentials = new SigningCredentials(chave, SecurityAlgorithms.HmacSha256);
+            // Obtendo chave de segurança
+            var secretKey = _configuration["SymmetricSecurityKey"];
+            if (string.IsNullOrEmpty(secretKey))
+                throw new InvalidOperationException("A chave de segurança não está configurada.");
 
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+
+            // Criando o token JWT
             var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(30),
+                expires: DateTime.UtcNow.AddMinutes(60), // Token válido por 60 minutos
                 signingCredentials: signingCredentials
             );
 
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-            return await Task.FromResult(tokenString);
+            // Retorna o token JWT gerado
+            return await Task.FromResult(new JwtSecurityTokenHandler().WriteToken(token));
         }
     }
 }

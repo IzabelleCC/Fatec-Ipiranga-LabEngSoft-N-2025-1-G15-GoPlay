@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace GoPlay_UserManagementService_Infra.Migrations
 {
-    [DbContext(typeof(UserDbContext))]
+    [DbContext(typeof(GoPlayDbContext))]
     partial class UserDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
