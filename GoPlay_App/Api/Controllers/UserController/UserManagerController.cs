@@ -2,7 +2,9 @@
 using GoPlay_UserManagementService_Core.Business.Interfaces;
 using GoPlay_UserManagementService_Core.Entities;
 using GoPlay_UserManagementService_Core.Repository.Interfaces;
+using GoPlay_UserManagementService_Core.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoPlay_App.Api.Controllers.UserController
@@ -14,11 +16,15 @@ namespace GoPlay_App.Api.Controllers.UserController
     {
         private readonly IUserBusiness<UserEntity> _business;
         private readonly IUserRepository _repository;
+        private readonly EmailService _emailService;
+        private readonly UserManager<UserEntity> _user;
 
-        public UserManagerController(IUserBusiness<UserEntity> business, IUserRepository repository)
+        public UserManagerController(IUserBusiness<UserEntity> business, IUserRepository repository, EmailService emailService, UserManager<UserEntity> user)
         {
             _business = business ?? throw new ArgumentNullException(nameof(business));
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
+            _user = user ?? throw new ArgumentNullException(nameof(user));
         }
 
         /// <summary>
@@ -32,7 +38,11 @@ namespace GoPlay_App.Api.Controllers.UserController
             try
             {
                 var entity = request.Data.ToUserEntity();
+
                 await _business.Add(entity, cancellationToken);
+
+                await _emailService.SendEmailRegisterAsync(entity);
+
                 return Ok();
             }
             catch (Exception ex)
@@ -89,6 +99,30 @@ namespace GoPlay_App.Api.Controllers.UserController
             {
                 await _business.Delete(userName, cancellationToken);
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet("emailConfirmation")]
+        [AllowAnonymous]
+        public async Task<IActionResult> EmailConfirmation([FromQuery] string email, [FromQuery] string token, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var user = await _user.FindByEmailAsync(email);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                var result = await _user.ConfirmEmailAsync(user, token);
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+                return BadRequest();
             }
             catch (Exception ex)
             {
