@@ -21,7 +21,7 @@ namespace GoPlay_UserManagementService_Infra.Repository
         {
             try
             {
-                //await _userManager.CreateAsync(entity, entity.PasswordHash ?? string.Empty);
+                await _userManager.CreateAsync(entity, entity.PasswordHash ?? string.Empty);
             }
             catch (Exception ex)
             {
