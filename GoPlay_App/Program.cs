@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using GoPlay_UserManagementService_Core.Business;
-using GoPlay_UserManagementService_Core.Business.Interfaces;
-using GoPlay_UserManagementService_Core.Entities;
-using GoPlay_UserManagementService_Core.Repository.Interfaces;
-using GoPlay_UserManagementService_Core.Services;
-using GoPlay_UserManagementService_Infra;
-using GoPlay_UserManagementService_Infra.Repository;
+using GoPlay_Core.Business;
+using GoPlay_Core.Business.Interfaces;
+using GoPlay_Core.Entities;
+using GoPlay_Core.Repository.Interfaces;
+using GoPlay_Core.Services;
+using GoPlay_Infra;
+using GoPlay_Infra.Repository;
 using GoPlay_Core.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,8 +31,9 @@ builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
 builder.Services
-        .AddIdentityApiEndpoints<UserEntity>()
-        .AddEntityFrameworkStores<GoPlayDbContext>();
+    .AddIdentity<UserEntity, IdentityRole>()
+    .AddEntityFrameworkStores<GoPlayDbContext>()
+    .AddDefaultTokenProviders();
 
 // Adicionar serviços ao contêiner.
 builder.Services.AddControllers();
@@ -60,7 +61,6 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGroup("auth").MapIdentityApi<UserEntity>().WithTags("Authentication");
 app.MapControllers();
 
 app.Run();

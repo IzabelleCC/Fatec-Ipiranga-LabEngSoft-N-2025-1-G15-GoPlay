@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using GoPlay_UserManagementService_Core.Entities;
-using GoPlay_UserManagementService_Core.Enum;
-using GoPlay_UserManagementService_Core.Models.Dto;
+using GoPlay_Core.Entities;
+using GoPlay_Core.Enum;
+using GoPlay_Core.Models.Dto;
 
 namespace GoPlay_App.Api.Controllers.UserController.Models
 {

@@ -1,6 +1,6 @@
-﻿using GoPlay_UserManagementService_Core.Entities;
+﻿using GoPlay_Core.Entities;
 
-namespace GoPlay_UserManagementService_Core.Business.Interfaces
+namespace GoPlay_Core.Business.Interfaces
 {
     public interface IUserBusiness<T> where T : UserEntity
     {

@@ -1,4 +1,4 @@
-﻿using GoPlay_UserManagementService_Core.Entities;
+﻿using GoPlay_Core.Entities;
 
 namespace GoPlay_App.Api.Controllers.UserController.Models
 {

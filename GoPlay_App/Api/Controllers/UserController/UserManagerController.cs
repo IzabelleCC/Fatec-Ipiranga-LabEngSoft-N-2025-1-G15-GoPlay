@@ -1,8 +1,8 @@
 ﻿using GoPlay_App.Api.Controllers.UserController.Models;
-using GoPlay_UserManagementService_Core.Business.Interfaces;
-using GoPlay_UserManagementService_Core.Entities;
-using GoPlay_UserManagementService_Core.Repository.Interfaces;
-using GoPlay_UserManagementService_Core.Services;
+using GoPlay_Core.Business.Interfaces;
+using GoPlay_Core.Entities;
+using GoPlay_Core.Repository.Interfaces;
+using GoPlay_Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

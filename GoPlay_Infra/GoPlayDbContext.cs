@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using GoPlay_UserManagementService_Core.Entities;
+using GoPlay_Core.Entities;
 using GoPlay_UserManagementService_Infra.Repository.Mapping;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 
-namespace GoPlay_UserManagementService_Infra
+namespace GoPlay_Infra
 {
     [ExcludeFromCodeCoverage]
     public class GoPlayDbContext : IdentityDbContext<UserEntity>

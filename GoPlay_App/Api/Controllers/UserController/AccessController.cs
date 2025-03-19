@@ -1,5 +1,5 @@
 ﻿using GoPlay_App.Api.Controllers.UserController.Models;
-using GoPlay_UserManagementService_Core.Services;
+using GoPlay_Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
