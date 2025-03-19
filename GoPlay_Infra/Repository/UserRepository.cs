@@ -1,9 +1,9 @@
-﻿using GoPlay_UserManagementService_Core.Entities;
-using GoPlay_UserManagementService_Core.Repository.Interfaces;
+﻿using GoPlay_Core.Entities;
+using GoPlay_Core.Repository.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
 
-namespace GoPlay_UserManagementService_Infra.Repository
+namespace GoPlay_Infra.Repository
 {
     public class UserRepository : IUserRepository
     {

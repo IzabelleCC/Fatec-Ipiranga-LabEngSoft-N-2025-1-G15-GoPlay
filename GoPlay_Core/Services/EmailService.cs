@@ -1,9 +1,9 @@
 ﻿using GoPlay_Core.Services;
-using GoPlay_UserManagementService_Core.Entities;
+using GoPlay_Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace GoPlay_UserManagementService_Core.Services
+namespace GoPlay_Core.Services
 {
     public class EmailService : IEmailSender<UserEntity>
     {
@@ -46,12 +46,23 @@ namespace GoPlay_UserManagementService_Core.Services
 
         public Task SendPasswordResetLinkAsync(UserEntity user, string email, string resetLink)
         {
-            return Task.CompletedTask;
+            try
+            {
+                string subject = "Redefinição de Senha";
+                string message = $"Olá {user.Name}, para redefinir sua senha, clique no link a seguir:\r\n {resetLink}";
+
+               return  _emailSender.SendEmailAsync(user.Email ?? string.Empty, subject, message);
+
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Erro ao enviar e-mail de redefinição de senha.", ex);
+            }
         }
 
         public Task SendPasswordResetCodeAsync(UserEntity user, string email, string resetCode)
         {
-            return Task.CompletedTask;
+            return _userManager.ChangePasswordAsync(user, email, resetCode);
         }
     }
 }

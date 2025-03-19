@@ -1,9 +1,9 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using GoPlay_UserManagementService_Core.Entities;
+using GoPlay_Core.Entities;
 
-namespace GoPlay_UserManagementService_Core.Services
+namespace GoPlay_Core.Services
 {
     public class CustomUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<UserEntity, IdentityRole>
     {

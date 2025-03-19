@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace GoPlay_UserManagementService_Infra.Migrations
+namespace GoPlay_Infra.Migrations
 {
     /// <inheritdoc />
     public partial class GOP15Inicial : Migration

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoPlay_UserManagementService_Core.Enum
+namespace GoPlay_Core.Enum
 {
     public enum UserTypeEnum
     {

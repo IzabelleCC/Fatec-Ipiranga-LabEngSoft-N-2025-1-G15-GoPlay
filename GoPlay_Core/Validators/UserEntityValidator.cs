@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using GoPlay_UserManagementService_Core.Entities;
+using GoPlay_Core.Entities;
 
 public class UserEntityValidator : AbstractValidator<UserEntity>
 {

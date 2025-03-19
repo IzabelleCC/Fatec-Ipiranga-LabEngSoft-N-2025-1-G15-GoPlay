@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
-namespace GoPlay_UserManagementService_Core.Entities
+namespace GoPlay_Core.Entities
 {
     public class LoginEntity
     {

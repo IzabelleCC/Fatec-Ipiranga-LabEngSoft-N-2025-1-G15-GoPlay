@@ -1,9 +1,9 @@
-﻿using GoPlay_UserManagementService_Core.Business.Interfaces;
-using GoPlay_UserManagementService_Core.Entities;
-using GoPlay_UserManagementService_Core.Repository.Interfaces;
+﻿using GoPlay_Core.Business.Interfaces;
+using GoPlay_Core.Entities;
+using GoPlay_Core.Repository.Interfaces;
 using FluentValidation;
 
-namespace GoPlay_UserManagementService_Core.Business
+namespace GoPlay_Core.Business
 {
     /// <summary>
     /// Classe de negócio de usuário
