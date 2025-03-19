@@ -1,19 +1,20 @@
-﻿using GoPlay_App.Api.Controllers.UserController.Models;
+﻿using GoPlay_App.Api.Controllers.AccessManager.Models;
+using GoPlay_App.Api.Controllers.UserController.Models;
 using GoPlay_Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GoPlay_App.Api.Controllers.UserController
+namespace GoPlay_App.Api.Controllers.AccessManager
 {
 
     [Route("api/[controller]")]
     [ApiController]
-    public class AccessController : ControllerBase
+    public class AccessManagerController : ControllerBase
     {
         private readonly UserService _service;
         private readonly TokenService _tokenService;
 
-        public AccessController(UserService service, TokenService tokenService)
+        public AccessManagerController(UserService service, TokenService tokenService)
         {
             _service = service;
             _tokenService = tokenService;

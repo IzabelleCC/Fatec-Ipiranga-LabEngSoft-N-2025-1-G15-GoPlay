@@ -1,4 +1,5 @@
-﻿using GoPlay_App.Api.Controllers.UserController.Models;
+﻿using GoPlay_App.Api.Controllers.AccessManager.Models;
+using GoPlay_App.Api.Controllers.UserController.Models;
 using GoPlay_Core.Business.Interfaces;
 using GoPlay_Core.Entities;
 using GoPlay_Core.Repository.Interfaces;
@@ -16,21 +17,22 @@ namespace GoPlay_App.Api.Controllers.UserController
     public class UserManagerController : ControllerBase
     {
         private readonly IUserBusiness<UserEntity> _business;
-        private readonly IUserRepository _repository;
         private readonly EmailService _emailService;
         private readonly UserManager<UserEntity> _user;
 
-        public UserManagerController(IUserBusiness<UserEntity> business, IUserRepository repository, EmailService emailService, UserManager<UserEntity> user)
+        public UserManagerController(IUserBusiness<UserEntity> business, EmailService emailService, UserManager<UserEntity> user)
         {
             _business = business ?? throw new ArgumentNullException(nameof(business));
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
             _user = user ?? throw new ArgumentNullException(nameof(user));
         }
 
         /// <summary>
-        /// Adiciona um novo usuário
+        /// Adiciona um usuário
         /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
@@ -53,8 +55,11 @@ namespace GoPlay_App.Api.Controllers.UserController
         }
 
         /// <summary>
-        /// Busca um usuário pelo UserName
+        /// Busca um usuário por UserName
         /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpGet("GetByUserName/{userName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetByUserName(string userName, CancellationToken cancellationToken)
@@ -73,6 +78,9 @@ namespace GoPlay_App.Api.Controllers.UserController
         /// <summary>
         /// Atualiza um usuário
         /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Update([FromBody] UserRequestBase<UserUpDateRequest> request, CancellationToken cancellationToken)
@@ -92,6 +100,9 @@ namespace GoPlay_App.Api.Controllers.UserController
         /// <summary>
         /// Deleta um usuário
         /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpDelete("{userName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Delete(string userName, CancellationToken cancellationToken)
@@ -107,6 +118,13 @@ namespace GoPlay_App.Api.Controllers.UserController
             }
         }
 
+        /// <summary>
+        /// Confirmação de e-mail
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="token"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpGet("emailConfirmation")]
         [AllowAnonymous]
         public async Task<IActionResult> EmailConfirmation([FromQuery] string email, [FromQuery] string token, CancellationToken cancellationToken)
