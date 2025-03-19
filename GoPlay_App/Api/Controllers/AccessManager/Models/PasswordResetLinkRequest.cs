@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GoPlay_App.Api.Controllers.UserController.Models
+namespace GoPlay_App.Api.Controllers.AccessManager.Models
 {
     public class PasswordResetLinkRequest
     {

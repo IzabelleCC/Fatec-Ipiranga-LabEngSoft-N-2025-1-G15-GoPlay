@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using GoPlay_Core.Entities;
 
-namespace GoPlay_App.Api.Controllers.UserController.Models
+namespace GoPlay_App.Api.Controllers.AccessManager.Models
 {
     public class UserLoginRequest
     {
