@@ -34,7 +34,12 @@ builder.Services
         .AddIdentityApiEndpoints<UserEntity>()
         .AddEntityFrameworkStores<GoPlayDbContext>();
 
-// Registro de serviços
+// Adicionar serviços ao contêiner.
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Registrar seus serviços aqui
 builder.Services.AddScoped<IUserBusiness<UserEntity>, UserBusiness>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IValidator<UserEntity>, UserEntityValidator>();

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GoPlay_UserManagementService_Core.Entities;
-using GoPlay_UserManagementService_Core.Repository.Interfaces;
+using GoPlay_Core.Entities;
+using GoPlay_Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace GoPlay_UserManagementService_Core.Services
+namespace GoPlay_Core.Services
 {
     public class UserService
     {
@@ -49,9 +49,14 @@ namespace GoPlay_UserManagementService_Core.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while logging in.");
-                throw new InvalidOperationException("An error occurred while logging in.", ex);
+                _logger.LogError(ex, "Usuário ou senha inválidos.");
+                throw new InvalidOperationException("Usuário ou senha inválidos.", ex);
             }
+        }
+
+        public async Task Logout()
+        {
+            await _signInManeger.SignOutAsync();
         }
     }
 }

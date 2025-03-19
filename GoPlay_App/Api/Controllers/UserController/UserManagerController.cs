@@ -6,6 +6,7 @@ using GoPlay_UserManagementService_Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace GoPlay_App.Api.Controllers.UserController
 {
@@ -118,6 +119,56 @@ namespace GoPlay_App.Api.Controllers.UserController
                     return NotFound();
                 }
                 var result = await _user.ConfirmEmailAsync(user, token);
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPost("SendPasswordResetLink")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SendPasswordResetLink([FromBody] UserRequestBase<PasswordResetLinkRequest> request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var user = await _user.FindByEmailAsync(request.Data.Email);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                var token = await _user.GeneratePasswordResetTokenAsync(user);
+                var param = new Dictionary<string, string?>
+                {
+                    {"token", token }
+                };
+                var resetLink = QueryHelpers.AddQueryString("https://localhost:7276/api/UserManager/ResetPassword", param);
+                await _emailService.SendPasswordResetLinkAsync(user, user.Email, resetLink);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPost("ResetPassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword([FromQuery] string token, [FromBody] UserRequestBase<PasswordResetRequest> request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var user = await _user.FindByEmailAsync(request.Data.Email);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                var result = await _user.ResetPasswordAsync(user, token, request.Data.Password);
                 if (result.Succeeded)
                 {
                     return Ok();

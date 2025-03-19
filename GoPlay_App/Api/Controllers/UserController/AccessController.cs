@@ -11,9 +11,12 @@ namespace GoPlay_App.Api.Controllers.UserController
     public class AccessController : ControllerBase
     {
         private readonly UserService _service;
-        public AccessController(UserService service)
+        private readonly TokenService _tokenService;
+
+        public AccessController(UserService service, TokenService tokenService)
         {
-            _service = service ?? throw new ArgumentNullException(nameof(service));
+            _service = service;
+            _tokenService = tokenService;
         }
 
 
@@ -23,9 +26,19 @@ namespace GoPlay_App.Api.Controllers.UserController
         /// <returns></returns>
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ValidateUser()
         {
-            return Ok("Acesso Permitido");
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            if (_tokenService.ValidateToken(token))
+            {
+                return Ok("Acesso Permitido");
+            }
+            else
+            {
+                return Unauthorized("Token inválido");
+            }
         }
 
         /// <summary>
@@ -42,9 +55,30 @@ namespace GoPlay_App.Api.Controllers.UserController
             try
             {
                 var entity = request.Data.ToLoginEntity();
+
                 var token = await _service.Login(entity);
 
                 return Ok(token);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Realiza logout de um usuário
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("Logout")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+                await _service.Logout();
+                return Ok("Logout realizado com sucesso");
             }
             catch (Exception ex)
             {
