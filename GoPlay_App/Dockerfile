@@ -5,7 +5,7 @@ RUN apt-get update \
     clang zlib1g-dev
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["GoPlay_APP/GoPlay_App.csproj", "GoPlay_APP/"]
+COPY ["GoPlay_APP/GoPlay_App.csproj", "GoPlay_App/"]
 COPY ["GoPlay_Core/GoPlay_Core.csproj", "GoPlay_Core/"]
 COPY ["GoPlay_Infra/GoPlay_Infra.csproj", "GoPlay_Infra/"]
 RUN dotnet restore "./GoPlay_APP/GoPlay_App.csproj"
