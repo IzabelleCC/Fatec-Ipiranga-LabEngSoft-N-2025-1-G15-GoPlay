@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GoPlay_Infra.Migrations
 {
     [DbContext(typeof(GoPlayDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    partial class GoPlayDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -22,7 +22,7 @@ namespace GoPlay_Infra.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("GoPlay_UserManagementService_Core.Entities.UserEntity", b =>
+            modelBuilder.Entity("GoPlay_Core.Entities.UserEntity", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -259,7 +259,7 @@ namespace GoPlay_Infra.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("GoPlay_UserManagementService_Core.Entities.UserEntity", null)
+                    b.HasOne("GoPlay_Core.Entities.UserEntity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -268,7 +268,7 @@ namespace GoPlay_Infra.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("GoPlay_UserManagementService_Core.Entities.UserEntity", null)
+                    b.HasOne("GoPlay_Core.Entities.UserEntity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -283,7 +283,7 @@ namespace GoPlay_Infra.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GoPlay_UserManagementService_Core.Entities.UserEntity", null)
+                    b.HasOne("GoPlay_Core.Entities.UserEntity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -292,7 +292,7 @@ namespace GoPlay_Infra.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("GoPlay_UserManagementService_Core.Entities.UserEntity", null)
+                    b.HasOne("GoPlay_Core.Entities.UserEntity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

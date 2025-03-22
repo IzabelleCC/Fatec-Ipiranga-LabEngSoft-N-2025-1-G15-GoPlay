@@ -19,7 +19,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Configuração do banco de dados
-var connectionString = builder.Configuration["ConnectionStrings:GoPlayDb"];
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+if (string.IsNullOrEmpty(databaseUrl))
+{
+    throw new InvalidOperationException("DATABASE_URL não está definida.");
+}
+
+var connectionString = HerokuConnectionHelper.ConvertDatabaseUrlToConnectionString(databaseUrl);
 builder.Services.AddDbContext<GoPlayDbContext>(options =>
 {
     options.UseNpgsql(connectionString);
