@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GoPlay_Infra.Migrations
 {
     /// <inheritdoc />
-    public partial class GOP15Inicial : Migration
+    public partial class GOP81Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,7 +31,7 @@ namespace GoPlay_Infra.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    Login = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
                     UserType = table.Column<int>(type: "integer", nullable: false),
                     InstagramPage = table.Column<string>(type: "text", nullable: true),
                     CpfCnpj = table.Column<string>(type: "text", nullable: false),
