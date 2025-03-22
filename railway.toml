@@ -1,0 +1,8 @@
+[build]
+builder = "dockerfile"
+dockerfilePath = "./GoPlay_App/Dockerfile"
+
+[deploy]
+startCommand = "dotnet GoPlay_App.dll"
+restartPolicyType = "always"
+healthcheckPath = "/health"
