@@ -13,6 +13,10 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://*:{port}");
+
+builder.Services.AddHealthChecks();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -62,6 +66,8 @@ builder.Services.AddCors(options =>
         builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
+
+
 var app = builder.Build();
 
 app.UseSwagger();
@@ -74,5 +80,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors("AllowAll");
 app.MapControllers();
+
+app.UseHealthChecks("/health");
 
 app.Run();
