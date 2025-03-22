@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoPlay_App", "GoPlay_APP\GoPlay_App.csproj", "{F146838E-AD2A-4EB6-9D78-A013039BE4F2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoPlay_App", "GoPlay_App\GoPlay_App.csproj", "{F146838E-AD2A-4EB6-9D78-A013039BE4F2}"
 	ProjectSection(ProjectDependencies) = postProject
 		{DCB4E241-AA65-4B73-B96E-368933CEE2C2} = {DCB4E241-AA65-4B73-B96E-368933CEE2C2}
 	EndProjectSection
