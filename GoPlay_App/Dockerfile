@@ -10,7 +10,7 @@ COPY ["GoPlay_Core/GoPlay_Core.csproj", "GoPlay_Core/"]
 COPY ["GoPlay_Infra/GoPlay_Infra.csproj", "GoPlay_Infra/"]
 RUN dotnet restore "./GoPlay_APP/GoPlay_App.csproj"
 COPY . .
-WORKDIR "/src/GoPlay_APP"
+WORKDIR "/src/GoPlay_App"
 RUN dotnet build "./GoPlay_App.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Stage 2: Publish
