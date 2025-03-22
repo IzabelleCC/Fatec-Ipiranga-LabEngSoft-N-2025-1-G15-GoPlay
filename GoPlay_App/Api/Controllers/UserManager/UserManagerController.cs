@@ -149,6 +149,12 @@ namespace GoPlay_App.Api.Controllers.UserController
             }
         }
 
+        /// <summary>
+        /// Envia um link para redefinição de senha
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPost("SendPasswordResetLink")]
         [AllowAnonymous]
         public async Task<IActionResult> SendPasswordResetLink([FromBody] UserRequestBase<PasswordResetLinkRequest> request, CancellationToken cancellationToken)
@@ -175,6 +181,13 @@ namespace GoPlay_App.Api.Controllers.UserController
             }
         }
 
+        /// <summary>
+        /// Redefine a senha do usuário
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPost("ResetPassword")]
         [AllowAnonymous]
         public async Task<IActionResult> ResetPassword([FromQuery] string token, [FromBody] UserRequestBase<PasswordResetRequest> request, CancellationToken cancellationToken)
