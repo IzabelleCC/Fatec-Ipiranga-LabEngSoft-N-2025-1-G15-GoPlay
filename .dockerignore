@@ -1,0 +1,22 @@
+# Ignorar pastas de build e IDEs
+bin/
+obj/
+.vs/
+.idea/
+
+# Ignorar arquivos temporários
+*.user
+*.suo
+*.log
+
+# Ignorar Git
+.git
+.gitignore
+
+# Ignorar arquivos de CI/CD ou configs locais
+*.env
+*.DS_Store
+*.swp
+
+# Ignorar arquivos do sistema
+Thumbs.db

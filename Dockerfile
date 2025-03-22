@@ -23,7 +23,5 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/publish .
 
-ENV ASPNETCORE_URLS=http://+:5000
-EXPOSE 5000
+CMD ASPNETCORE_URLS="http://*:$PORT" dotnet GoPlay_App.dll
 
-ENTRYPOINT ["dotnet", "GoPlay_App.dll"]
