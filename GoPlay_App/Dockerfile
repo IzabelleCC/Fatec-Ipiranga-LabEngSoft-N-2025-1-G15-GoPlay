@@ -1,7 +1,5 @@
-
-# This stage is used to build the service project
+# Stage 1: Build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-# Install clang/zlib1g-dev dependencies for publishing to native
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     clang zlib1g-dev
@@ -15,12 +13,15 @@ COPY . .
 WORKDIR "/src/GoPlay_APP"
 RUN dotnet build "./GoPlay_App.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# This stage is used to publish the service project to be copied to the final stage
+# Stage 2: Publish
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./GoPlay_App.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
+# Stage 3: Runtime (corrigido)
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+
+# Stage 4: Final
 FROM base AS final
 WORKDIR /app
 EXPOSE 8080
