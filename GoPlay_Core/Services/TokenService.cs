@@ -10,10 +10,18 @@ namespace GoPlay_Core.Services
     public class TokenService
     {
         private readonly IConfiguration _configuration;
+        private readonly string _secretKey;
 
         public TokenService(IConfiguration configuration)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _secretKey = GetSecretKey();
+        }
+
+        private string GetSecretKey()
+        {
+            var key = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
+            return string.IsNullOrEmpty(key) ? _configuration["SymmetricSecurityKey"] : key;
         }
 
         public async Task<string> GenerateToken(UserEntity user)
@@ -31,22 +39,17 @@ namespace GoPlay_Core.Services
                 new Claim("LoginTimeStamp", DateTime.UtcNow.ToString("o"))
             };
 
-            var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
-            if (string.IsNullOrEmpty(secretKey))
-                throw new InvalidOperationException("A chave de segurança não está configurada.");
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(60), // Token válido por 60 minutos
+                expires: DateTime.UtcNow.AddMinutes(60),
                 signingCredentials: signingCredentials
             );
 
-            // Retorna o token JWT gerado
             return await Task.FromResult(new JwtSecurityTokenHandler().WriteToken(token));
         }
 
@@ -55,12 +58,8 @@ namespace GoPlay_Core.Services
             if (string.IsNullOrEmpty(token))
                 throw new ArgumentNullException(nameof(token));
 
-            var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
-            if (string.IsNullOrEmpty(secretKey))
-                throw new InvalidOperationException("A chave de segurança não está configurada.");
-
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(secretKey);
+            var key = Encoding.UTF8.GetBytes(_secretKey);
 
             try
             {
@@ -73,16 +72,12 @@ namespace GoPlay_Core.Services
                     ValidateAudience = true,
                     ValidAudience = _configuration["Jwt:Audience"],
                     ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero 
+                    ClockSkew = TimeSpan.Zero
                 }, out SecurityToken validatedToken);
 
                 return true;
             }
-            catch (SecurityTokenException)
-            {
-                return false;
-            }
-            catch (Exception)
+            catch
             {
                 return false;
             }
