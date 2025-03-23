@@ -19,12 +19,14 @@ namespace GoPlay_App.Api.Controllers.UserController
         private readonly IUserBusiness<UserEntity> _business;
         private readonly EmailService _emailService;
         private readonly UserManager<UserEntity> _user;
+        private readonly IConfiguration _configuration;
 
-        public UserManagerController(IUserBusiness<UserEntity> business, EmailService emailService, UserManager<UserEntity> user)
+        public UserManagerController(IUserBusiness<UserEntity> business, EmailService emailService, UserManager<UserEntity> user, IConfiguration configuration)
         {
             _business = business ?? throw new ArgumentNullException(nameof(business));
             _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
             _user = user ?? throw new ArgumentNullException(nameof(user));
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -171,7 +173,9 @@ namespace GoPlay_App.Api.Controllers.UserController
                 {
                     {"token", token }
                 };
-                var resetLink = QueryHelpers.AddQueryString("https://localhost:7276/api/UserManager/ResetPassword", param);
+
+                var baseUrl = _configuration["Backend:BaseUrl"];
+                var resetLink = QueryHelpers.AddQueryString($"{baseUrl}/api/UserManager/ResetPassword", param);
                 await _emailService.SendPasswordResetLinkAsync(user, user.Email, resetLink);
                 return Ok();
             }
