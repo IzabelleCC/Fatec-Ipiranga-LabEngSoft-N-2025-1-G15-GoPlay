@@ -28,7 +28,7 @@ namespace GoPlay_Core.Services
                 {"email", user.Email }
             };
 
-            var baseUrl = _configuration["Frontend:BaseUrl"];
+            var baseUrl = _configuration["Backend:BaseUrl"];
             var confirmationLink = QueryHelpers.AddQueryString($"{baseUrl}/api/UserManager/emailConfirmation", param);
 
             string subject = "Confirmação de Cadastro";
