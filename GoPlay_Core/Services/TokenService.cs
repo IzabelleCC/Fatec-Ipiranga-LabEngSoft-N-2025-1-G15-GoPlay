@@ -31,7 +31,7 @@ namespace GoPlay_Core.Services
                 new Claim("LoginTimeStamp", DateTime.UtcNow.ToString("o"))
             };
 
-            var secretKey = _configuration["SymmetricSecurityKey"];
+            var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
             if (string.IsNullOrEmpty(secretKey))
                 throw new InvalidOperationException("A chave de segurança não está configurada.");
 
@@ -55,7 +55,7 @@ namespace GoPlay_Core.Services
             if (string.IsNullOrEmpty(token))
                 throw new ArgumentNullException(nameof(token));
 
-            var secretKey = _configuration["SymmetricSecurityKey"];
+            var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
             if (string.IsNullOrEmpty(secretKey))
                 throw new InvalidOperationException("A chave de segurança não está configurada.");
 

@@ -10,6 +10,7 @@ using GoPlay_Infra;
 using GoPlay_Infra.Repository;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using GoPlay_Core.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +24,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Configuração do banco de dados
-var connectionString = builder.Configuration["ConnectionStrings:GoPlayDb"];
+var connectionString = ConnectionStringHelper.FromEnvironmentVariable();
 builder.Services.AddDbContext<GoPlayDbContext>(options =>
 {
     options.UseNpgsql(connectionString);
