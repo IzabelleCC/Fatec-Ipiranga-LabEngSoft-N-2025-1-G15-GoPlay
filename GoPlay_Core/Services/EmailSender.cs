@@ -24,6 +24,7 @@ namespace GoPlay_Core.Services
                     mailMessage.To.Add(email);
                     mailMessage.Subject = subject;
                     mailMessage.Body = message;
+                    mailMessage.IsBodyHtml = true;
 
                     try
                     {
