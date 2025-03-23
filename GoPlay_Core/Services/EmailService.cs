@@ -32,7 +32,11 @@ namespace GoPlay_Core.Services
             var confirmationLink = QueryHelpers.AddQueryString($"{baseUrl}/api/UserManager/emailConfirmation", param);
 
             string subject = "Confirmação de Cadastro";
-            string message = $"Olá {user.Name}, seja bem-vindo ao GoPlay! Para confirmar seu cadastro, clique no link a seguir: {confirmationLink}";
+            string message = $@"
+                                    <p>Olá <strong>{user.Name}</strong>, seja bem-vindo ao GoPlay!</p>
+                                    <p>Para confirmar seu cadastro, clique no link abaixo:</p>
+                                    <p><a href=""{confirmationLink}"">{confirmationLink}</a></p>
+";
 
             try
             {
