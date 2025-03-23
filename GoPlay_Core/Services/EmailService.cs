@@ -2,6 +2,7 @@
 using GoPlay_Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
 
 namespace GoPlay_Core.Services
 {
@@ -10,11 +11,13 @@ namespace GoPlay_Core.Services
 
         public readonly EmailSender _emailSender;
         public readonly UserManager<UserEntity> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public EmailService(EmailSender emailSender, UserManager<UserEntity> userManager)
+        public EmailService(EmailSender emailSender, UserManager<UserEntity> userManager, IConfiguration configuration)
         {
             _emailSender = emailSender;
             _userManager = userManager;
+            _configuration = configuration;
         }
         public async Task SendEmailRegisterAsync(UserEntity user)
         {
@@ -25,7 +28,9 @@ namespace GoPlay_Core.Services
                 {"email", user.Email }
             };
 
-            var confirmationLink = QueryHelpers.AddQueryString("https://localhost:7276/api/UserManager/emailConfirmation", param);
+            var baseUrl = _configuration["Frontend:BaseUrl"];
+            var confirmationLink = QueryHelpers.AddQueryString($"{baseUrl}/api/UserManager/emailConfirmation", param);
+
             string subject = "Confirmação de Cadastro";
             string message = $"Olá {user.Name}, seja bem-vindo ao GoPlay! Para confirmar seu cadastro, clique no link a seguir: {confirmationLink}";
 
