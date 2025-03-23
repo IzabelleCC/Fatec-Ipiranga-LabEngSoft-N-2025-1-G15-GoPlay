@@ -24,7 +24,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Configuração do banco de dados
-var connectionString = ConnectionStringHelper.FromEnvironmentVariable();
+var connectionStringHelper = new ConnectionStringHelper(builder.Configuration);
+var connectionString = connectionStringHelper.FromEnvironmentVariable();
 builder.Services.AddDbContext<GoPlayDbContext>(options =>
 {
     options.UseNpgsql(connectionString);

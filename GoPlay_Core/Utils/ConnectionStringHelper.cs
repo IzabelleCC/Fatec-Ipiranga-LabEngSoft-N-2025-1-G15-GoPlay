@@ -1,15 +1,25 @@
 ﻿using System;
+using Microsoft.Extensions.Configuration;
 
 namespace GoPlay_Core.Utils
 {
-    public static class ConnectionStringHelper
+    public  class ConnectionStringHelper
     {
-        public static string FromEnvironmentVariable(string variableName = "DATABASE_URL")
+        private readonly IConfiguration _configuration;
+
+        public ConnectionStringHelper(IConfiguration configuration)
+        {
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        }
+
+        public string FromEnvironmentVariable(string variableName = "DATABASE_URL")
         {
             var databaseUrl = Environment.GetEnvironmentVariable(variableName);
 
             if (string.IsNullOrWhiteSpace(databaseUrl))
-                throw new InvalidOperationException($"A variável de ambiente '{variableName}' não foi encontrada.");
+            {
+                return _configuration["ConnectionStrings:GoPlayDb"];
+            }
 
             var databaseUri = new Uri(databaseUrl);
             var userInfo = databaseUri.UserInfo.Split(':');
