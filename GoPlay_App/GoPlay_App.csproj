@@ -42,5 +42,12 @@
 		<ProjectReference Include="..\GoPlay_Core\GoPlay_Core.csproj" />
 		<ProjectReference Include="..\GoPlay_Infra\GoPlay_Infra.csproj" />
 	</ItemGroup>
-
+	<ItemGroup>
+		<None Update="appsettings.Production.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="appsettings.Development.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 </Project>
