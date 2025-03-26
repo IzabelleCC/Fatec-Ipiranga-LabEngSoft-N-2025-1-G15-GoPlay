@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GoPlay_App.Api.Controllers.AccessManager
 {
-
     [Route("api/[controller]")]
     [ApiController]
     public class AccessManagerController : ControllerBase
@@ -19,7 +18,6 @@ namespace GoPlay_App.Api.Controllers.AccessManager
             _service = service;
             _tokenService = tokenService;
         }
-
 
         /// <summary>
         /// Permite acesso a usuários autenticados
@@ -34,11 +32,11 @@ namespace GoPlay_App.Api.Controllers.AccessManager
 
             if (_tokenService.ValidateToken(token))
             {
-                return Ok("Acesso Permitido");
+                return Ok(new { message = "Acesso permitido." });
             }
             else
             {
-                return Unauthorized("Token inválido");
+                return Unauthorized(new { message = "Token inválido." });
             }
         }
 
@@ -48,22 +46,28 @@ namespace GoPlay_App.Api.Controllers.AccessManager
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpPost]
-        [Route("Login")]
+        [HttpPost("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Login(UserRequestBase<UserLoginRequest> request, CancellationToken cancellationToken)
         {
             try
             {
                 var entity = request.Data.ToLoginEntity();
-
                 var token = await _service.Login(entity);
 
-                return Ok(token);
+                return Ok(new
+                {
+                    message = "Login realizado com sucesso.",
+                    token = token
+                });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = "Erro ao realizar login.",
+                    error = ex.Message
+                });
             }
         }
 
@@ -71,19 +75,22 @@ namespace GoPlay_App.Api.Controllers.AccessManager
         /// Realiza logout de um usuário
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("Logout")]
+        [HttpPost("Logout")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Logout()
         {
             try
             {
                 await _service.Logout();
-                return Ok("Logout realizado com sucesso");
+                return Ok(new { message = "Logout realizado com sucesso." });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = "Erro ao realizar logout.",
+                    error = ex.Message
+                });
             }
         }
     }
