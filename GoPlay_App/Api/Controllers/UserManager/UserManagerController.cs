@@ -131,8 +131,8 @@ namespace GoPlay_App.Api.Controllers.UserController
                 var token = await _user.GeneratePasswordResetTokenAsync(user);
                 var param = new Dictionary<string, string?> { { "token", token } };
 
-                var baseUrl = _configuration["Backend:BaseUrl"];
-                var resetLink = QueryHelpers.AddQueryString($"{baseUrl}/api/UserManager/ResetPassword", param);
+                var appBaseUrl = _configuration["Frontend:AppUrl"];
+                var resetLink = QueryHelpers.AddQueryString($"{appBaseUrl}/reset-password", param);
                 await _emailService.SendPasswordResetLinkAsync(user, user.Email, resetLink);
 
                 return Ok(new { message = "Link de redefinição enviado com sucesso." });
