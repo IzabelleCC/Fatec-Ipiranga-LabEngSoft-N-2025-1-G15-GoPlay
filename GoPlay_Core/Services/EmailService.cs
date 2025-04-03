@@ -3,10 +3,11 @@ using GoPlay_Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
+using GoPlay_Core.Services.Interfaces;
 
 namespace GoPlay_Core.Services
 {
-    public class EmailService : IEmailSender<UserEntity>
+    public class EmailService : IEmailService, IEmailSender<UserEntity>
     {
 
         public readonly EmailSender _emailSender;
