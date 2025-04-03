@@ -29,6 +29,12 @@ namespace GoPlay_App.Api.Controllers.UserController
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Adiciona um novo usuário
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
@@ -37,8 +43,9 @@ namespace GoPlay_App.Api.Controllers.UserController
             try
             {
                 var entity = request.Data.ToUserEntity();
+
                 await _business.Add(entity, cancellationToken);
-                await _emailService.SendEmailRegisterAsync(entity);
+
                 return Ok(new { message = "Usuário criado com sucesso." });
             }
             catch (Exception ex)
@@ -47,6 +54,12 @@ namespace GoPlay_App.Api.Controllers.UserController
             }
         }
 
+        /// <summary>
+        /// Busca um usuário pelo UserName
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpGet("GetByUserName/{userName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetByUserName(string userName, CancellationToken cancellationToken)
@@ -62,6 +75,12 @@ namespace GoPlay_App.Api.Controllers.UserController
             }
         }
 
+        /// <summary>
+        /// Atualiza os dados de um usuário
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Update([FromBody] UserRequestBase<UserUpDateRequest> request, CancellationToken cancellationToken)
@@ -78,6 +97,12 @@ namespace GoPlay_App.Api.Controllers.UserController
             }
         }
 
+        /// <summary>
+        /// Deleta um usuário pelo UserName
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpDelete("{userName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Delete(string userName, CancellationToken cancellationToken)
@@ -93,6 +118,13 @@ namespace GoPlay_App.Api.Controllers.UserController
             }
         }
 
+        /// <summary>
+        /// Confirma o e-mail do usuário
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="token"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpGet("emailConfirmation")]
         [AllowAnonymous]
         public async Task<IActionResult> EmailConfirmation([FromQuery] string email, [FromQuery] string token, CancellationToken cancellationToken)
@@ -117,6 +149,12 @@ namespace GoPlay_App.Api.Controllers.UserController
             }
         }
 
+        /// <summary>
+        /// Envia um link para redefinição de senha para o e-mail do usuário
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPost("SendPasswordResetLink")]
         [AllowAnonymous]
         public async Task<IActionResult> SendPasswordResetLink([FromBody] UserRequestBase<PasswordResetLinkRequest> request, CancellationToken cancellationToken)
@@ -143,6 +181,13 @@ namespace GoPlay_App.Api.Controllers.UserController
             }
         }
 
+        /// <summary>
+        /// Redefine a senha do usuário
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPost("ResetPassword")]
         [AllowAnonymous]
         public async Task<IActionResult> ResetPassword([FromQuery] string token, [FromBody] UserRequestBase<PasswordResetRequest> request, CancellationToken cancellationToken)

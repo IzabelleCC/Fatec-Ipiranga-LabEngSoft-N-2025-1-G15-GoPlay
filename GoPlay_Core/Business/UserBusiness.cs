@@ -2,6 +2,7 @@
 using GoPlay_Core.Entities;
 using GoPlay_Core.Repository.Interfaces;
 using FluentValidation;
+using GoPlay_Core.Services;
 
 namespace GoPlay_Core.Business
 {
@@ -13,11 +14,13 @@ namespace GoPlay_Core.Business
 
         private readonly IUserRepository _repository;
         private readonly IValidator<UserEntity> _validator;
+        private readonly EmailService _emailService;
 
-        public UserBusiness(IUserRepository repository, IValidator<UserEntity> validator)
+        public UserBusiness(IUserRepository repository, IValidator<UserEntity> validator, EmailService emailService)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
+            _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
         }
 
         public async Task Add(UserEntity entity, CancellationToken cancellationToken)
@@ -28,6 +31,7 @@ namespace GoPlay_Core.Business
                 throw new ValidationException(validationResult.Errors);
             }
             await _repository.Add(entity);
+            await _emailService.SendEmailRegisterAsync(entity);
         }
         public async Task Update(UserEntity entity, CancellationToken cancellationToken)
         {
@@ -38,10 +42,12 @@ namespace GoPlay_Core.Business
                 throw new InvalidOperationException("Usuário não encontrado.");
             }
             entityToUpdate.Name = entity.Name;
+            entityToUpdate.UserName = entity.UserName;
             entityToUpdate.InstagramPage = entity.InstagramPage;
             entityToUpdate.Gender = entity.Gender;
             entityToUpdate.BirthDate = entity.BirthDate;
             entityToUpdate.TShirtSize = entity.TShirtSize;
+            entityToUpdate.PhoneNumber = entity.PhoneNumber;
 
             await _repository.Update(entityToUpdate);
         }

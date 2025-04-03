@@ -26,8 +26,8 @@ builder.Configuration
 
 // Configuração da porta no Railway
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-builder.WebHost.UseUrls($"http://*:{port}");
+var port = Environment.GetEnvironmentVariable("PORT") ?? "7276";
+builder.WebHost.UseUrls($"https://*:{port}");
 
 // Serviços principais
 
@@ -98,5 +98,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.UseHealthChecks("/health");
+
+app.UseStaticFiles();
 
 app.Run();
