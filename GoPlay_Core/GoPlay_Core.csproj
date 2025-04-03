@@ -7,11 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Services\Interfaces\**" />
     <Compile Remove="Services\Interface\**" />
-    <EmbeddedResource Remove="Services\Interfaces\**" />
     <EmbeddedResource Remove="Services\Interface\**" />
-    <None Remove="Services\Interfaces\**" />
     <None Remove="Services\Interface\**" />
   </ItemGroup>
 
