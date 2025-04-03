@@ -27,20 +27,21 @@ namespace GoPlay_App.Api.Controllers.UserController.Models
         public string? Gender { get; set; }
         public DateTime? BirthDate { get; set; }
         public string? TShirtSize { get; set; }
+        public string? Phone { get; set; }
 
         /// <summary>
         /// Construtor da classe UserCreateRequest
         /// </summary>
         /// <param name="name"></param>
         /// <param name="email"></param>
-        /// <param name="login"></param>
+        /// <param name="userName"></param>
         /// <param name="password"></param>
         /// <param name="userType"></param>
         /// <param name="instagramPage"></param>
-        /// <param name="cpf"></param>
-        /// <param name="cnpj"></param>
+        /// <param name="cpfCnpj"></param>
         /// <param name="birthDate"></param>
         /// <param name="tShirtSize"></param>
+        /// <param name="phone"></param>
         public UserCreateRequest(string name,
                                  string email,
                                  string userName,
@@ -50,7 +51,8 @@ namespace GoPlay_App.Api.Controllers.UserController.Models
                                  string cpfCnpj,
                                  string? gender,
                                  DateTime? birthDate,
-                                 string? tShirtSize)
+                                 string? tShirtSize,
+                                 string? phone)
         {
             Name = name;
             UserName = userName;
@@ -62,6 +64,7 @@ namespace GoPlay_App.Api.Controllers.UserController.Models
             Gender = gender;
             BirthDate = birthDate;
             TShirtSize = tShirtSize;
+            Phone = phone;
         }
 
         public UserEntity ToUserEntity()
@@ -76,7 +79,8 @@ namespace GoPlay_App.Api.Controllers.UserController.Models
                 CpfCnpj = CpfCnpj,
                 Gender = Gender,
                 BirthDate = BirthDate?.ToUniversalTime(),
-                TShirtSize = TShirtSize
+                TShirtSize = TShirtSize,
+                PhoneNumber = Phone
             };
     }
 }

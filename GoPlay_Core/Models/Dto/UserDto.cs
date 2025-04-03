@@ -21,8 +21,7 @@ namespace GoPlay_Core.Models.Dto
         public virtual string? Gender { get; set; }
         public virtual DateTime? BirthDate { get; set; }
         public virtual string? TShirtSize { get; set; }
-
-
+        public virtual string? Phone { get; set; }
 
         protected UserDto()
         {
@@ -41,6 +40,7 @@ namespace GoPlay_Core.Models.Dto
             Gender = entity.Gender ?? string.Empty;
             BirthDate = entity.BirthDate?.ToUniversalTime() ?? null;
             TShirtSize = entity.TShirtSize ?? string.Empty;
+            Phone = entity.PhoneNumber ?? string.Empty;
         }
     }
 }
