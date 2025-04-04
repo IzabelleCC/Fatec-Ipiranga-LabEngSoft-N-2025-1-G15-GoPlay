@@ -3,6 +3,7 @@ using GoPlay_Core.Entities;
 using GoPlay_Core.Repository.Interfaces;
 using FluentValidation;
 using GoPlay_Core.Services;
+using GoPlay_Core.Services.Interfaces;
 
 namespace GoPlay_Core.Business
 {
@@ -14,9 +15,9 @@ namespace GoPlay_Core.Business
 
         private readonly IUserRepository _repository;
         private readonly IValidator<UserEntity> _validator;
-        private readonly EmailService _emailService;
+        private readonly IEmailService _emailService;
 
-        public UserBusiness(IUserRepository repository, IValidator<UserEntity> validator, EmailService emailService)
+        public UserBusiness(IUserRepository repository, IValidator<UserEntity> validator, IEmailService emailService)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
@@ -25,7 +26,7 @@ namespace GoPlay_Core.Business
 
         public async Task Add(UserEntity entity, CancellationToken cancellationToken)
         {
-            var validationResult = _validator.Validate(entity);
+            var validationResult = await _validator.ValidateAsync(entity, cancellationToken);
             if (!validationResult.IsValid)
             {
                 throw new ValidationException(validationResult.Errors);
@@ -35,6 +36,12 @@ namespace GoPlay_Core.Business
         }
         public async Task Update(UserEntity entity, CancellationToken cancellationToken)
         {
+            var validationResult = await _validator.ValidateAsync(entity, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
             var entityToUpdate = await _repository.GetById(entity.Id);
 
             if (entityToUpdate == null)

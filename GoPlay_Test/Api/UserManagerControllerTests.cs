@@ -11,10 +11,6 @@ using GoPlay_App.Api.Controllers.AccessManager.Models;
 using Microsoft.AspNetCore.Mvc;
 using FluentAssertions;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace GoPlay_Test.Api
 {
