@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GoPlay_Core.Entities;
-using GoPlay_Core.Entities;
+﻿using GoPlay_Core.Entities;
+using GoPlay_Core.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace GoPlay_Core.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly ILogger<UserEntity> _logger;
         private readonly SignInManager<UserEntity> _signInManeger;

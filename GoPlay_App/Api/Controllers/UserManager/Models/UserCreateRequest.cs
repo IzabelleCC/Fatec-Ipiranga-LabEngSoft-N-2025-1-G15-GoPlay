@@ -4,6 +4,9 @@ using GoPlay_Core.Enum;
 
 namespace GoPlay_App.Api.Controllers.UserController.Models
 {
+    /// <summary>
+    /// Classe de requisição para criação de usuário
+    /// </summary>
     public class UserCreateRequest
     {
         public string Name { get; set; }
@@ -60,6 +63,10 @@ namespace GoPlay_App.Api.Controllers.UserController.Models
             Phone = phone;
         }
 
+        /// <summary>
+        /// Converte a classe UserCreateRequest em um objeto UserEntity
+        /// </summary>
+        /// <returns></returns>
         public UserEntity ToUserEntity()
             => new()
             {                
