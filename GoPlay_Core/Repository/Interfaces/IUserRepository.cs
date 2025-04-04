@@ -14,5 +14,7 @@ namespace GoPlay_Core.Repository.Interfaces
         Task Delete(UserEntity entity);
         Task<UserEntity?> GetById(string id);
         Task<UserEntity?> GetByUserName(string userName);
+        Task<UserEntity?> GetByEmail(string email);
+        Task<UserEntity?> GetByCpfCnpj(string cpfCnpj);
     }
 }

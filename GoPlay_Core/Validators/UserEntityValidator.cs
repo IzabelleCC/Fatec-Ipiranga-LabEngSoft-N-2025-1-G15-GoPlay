@@ -2,15 +2,19 @@
 using GoPlay_Core.Entities;
 using System.Text.RegularExpressions;
 using CpfCnpjLibrary;
+using GoPlay_Core.Repository.Interfaces;
 
 public class UserEntityValidator : AbstractValidator<UserEntity>
 {
-    public UserEntityValidator()
+    private readonly IUserRepository _userRepository;
+
+    public UserEntityValidator(IUserRepository userRepository)
     {
+        _userRepository = userRepository;
         // Senha
         RuleFor(x => x.PasswordHash)
-            .NotEmpty()
-            .MinimumLength(6)
+            .NotEmpty().WithMessage("A senha é obrigatória.")
+            .MinimumLength(6).WithMessage("A senha deve ter no mínimo 6 caracteres.")
             .Matches("[A-Z]").WithMessage("A senha deve conter ao menos uma letra maiúscula.")
             .Matches("[a-z]").WithMessage("A senha deve conter ao menos uma letra minúscula.")
             .Matches("[0-9]").WithMessage("A senha deve conter ao menos um número.")
@@ -18,23 +22,26 @@ public class UserEntityValidator : AbstractValidator<UserEntity>
 
         // E-mail
         RuleFor(x => x.Email)
-            .NotEmpty()
-            .EmailAddress().WithMessage("Formato de e-mail inválido.");
+            .NotEmpty().WithMessage("O e-mail é obrigatório.")
+            .EmailAddress().WithMessage("Formato de e-mail inválido.")
+            .MustAsync(BeUniqueEmail).WithMessage("E-mail já está em uso.");
 
         // CPF ou CNPJ
         RuleFor(x => x.CpfCnpj)
-            .NotEmpty()
-            .Must(IsValidCpfOrCnpj).WithMessage("CPF ou CNPJ inválido.");
+            .NotEmpty().WithMessage("O CPF ou CNPJ é obrigatório.")
+            .Must(IsValidCpfOrCnpj).WithMessage("CPF ou CNPJ inválido.")
+            .MustAsync(BeUniqueCpfCnpj).WithMessage("CPF ou CNPJ já está em uso.");
 
         // Nome completo
         RuleFor(x => x.Name)
-            .NotEmpty()
-            .Matches("^[A-Za-zÀ-ÿ\\s]+$").WithMessage("Nome deve conter apenas letras e espaços.");
+            .NotEmpty().WithMessage("O nome é obrigatório.")
+            .Matches("^[A-Za-zÀ-ÿ\\s]+$").WithMessage("O nome deve conter apenas letras e espaços.");
 
         // Login
         RuleFor(x => x.UserName)
-            .NotEmpty()
-            .Matches("^[a-zA-Z0-9_]+$").WithMessage("Login não deve conter espaços ou caracteres especiais.");
+            .NotEmpty().WithMessage("O login é obrigatório.")
+            .Matches("^[a-zA-Z0-9_]+$").WithMessage("O login não deve conter espaços ou caracteres especiais.")
+            .MustAsync(BeUniqueUserName).WithMessage("Login já está em uso.");
 
         // Telefone
         RuleFor(x => x.PhoneNumber)
@@ -61,5 +68,23 @@ public class UserEntityValidator : AbstractValidator<UserEntity>
             return Cnpj.Validar(onlyDigits);
 
         return false;
+    }
+
+    private async Task<bool> BeUniqueEmail(string email, CancellationToken cancellationToken)
+    {
+        var existingUser = await _userRepository.GetByEmail(email);
+        return existingUser == null;
+    }
+
+    private async Task<bool> BeUniqueUserName(string userName, CancellationToken cancellationToken)
+    {
+        var existingUser = await _userRepository.GetByUserName(userName);
+        return existingUser == null;
+    }
+
+    private async Task<bool> BeUniqueCpfCnpj(string cpfCnpj, CancellationToken cancellationToken)
+    {
+        var existingUser = await _userRepository.GetByCpfCnpj(cpfCnpj);
+        return existingUser == null;
     }
 }

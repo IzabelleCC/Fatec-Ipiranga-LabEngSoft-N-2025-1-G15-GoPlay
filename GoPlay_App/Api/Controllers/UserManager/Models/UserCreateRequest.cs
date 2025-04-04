@@ -1,28 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using GoPlay_Core.Entities;
 using GoPlay_Core.Enum;
-using GoPlay_Core.Models.Dto;
 
 namespace GoPlay_App.Api.Controllers.UserController.Models
 {
     public class UserCreateRequest
     {
-        [Required]
         public string Name { get; set; }
-        [Required]
         public string UserName { get; set; }
-        [Required]
         public string Email { get; set; }
-        [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        [Required]
         [Compare ("Password")]
         public string ConfirmPassword { get; set; }
-        [Required]
         public int UserType { get; set; }
         public string? InstagramPage { get; set; }
-        [Required]
         public string CpfCnpj { get; set; }
         public string? Gender { get; set; }
         public DateTime? BirthDate { get; set; }
@@ -39,6 +31,7 @@ namespace GoPlay_App.Api.Controllers.UserController.Models
         /// <param name="userType"></param>
         /// <param name="instagramPage"></param>
         /// <param name="cpfCnpj"></param>
+        /// <param name="gender"></param>
         /// <param name="birthDate"></param>
         /// <param name="tShirtSize"></param>
         /// <param name="phone"></param>

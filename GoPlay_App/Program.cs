@@ -12,6 +12,7 @@ using GoPlay_Core.Services;
 using GoPlay_Core.Utils;
 using GoPlay_Infra;
 using GoPlay_Infra.Repository;
+using GoPlay_Core.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,9 +81,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IValidator<UserEntity>, UserEntityValidator>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<TokenService>();
-builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<EmailSender>();
-
 // App Pipeline
 
 var app = builder.Build();
