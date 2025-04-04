@@ -2,12 +2,13 @@
 using System.Security.Claims;
 using System.Text;
 using GoPlay_Core.Entities;
+using GoPlay_Core.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace GoPlay_Core.Services
 {
-    public class TokenService
+    public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
         private readonly string _secretKey;
