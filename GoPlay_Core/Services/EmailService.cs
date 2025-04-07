@@ -1,5 +1,4 @@
-﻿using GoPlay_Core.Services;
-using GoPlay_Core.Entities;
+﻿using GoPlay_Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;

@@ -1,4 +1,4 @@
-﻿namespace GoPlay_App.Api.Controllers.UserController.Models
+﻿namespace GoPlay_App.Api.Controllers
 {
     /// <summary>
     /// Base class for user requests
