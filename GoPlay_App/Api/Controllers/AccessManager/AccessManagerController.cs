@@ -1,5 +1,4 @@
 ﻿using GoPlay_App.Api.Controllers.AccessManager.Models;
-using GoPlay_App.Api.Controllers.UserController.Models;
 using GoPlay_Core.Exceptions;
 using GoPlay_Core.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -57,7 +56,7 @@ namespace GoPlay_App.Api.Controllers.AccessManager
         /// <returns></returns>
         [HttpPost("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Login(UserRequestBase<UserLoginRequest> request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Login([FromBody]UserRequestBase<UserLoginRequest> request, CancellationToken cancellationToken)
         {
             try
             {

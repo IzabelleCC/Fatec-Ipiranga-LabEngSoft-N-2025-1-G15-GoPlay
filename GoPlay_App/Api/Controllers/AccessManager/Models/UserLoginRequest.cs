@@ -1,12 +1,11 @@
-﻿using GoPlay_App.Api.Controllers.UserController.Models;
-using GoPlay_Core.Entities;
+﻿using GoPlay_Core.Entities;
 
 namespace GoPlay_App.Api.Controllers.AccessManager.Models
 {
     /// <summary>
     /// Classe de requisição para login de usuário
     /// </summary>
-    public class UserLoginRequest : UserRequestBase<LoginEntity>
+    public class UserLoginRequest
     {
         public string UserName { get; set; }
         public string Password { get; set; }
@@ -29,8 +28,8 @@ namespace GoPlay_App.Api.Controllers.AccessManager.Models
         public LoginEntity ToLoginEntity()
             => new()
             {
-                UserName = UserName,
-                Password = Password
+                UserName = UserName ?? string.Empty,
+                Password = Password ?? string.Empty
             };
     }
 }

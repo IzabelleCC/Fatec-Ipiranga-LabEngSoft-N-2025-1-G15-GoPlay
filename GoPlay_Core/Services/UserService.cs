@@ -10,9 +10,9 @@ namespace GoPlay_Core.Services
     {
         private readonly ILogger<UserEntity> _logger;
         private readonly SignInManager<UserEntity> _signInManeger;
-        private readonly TokenService _tokenService;
+        private readonly ITokenService _tokenService;
 
-        public UserService(ILogger<UserEntity> logger, SignInManager<UserEntity> signInManager, TokenService tokenService)
+        public UserService(ILogger<UserEntity> logger, SignInManager<UserEntity> signInManager, ITokenService tokenService)
         {
             _signInManeger = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -23,6 +23,11 @@ namespace GoPlay_Core.Services
         {
             try
             {
+                if (string.IsNullOrEmpty(entity.UserName) || string.IsNullOrEmpty(entity.Password))
+                {
+                    throw new ArgumentException("Usuário e senha são campos obrigatórios.");
+                }
+
                 var result = await _signInManeger.PasswordSignInAsync(entity.UserName, entity.Password, false, false);
 
                 if (!result.Succeeded)
@@ -33,19 +38,13 @@ namespace GoPlay_Core.Services
                 var user = await _signInManeger.UserManager.Users
                     .FirstOrDefaultAsync(u => u.NormalizedUserName == entity.UserName.ToUpper());
 
-                if (user == null)
-                {
-                    throw new InvalidOperationException("Usuário não encontrado.");
-                }
-
-                var token = await _tokenService.GenerateToken(user);
+                var token = await _tokenService.GenerateToken(user!);
 
                 return token;
             }
-            catch (Exception ex)
+            catch
             {
-                _logger.LogError(ex, "Usuário ou senha inválidos.");
-                throw new InvalidOperationException("Usuário ou senha inválidos.", ex);
+                throw;
             }
         }
 
