@@ -1,8 +1,13 @@
 ﻿using GoPlay_App.Api.Controllers.AccessManager.Models;
+using GoPlay_Core.Entities;
 using GoPlay_Core.Exceptions;
+using GoPlay_Core.Repository.Interfaces;
+using GoPlay_Core.Services;
 using GoPlay_Core.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace GoPlay_App.Api.Controllers.AccessManager
 {
@@ -15,16 +20,32 @@ namespace GoPlay_App.Api.Controllers.AccessManager
     {
         private readonly IUserService _userService;
         private readonly ITokenService _tokenService;
+        private readonly IEmailService _emailService;
+        private readonly IConfiguration _configuration;
+        private readonly UserManager<UserEntity> _user;
+        private readonly IUserRepository _repository;
 
         /// <summary>
         /// Construtor do controlador de gerenciamento de acesso
         /// </summary>
         /// <param name="userService"></param>
         /// <param name="tokenService"></param>
-        public AccessManagerController(IUserService userService, ITokenService tokenService)
+        public AccessManagerController(IUserService userService, ITokenService tokenService, IEmailService emailService, IConfiguration configuration, UserManager<UserEntity> user, IUserRepository repository)
         {
             _userService = userService;
             _tokenService = tokenService;
+            _emailService = emailService;
+            _configuration = configuration;
+            _user = user;
+            _repository = repository;
+        }
+
+        private IActionResult HandleException(Exception ex)
+        {
+            if (ex is NotFoundException)
+                return NotFound(new { message = ex.Message });
+
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
         }
 
         /// <summary>
@@ -32,19 +53,18 @@ namespace GoPlay_App.Api.Controllers.AccessManager
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> ValidateUser()
         {
             var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
-            if (_tokenService.ValidateToken(token))
+            if (_tokenService.ValidateToken(token) == null )
             {
-                return Ok(new { message = "Acesso permitido." });
+                return Unauthorized(new { message = "Token inválido." });
             }
             else
             {
-                return Unauthorized(new { message = "Token inválido." });
+                return Ok(new { message = "Acesso permitido." });
             }
         }
 
@@ -56,7 +76,7 @@ namespace GoPlay_App.Api.Controllers.AccessManager
         /// <returns></returns>
         [HttpPost("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Login([FromBody]UserRequestBase<UserLoginRequest> request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Login([FromBody] UserRequestBase<UserLoginRequest> request, CancellationToken cancellationToken)
         {
             try
             {
@@ -107,6 +127,69 @@ namespace GoPlay_App.Api.Controllers.AccessManager
                     message = "Erro ao realizar logout.",
                     error = ex.Message
                 });
+            }
+        }
+
+        /// <summary>
+        /// Envia um link para redefinição de senha para o e-mail do usuário
+        /// </summary>
+        [HttpPost("SendPasswordResetLink")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> SendPasswordResetLink([FromBody] UserRequestBase<PasswordResetLinkRequest> request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var user = await _user.FindByEmailAsync(request.Data.Email);
+                if (user == null)
+                    throw new NotFoundException("Email não cadastrado.");
+
+                await _emailService.SendPasswordResetLinkAsync(user);
+
+                return Ok(new { message = "Link de redefinição enviado com sucesso." });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Redefine a senha do usuário
+        /// </summary>
+        [HttpPost("ResetPassword")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ResetPassword([FromQuery] string token, [FromBody] UserRequestBase<PasswordResetRequest> request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var validateToken = _tokenService.ValidateToken(token);
+
+                if (validateToken == null)
+                    return BadRequest(new { message = "Token inválido." });
+
+                if (string.IsNullOrEmpty(request.Data.Password))
+                    return BadRequest(new { message = "Senha Obrigatória." });
+
+                if(request.Data.Password != request.Data.ConfirmPassword)
+                    return BadRequest(new { message = "As senhas não coincidem." });
+
+                var result = await _repository.UpDatePassword(validateToken, request.Data.Password);
+               
+                if (result)
+                    return Ok(new { message = "Senha redefinida com sucesso." });
+                else
+                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Erro ao redefinir a senha." });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
             }
         }
     }

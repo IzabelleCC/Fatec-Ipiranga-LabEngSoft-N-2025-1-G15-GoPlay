@@ -59,10 +59,11 @@ namespace GoPlay_App.Api.Controllers.UserController
             try
             {
                 if (request?.Data == null)
-                    return BadRequest(new { message = "Dados inválidos enviados." });
+                    return BadRequest(new { message = "Dados enviados inválidos ." });
 
                 var entity = request.Data.ToUserEntity();
                 await _business.Add(entity, cancellationToken);
+
                 return Ok(new { message = "Usuário criado com sucesso." });
             }
             catch (Exception ex)
@@ -106,7 +107,7 @@ namespace GoPlay_App.Api.Controllers.UserController
             try
             {
                 if (request?.Data == null)
-                    return BadRequest(new { message = "Dados inválidos enviados." });
+                    return BadRequest(new { message = "Dados enviados inválidos. " });
 
                 var entity = request.Data.ToUserEntity();
                 await _business.Update(entity, cancellationToken);
@@ -160,67 +161,6 @@ namespace GoPlay_App.Api.Controllers.UserController
                     return Ok(new { message = "E-mail confirmado com sucesso." });
 
                 return BadRequest(new { message = "Não foi possível confirmar o e-mail." });
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
-        /// <summary>
-        /// Envia um link para redefinição de senha para o e-mail do usuário
-        /// </summary>
-        [HttpPost("SendPasswordResetLink")]
-        [AllowAnonymous]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> SendPasswordResetLink([FromBody] UserRequestBase<PasswordResetLinkRequest> request, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var user = await _user.FindByEmailAsync(request.Data.Email);
-                if (user == null)
-                    throw new NotFoundException("Usuário não encontrado.");
-
-                var token = await _user.GeneratePasswordResetTokenAsync(user);
-                var param = new Dictionary<string, string?> { { "token", token } };
-
-                var appBaseUrl = _configuration["Frontend:AppUrl"];
-                var resetLink = QueryHelpers.AddQueryString($"{appBaseUrl}/reset-password", param);
-
-                await _emailService.SendPasswordResetLinkAsync(user, user.Email, resetLink);
-
-                return Ok(new { message = "Link de redefinição enviado com sucesso." });
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
-        /// <summary>
-        /// Redefine a senha do usuário
-        /// </summary>
-        [HttpPost("ResetPassword")]
-        [AllowAnonymous]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ResetPassword([FromQuery] string token, [FromBody] UserRequestBase<PasswordResetRequest> request, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var user = await _user.FindByEmailAsync(request.Data.Email);
-                if (user == null)
-                    throw new NotFoundException("Usuário não encontrado.");
-
-                var result = await _user.ResetPasswordAsync(user, token, request.Data.Password);
-                if (result.Succeeded)
-                    return Ok(new { message = "Senha redefinida com sucesso." });
-
-                return BadRequest(new { message = "Não foi possível redefinir a senha." });
             }
             catch (Exception ex)
             {

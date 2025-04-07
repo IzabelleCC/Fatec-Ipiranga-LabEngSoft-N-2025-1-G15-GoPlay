@@ -6,18 +6,20 @@ using GoPlay_Core.Services.Interfaces;
 
 namespace GoPlay_Core.Services
 {
-    public class EmailService : IEmailService, IEmailSender<UserEntity>
+    public class EmailService : IEmailService
     {
 
         public readonly EmailSender _emailSender;
         public readonly UserManager<UserEntity> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly ITokenService _tokenService;
 
-        public EmailService(EmailSender emailSender, UserManager<UserEntity> userManager, IConfiguration configuration)
+        public EmailService(EmailSender emailSender, UserManager<UserEntity> userManager, IConfiguration configuration, ITokenService tokenService)
         {
             _emailSender = emailSender;
             _userManager = userManager;
             _configuration = configuration;
+            _tokenService = tokenService;
         }
         public async Task SendEmailRegisterAsync(UserEntity user)
         {
@@ -35,8 +37,7 @@ namespace GoPlay_Core.Services
             string message = $@"
                                     <p>Olá <strong>{user.Name}</strong>, seja bem-vindo ao GoPlay!</p>
                                     <p>Para confirmar seu cadastro, clique no link abaixo:</p>
-                                    <p><a href=""{confirmationLink}"">{confirmationLink}</a></p>
-";
+                                    <p><a href=""{confirmationLink}"">{confirmationLink}</a></p>";
 
             try
             {
@@ -48,30 +49,27 @@ namespace GoPlay_Core.Services
             }
         }
 
-        public Task SendConfirmationLinkAsync(UserEntity user, string email, string confirmationLink)
+        public async Task SendPasswordResetLinkAsync(UserEntity user)
         {
-            return Task.CompletedTask;
-        }
+            var token = await _tokenService.GenerateToken(user);
+            var param = new Dictionary<string, string?> { { "token", token } };
 
-        public Task SendPasswordResetLinkAsync(UserEntity user, string email, string resetLink)
-        {
+            var appBaseUrl = _configuration["Backend:BaseUrl"];
+            var resetLink = QueryHelpers.AddQueryString($"{appBaseUrl}/api/AccessManager/SendPasswordResetLink", param);
+
+            string subject = "Redefinição de Senha";
+            string message = $@"
+                                    <p>Olá <strong>{user.Name}</strong>,</p>
+                                    <p>Para redefinir sua senha, clique no link abaixo:</p>
+                                    <p><a href=""{resetLink}"">{resetLink}</a></p>";
             try
             {
-                string subject = "Redefinição de Senha";
-                string message = $"Olá {user.Name}, para redefinir sua senha, clique no link a seguir:\r\n {resetLink}";
-
-               return  _emailSender.SendEmailAsync(user.Email ?? string.Empty, subject, message);
-
+                await _emailSender.SendEmailAsync(user.Email ?? string.Empty, subject, message);
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException("Erro ao enviar e-mail de redefinição de senha.", ex);
+                throw new InvalidOperationException("Erro ao enviar e-mail de confirmação de cadastro.", ex);
             }
-        }
-
-        public Task SendPasswordResetCodeAsync(UserEntity user, string email, string resetCode)
-        {
-            return _userManager.ChangePasswordAsync(user, email, resetCode);
         }
     }
 }
