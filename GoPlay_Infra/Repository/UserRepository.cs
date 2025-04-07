@@ -108,5 +108,28 @@ namespace GoPlay_Infra.Repository
                 throw new InvalidOperationException("Ocorreu um erro ao recuperar o usuário.", ex);
             }
         }
+
+        public async Task<bool> UpDatePassword(string idUser, string password)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(idUser);
+                if (user == null)
+                    return false;
+
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var result = await _userManager.ResetPasswordAsync(user, token, password);
+
+                if (result.Succeeded)
+                    return true;
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ocorreu um erro ao atualizar a senha do usuário.");
+                throw new InvalidOperationException("Ocorreu um erro ao atualizar a senha do usuário.", ex);
+            }
+        }
     }
 }

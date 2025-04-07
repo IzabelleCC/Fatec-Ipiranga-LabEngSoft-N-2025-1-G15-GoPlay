@@ -16,5 +16,6 @@ namespace GoPlay_Core.Repository.Interfaces
         Task<UserEntity?> GetByUserName(string userName);
         Task<UserEntity?> GetByEmail(string email);
         Task<UserEntity?> GetByCpfCnpj(string cpfCnpj);
+        Task<bool> UpDatePassword(string userName, string password);
     }
 }
