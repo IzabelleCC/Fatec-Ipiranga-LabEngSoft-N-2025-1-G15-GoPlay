@@ -62,6 +62,7 @@ namespace GoPlay_App.Api.Controllers.UserController
                     return BadRequest(new { message = "Dados enviados inválidos ." });
 
                 var entity = request.Data.ToUserEntity();
+
                 await _business.Add(entity, cancellationToken);
 
                 return Ok(new { message = "Usuário criado com sucesso." });
