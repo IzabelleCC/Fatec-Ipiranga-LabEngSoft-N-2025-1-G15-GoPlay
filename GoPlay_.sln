@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		railway.toml = railway.toml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoPlay_Web", "GoPlay_Web\GoPlay_Web.csproj", "{DDA15439-6137-4C45-A008-8A605F0D5D0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{DCB4E241-AA65-4B73-B96E-368933CEE2C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCB4E241-AA65-4B73-B96E-368933CEE2C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCB4E241-AA65-4B73-B96E-368933CEE2C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDA15439-6137-4C45-A008-8A605F0D5D0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDA15439-6137-4C45-A008-8A605F0D5D0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDA15439-6137-4C45-A008-8A605F0D5D0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDA15439-6137-4C45-A008-8A605F0D5D0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
