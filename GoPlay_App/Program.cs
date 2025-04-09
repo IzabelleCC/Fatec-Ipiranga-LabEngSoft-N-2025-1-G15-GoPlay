@@ -29,7 +29,7 @@ builder.Configuration
 #region Configuração da Porta no Railway
 
 var port = Environment.GetEnvironmentVariable("PORT") ?? "7276";
-builder.WebHost.UseUrls($"https://*:{port}");
+builder.WebHost.UseUrls($"http://*:{port}");
 
 #endregion
 
@@ -121,7 +121,6 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "GoPlay API v1"));
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseCors("AllowAll");
 
