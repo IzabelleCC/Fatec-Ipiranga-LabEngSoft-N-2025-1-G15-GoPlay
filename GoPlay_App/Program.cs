@@ -37,7 +37,6 @@ builder.WebHost.UseUrls($"http://*:{port}");
 
 builder.Services.AddControllers();
 builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
 builder.Services.AddHttpClient();
 builder.Services.AddHealthChecks();
 builder.Services.AddEndpointsApiExplorer();
@@ -130,8 +129,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapBlazorHub();
-app.MapFallbackToPage("/_Host");
+app.MapRazorPages();
 app.UseHealthChecks("/health");
 app.UseStaticFiles();
 

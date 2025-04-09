@@ -16,24 +16,36 @@ namespace GoPlay_Web.Services
         public async Task<bool> EmailConfirmation(string token, string email)
         {
 
-            var param = new Dictionary<string, string?>
+            if (string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(email))
             {
-                {"token", token },
-                {"email", email }
-            };
-
-            var baseUrl = _configuration["Backend:BaseUrl"];
-            var confirmationLink = QueryHelpers.AddQueryString($"{baseUrl}/emailConfirmation", param);
-
-            var response = await _httpClient.GetAsync(confirmationLink);
-
-            if (response.IsSuccessStatusCode)
-            {
-                return true;
+                return false;
             }
 
-            return false;
-        }
+            try
+            {
+                var param = new Dictionary<string, string?>
+                {
+                    { "token", token },
+                    { "email", email }
+                };
 
+                var baseUrl = _configuration["Backend:BaseUrl"];
+
+                if (string.IsNullOrWhiteSpace(baseUrl))
+                {
+                    return false;
+                }
+
+                var confirmationLink = QueryHelpers.AddQueryString($"{baseUrl}/api/UserManager/emailConfirmation", param);
+
+                var response = await _httpClient.GetAsync(confirmationLink);
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }
