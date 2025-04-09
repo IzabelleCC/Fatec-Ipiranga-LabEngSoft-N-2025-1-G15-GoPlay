@@ -12,6 +12,7 @@ using GoPlay_Core.Services.Interfaces;
 using GoPlay_Core.Utils;
 using GoPlay_Infra;
 using GoPlay_Infra.Repository;
+using GoPlay_Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,13 +29,16 @@ builder.Configuration
 #region Configuração da Porta no Railway
 
 var port = Environment.GetEnvironmentVariable("PORT") ?? "7276";
-builder.WebHost.UseUrls($"https://*:{port}");
+builder.WebHost.UseUrls($"http://*:{port}");
 
 #endregion
 
 #region Serviços Essenciais
 
 builder.Services.AddControllers();
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
+builder.Services.AddHttpClient();
 builder.Services.AddHealthChecks();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -96,24 +100,39 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<EmailSender>();
+builder.Services.AddTransient<AccessManagerApi>();
+builder.Services.AddTransient<UserManagerApi>();
+
 
 #endregion
+
 
 #region Pipeline da Aplicação
 
 var app = builder.Build();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "GoPlay API v1"));
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseCors("AllowAll");
+
+app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapBlazorHub();
+app.MapFallbackToPage("/_Host");
 app.UseHealthChecks("/health");
 app.UseStaticFiles();
 
