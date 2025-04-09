@@ -1,0 +1,21 @@
+﻿@page "/EmailConfirmation"
+@model EmailConfirmationModel
+@{
+    ViewData["Title"] = "Confirmação de E-mail";
+    Layout = "_Layout"; 
+}
+
+<div class="confirmation-container">
+    <img src="/images/logo.png" alt="Logo GoPlay" class="logo" />
+
+    <h2 class="title">Confirmação de E-mail</h2>
+
+    @if (Model.IsSuccess)
+    {
+        <p class="message success">@Model.SuccessMessage</p>
+    }
+    else
+    {
+        <p class="message error">@Model.ErrorMessage</p>
+    }
+</div>
