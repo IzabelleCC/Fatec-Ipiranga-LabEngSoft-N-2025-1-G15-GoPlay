@@ -29,7 +29,7 @@ builder.Configuration
 #region Configuração da Porta no Railway
 
 var port = Environment.GetEnvironmentVariable("PORT") ?? "7276";
-builder.WebHost.UseUrls($"http://*:{port}");
+builder.WebHost.UseUrls($"https://*:{port}");
 
 #endregion
 
