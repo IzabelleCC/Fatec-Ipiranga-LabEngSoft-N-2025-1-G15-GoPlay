@@ -1,0 +1,41 @@
+﻿@page "/EmailConfirmation"
+
+@inject NavigationManager Navigation
+@inject UserManagerApi userManegerApi
+
+<div class="confirmation-container">
+    <img src="images/logo.png" alt="Logo GoPlay" class="logo" />
+
+    <h2 class="title">Confirmação de E-mail</h2>
+
+    @if (emailConfirmed == true)
+    {
+        <p class="message success">@msgSucess</p>
+    }
+    else
+    {
+        <p class="message error">@msgError</p>
+    }
+</div>
+
+@code {
+    private string? Token { get; set; }
+    private string? Email { get; set; }
+    public string msgSucess { get; set; } = "E-mail confirmado com sucesso!";
+    public string msgError { get; set; } = "E-mail não confirmado!";
+    private bool emailConfirmed = false;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+
+        if (query.TryGetValue("token", out var tokenValue) && query.TryGetValue("email", out var emailValue))
+        {
+            Token = tokenValue;
+            Email = emailValue;
+
+            emailConfirmed = await userManegerApi.EmailConfirmation(Token, Email);
+        }
+    }
+}

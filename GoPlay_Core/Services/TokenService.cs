@@ -2,12 +2,13 @@
 using System.Security.Claims;
 using System.Text;
 using GoPlay_Core.Entities;
+using GoPlay_Core.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace GoPlay_Core.Services
 {
-    public class TokenService
+    public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
         private readonly string _secretKey;
@@ -31,9 +32,7 @@ namespace GoPlay_Core.Services
 
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim("Id", user.Id),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Role, user.UserType.ToString()),
                 new Claim("LoginTimeStamp", DateTime.UtcNow.ToString("o"))
@@ -42,18 +41,26 @@ namespace GoPlay_Core.Services
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
+            var audience = _configuration["Jwt:Audience"];
+            if (string.IsNullOrWhiteSpace(audience))
+                throw new InvalidOperationException("Jwt:Audience is not configured.");
+
+            var issuer = _configuration["Jwt:Issuer"];
+            if (string.IsNullOrWhiteSpace(issuer))
+                throw new InvalidOperationException("Jwt:Issuer is not configured.");
+
             var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
+                issuer: issuer,
+                audience: audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(60),
+                expires: DateTime.UtcNow.AddMinutes(15),
                 signingCredentials: signingCredentials
             );
 
             return await Task.FromResult(new JwtSecurityTokenHandler().WriteToken(token));
         }
 
-        public bool ValidateToken(string token)
+        public string? ValidateToken(string token)
         {
             if (string.IsNullOrEmpty(token))
                 throw new ArgumentNullException(nameof(token));
@@ -63,7 +70,7 @@ namespace GoPlay_Core.Services
 
             try
             {
-                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
@@ -75,11 +82,13 @@ namespace GoPlay_Core.Services
                     ClockSkew = TimeSpan.Zero
                 }, out SecurityToken validatedToken);
 
-                return true;
+                // Obter o ID do usuário a partir das reivindicações
+                var userIdClaim = principal.FindFirst("Id");
+                return userIdClaim?.Value;
             }
             catch
             {
-                return false;
+                return null;
             }
         }
     }

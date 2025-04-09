@@ -1,22 +1,22 @@
+using System.Reflection;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
-
 using GoPlay_Core.Business;
 using GoPlay_Core.Business.Interfaces;
 using GoPlay_Core.Entities;
 using GoPlay_Core.Repository.Interfaces;
 using GoPlay_Core.Services;
+using GoPlay_Core.Services.Interfaces;
 using GoPlay_Core.Utils;
 using GoPlay_Infra;
 using GoPlay_Infra.Repository;
+using GoPlay_Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-// Configuração de ambiente e settings
+#region Configuração de Ambiente e Settings
 
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -24,38 +24,52 @@ builder.Configuration
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
     .AddEnvironmentVariables();
 
-// Configuração da porta no Railway
+#endregion
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+#region Configuração da Porta no Railway
+
+var port = Environment.GetEnvironmentVariable("PORT") ?? "7276";
 builder.WebHost.UseUrls($"http://*:{port}");
 
-// Serviços principais
+#endregion
+
+#region Serviços Essenciais
 
 builder.Services.AddControllers();
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
+builder.Services.AddHttpClient();
 builder.Services.AddHealthChecks();
 builder.Services.AddEndpointsApiExplorer();
 
-// Swagger
+#endregion
+
+#region Swagger
 
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "GoPlay API", Version = "v1" });
 
-    // Inclui comentários XML no Swagger (se houver)
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
 });
 
-// CORS
+#endregion
+
+#region CORS
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
-        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader());
 });
 
-// Banco de Dados
+#endregion
+
+#region Banco de Dados
 
 var connectionStringHelper = new ConnectionStringHelper(builder.Configuration);
 var connectionString = connectionStringHelper.FromEnvironmentVariable();
@@ -63,7 +77,9 @@ var connectionString = connectionStringHelper.FromEnvironmentVariable();
 builder.Services.AddDbContext<GoPlayDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-// Identity e Autenticação
+#endregion
+
+#region Identity e Autenticação
 
 builder.Services
     .AddIdentity<UserEntity, IdentityRole>()
@@ -73,30 +89,53 @@ builder.Services
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
-// Injeção de Dependência (DI)
+#endregion
+
+#region Injeção de Dependência (DI)
 
 builder.Services.AddScoped<IUserBusiness<UserEntity>, UserBusiness>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IValidator<UserEntity>, UserEntityValidator>();
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<TokenService>();
-builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<EmailSender>();
+builder.Services.AddTransient<AccessManagerApi>();
+builder.Services.AddTransient<UserManagerApi>();
 
-// App Pipeline
+
+#endregion
+
+
+#region Pipeline da Aplicação
 
 var app = builder.Build();
 
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
+
 app.UseSwagger();
-app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GoPlay API v1"));
+app.UseSwaggerUI(c =>
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "GoPlay API v1"));
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseCors("AllowAll");
+
+app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapBlazorHub();
+app.MapFallbackToPage("/_Host");
 app.UseHealthChecks("/health");
+app.UseStaticFiles();
 
 app.Run();
+
+#endregion
