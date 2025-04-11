@@ -1,21 +1,49 @@
 ﻿@page "/EmailConfirmation"
-@model EmailConfirmationModel
 @{
-    ViewData["Title"] = "Confirmação de E-mail";
-    Layout = "_Layout"; 
+    Layout = null;
 }
 
-<div class="confirmation-container">
-    <img src="/images/logo.png" alt="Logo GoPlay" class="logo" />
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <title>Confirmação de E-mail</title>
+    <link rel="stylesheet" href="/css/app.css" />
+    <script>
+        async function confirmEmail() {
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get("token");
+            const email = params.get("email");
 
-    <h2 class="title">Confirmação de E-mail</h2>
+            const container = document.getElementById("result-message");
 
-    @if (Model.IsSuccess)
-    {
-        <p class="message success">@Model.SuccessMessage</p>
-    }
-    else
-    {
-        <p class="message error">@Model.ErrorMessage</p>
-    }
-</div>
+            if (!token || !email) {
+                container.innerHTML = `<p class="message error">Token ou e-mail inválido.</p>`;
+                return;
+            }
+
+            const url = `/api/UserManager/emailConfirmation?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`;
+
+            try {
+                const response = await fetch(url);
+                if (response.ok) {
+                    container.innerHTML = `<p class="message success">E-mail confirmado com sucesso!</p>`;
+                } else {
+                    container.innerHTML = `<p class="message error">Erro ao confirmar e-mail.</p>`;
+                }
+            } catch (error) {
+                container.innerHTML = `<p class="message error">Erro ao processar a requisição.</p>`;
+            }
+        }
+
+        window.onload = confirmEmail;
+    </script>
+</head>
+<body>
+    <div class="confirmation-container">
+        <img src="/images/logo.png" alt="Logo GoPlay" class="logo" style="width: 180px;" />
+        <h2 class="title">Confirmação de E-mail</h2>
+        <div id="result-message"></div>
+    </div>
+</body>
+</html>
