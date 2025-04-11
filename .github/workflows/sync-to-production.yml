@@ -1,9 +1,12 @@
 name: Sync release_for_deploy to production
 
+permissions:
+  contents: write
+
 on:
   schedule:
-    - cron: '0 1 * * *'  # Executa todos os dias às 22h (horário de Brasília)
-  workflow_dispatch:  # Permite executar manualmente se desejar
+    - cron: '0 1 * * *'  # Executa às 01h UTC (22h BRT)
+  workflow_dispatch:
 
 jobs:
   sync:
@@ -28,5 +31,7 @@ jobs:
 
       - name: Fazer merge da branch release_for_deploy na production
         run: |
-          git merge upstream/release_for_deploy --allow-unrelated-histories -m "Sync release_for_deploy from upstream"
-          git push origin production
+          git merge upstream/release_for_deploy --allow-unrelated-histories -m "Sync release_for_deploy from upstream" || (echo "⚠️ Merge falhou" && git status && exit 1)
+
+      - name: Enviar alterações para origin
+        run: git push origin production
