@@ -177,9 +177,6 @@ namespace GoPlay_App.Api.Controllers.AccessManager
                 if (string.IsNullOrEmpty(request.Data.Password))
                     return BadRequest(new { message = "Senha Obrigatória." });
 
-                if(request.Data.Password != request.Data.ConfirmPassword)
-                    return BadRequest(new { message = "As senhas não coincidem." });
-
                 var result = await _repository.UpDatePassword(validateToken, request.Data.Password);
                
                 if (result)
