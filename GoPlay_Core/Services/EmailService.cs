@@ -55,7 +55,7 @@ namespace GoPlay_Core.Services
             var param = new Dictionary<string, string?> { { "token", token } };
 
             var appBaseUrl = _configuration["Backend:BaseUrl"];
-            var resetLink = QueryHelpers.AddQueryString($"{appBaseUrl}/api/AccessManager/SendPasswordResetLink", param);
+            var resetLink = QueryHelpers.AddQueryString($"{appBaseUrl}/ResetPassword", param);
 
             string subject = "Redefinição de Senha";
             string message = $@"

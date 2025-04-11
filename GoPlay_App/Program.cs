@@ -12,7 +12,6 @@ using GoPlay_Core.Services.Interfaces;
 using GoPlay_Core.Utils;
 using GoPlay_Infra;
 using GoPlay_Infra.Repository;
-using GoPlay_Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +39,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddHttpClient();
 builder.Services.AddHealthChecks();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHttpContextAccessor();
 
 #endregion
 
@@ -99,12 +99,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<EmailSender>();
-builder.Services.AddTransient<AccessManagerApi>();
-builder.Services.AddTransient<UserManagerApi>();
-
 
 #endregion
-
 
 #region Pipeline da Aplicação
 
@@ -123,15 +119,19 @@ app.UseSwaggerUI(c =>
 app.UseStaticFiles();
 app.UseCors("AllowAll");
 
+app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
-app.MapRazorPages();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapRazorPages(); 
+});
+
 app.UseHealthChecks("/health");
-app.UseStaticFiles();
 
 app.Run();
 

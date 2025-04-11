@@ -1,0 +1,32 @@
+name: Sync release_for_deploy to production
+
+on:
+  schedule:
+    - cron: '0 1 * * *'  # Executa todos os dias às 22h (horário de Brasília)
+  workflow_dispatch:  # Permite executar manualmente se desejar
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar o repositório Go_Play (branch production)
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          ref: production
+
+      - name: Configurar Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Adicionar remoto do repositório de origem
+        run: |
+          git remote add upstream https://github.com/IzabelleCC/Fatec-Ipiranga-LabEngSoft-N-2025-1-G15-GoPlay.git
+          git fetch upstream
+
+      - name: Fazer merge da branch release_for_deploy na production
+        run: |
+          git merge upstream/release_for_deploy --allow-unrelated-histories -m "Sync release_for_deploy from upstream"
+          git push origin production
