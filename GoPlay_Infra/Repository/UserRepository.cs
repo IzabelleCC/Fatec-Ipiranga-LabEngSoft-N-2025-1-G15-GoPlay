@@ -3,6 +3,7 @@ using GoPlay_Core.Repository.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using GoPlay_Core.Enum;
 
 namespace GoPlay_Infra.Repository
 {
@@ -40,6 +41,27 @@ namespace GoPlay_Infra.Repository
             {
                 _logger.LogError(ex, "Ocorreu um erro ao excluir o usuário.");
                 throw new InvalidOperationException("Ocorreu um erro ao excluir o usuário.", ex);
+            }
+        }
+
+        public async Task<List<UserEntity?>> GetAllPlayers()
+        {
+            try
+            {
+                var players = await _userManager.Users.ToListAsync();
+
+                if (players == null || players.Count == 0)
+                {
+                    _logger.LogWarning("Nenhum usuário encontrado.");
+                    return new List<UserEntity?>();
+                }
+
+                return players.Where(u => u.UserType == UserTypeEnum.Player).Cast<UserEntity?>().ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ocorreu um erro ao recuperar os usuários.");
+                throw new InvalidOperationException("Ocorreu um erro ao recuperar os usuários.", ex);
             }
         }
 
