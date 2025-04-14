@@ -4,13 +4,14 @@ using GoPlay_Core.Repository.Interfaces;
 using FluentValidation;
 using GoPlay_Core.Services;
 using GoPlay_Core.Services.Interfaces;
+using GoPlay_App.Api.Controllers.UserController.Models;
 
 namespace GoPlay_Core.Business
 {
     /// <summary>
     /// Classe de negócio de usuário
     /// </summary>
-    public class UserBusiness : IUserBusiness<UserEntity>
+    public class UserBusiness : IUserBusiness<UserEntity, UserResponse>
     {
 
         private readonly IUserRepository _repository;
@@ -75,5 +76,20 @@ namespace GoPlay_Core.Business
             return await _repository.GetByUserName(userName);
         }
 
+        public async Task<List<UserResponse>> GetAllPlayers(CancellationToken cancellationToken)
+        {
+            var result = await _repository.GetAllPlayers();
+            if (result == null || !result.Any())
+            {
+                throw new InvalidOperationException("Nenhum jogador encontrado.");
+            }
+
+            var players = result
+                .Where(p => p != null)
+                .Select(UserResponse.ConvertToUserResponse)
+                .ToList();
+
+            return players;
+        }
     }
 }
