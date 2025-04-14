@@ -1,5 +1,4 @@
-﻿using GoPlay_App.Api.Controllers.AccessManager.Models;
-using GoPlay_App.Api.Controllers.UserController.Models;
+﻿using GoPlay_App.Api.Controllers.UserController.Models;
 using GoPlay_Core.Business.Interfaces;
 using GoPlay_Core.Entities;
 using GoPlay_Core.Exceptions;
@@ -7,7 +6,6 @@ using GoPlay_Core.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace GoPlay_App.Api.Controllers.UserController
 {
@@ -16,10 +14,9 @@ namespace GoPlay_App.Api.Controllers.UserController
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class UserManagerController : ControllerBase
     {
-        private readonly IUserBusiness<UserEntity> _business;
+        private readonly IUserBusiness<UserEntity, UserResponse> _business;
         private readonly IEmailService _emailService;
         private readonly UserManager<UserEntity> _user;
         private readonly IConfiguration _configuration;
@@ -28,7 +25,7 @@ namespace GoPlay_App.Api.Controllers.UserController
         /// Construtor do UserManagerController
         /// </summary>
         public UserManagerController(
-            IUserBusiness<UserEntity> business,
+            IUserBusiness<UserEntity, UserResponse> business,
             IEmailService emailService,
             UserManager<UserEntity> user,
             IConfiguration configuration)
@@ -53,7 +50,6 @@ namespace GoPlay_App.Api.Controllers.UserController
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [AllowAnonymous]
         public async Task<IActionResult> Add([FromBody] UserRequestBase<UserCreateRequest> request, CancellationToken cancellationToken)
         {
             try
@@ -87,6 +83,32 @@ namespace GoPlay_App.Api.Controllers.UserController
                 var entity = await _business.GetByUserName(userName, cancellationToken);
                 if (entity == null)
                     throw new NotFoundException("Usuário não encontrado.");
+
+                return Ok(entity);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Busca todos os jogadores
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="NotFoundException"></exception>
+        [HttpGet("GetAllPlayers")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAllPlayers(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var entity = await _business.GetAllPlayers(cancellationToken);
+                if (entity == null)
+                    throw new NotFoundException("Nenhum usuário encontrado.");
 
                 return Ok(entity);
             }
@@ -144,7 +166,6 @@ namespace GoPlay_App.Api.Controllers.UserController
         /// Confirma o e-mail do usuário
         /// </summary>
         [HttpGet("emailConfirmation")]
-        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -2,7 +2,9 @@
 
 namespace GoPlay_Core.Business.Interfaces
 {
-    public interface IUserBusiness<T> where T : UserEntity
+    public interface IUserBusiness<TUserEntity, TUserResponse>
+                                            where TUserEntity : class
+                                            where TUserResponse : class
     {
         /// <summary>
         /// Adiciona Usuário
@@ -10,7 +12,7 @@ namespace GoPlay_Core.Business.Interfaces
         /// <param name="entity"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task Add(T entity, CancellationToken cancellationToken);
+        Task Add(TUserEntity entity, CancellationToken cancellationToken);
 
         /// <summary>
         /// Atualiza Usuário
@@ -18,7 +20,7 @@ namespace GoPlay_Core.Business.Interfaces
         /// <param name="entity"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task Update(T entity, CancellationToken cancellationToken);
+        Task Update(TUserEntity entity, CancellationToken cancellationToken);
 
         /// <summary>
         /// Deleta Usuário
@@ -26,7 +28,7 @@ namespace GoPlay_Core.Business.Interfaces
         /// <param name="userName"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task Delete (string userName, CancellationToken cancellationToken);
+        Task Delete(string userName, CancellationToken cancellationToken);
 
         /// <summary>
         /// Busca Usuário por UserName
@@ -34,7 +36,14 @@ namespace GoPlay_Core.Business.Interfaces
         /// <param name="userName"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<T> GetByUserName (string userName, CancellationToken cancellationToken);
+        Task<TUserEntity> GetByUserName(string userName, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Busca todos os jogadores
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<List<TUserResponse>> GetAllPlayers(CancellationToken cancellationToken);
 
     }
 }

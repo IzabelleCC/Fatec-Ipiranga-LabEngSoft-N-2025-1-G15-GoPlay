@@ -12,6 +12,8 @@ using GoPlay_Core.Services.Interfaces;
 using GoPlay_Core.Utils;
 using GoPlay_Infra;
 using GoPlay_Infra.Repository;
+using GoPlay_App.Api.Controllers.UserController.Models;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -92,7 +94,7 @@ builder.Services.AddAuthorization();
 
 #region Injeção de Dependência (DI)
 
-builder.Services.AddScoped<IUserBusiness<UserEntity>, UserBusiness>();
+builder.Services.AddScoped<IUserBusiness<UserEntity, UserResponse>, UserBusiness>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IValidator<UserEntity>, UserEntityValidator>();
 builder.Services.AddScoped<IUserService, UserService>();
