@@ -62,13 +62,16 @@ namespace GoPlay_Core.Business
 
         public async Task Delete(string userName, CancellationToken cancellationToken)
         {
-            var entity = await _repository.GetByUserName(userName);
+            var entityToDelete = await _repository.GetByUserName(userName);
 
-            if (entity == null)
+            if (entityToDelete == null)
             {
                 throw new InvalidOperationException("Usuário não encontrado.");
             }
-            await _repository.Delete(entity);
+
+            entityToDelete.IsActive = false;
+
+            await _repository.Delete(entityToDelete);
         }
 
         public async Task<UserEntity> GetByUserName(string userName, CancellationToken cancellationToken)
