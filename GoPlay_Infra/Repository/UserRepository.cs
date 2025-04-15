@@ -35,7 +35,7 @@ namespace GoPlay_Infra.Repository
         {
             try
             {
-                await _userManager.DeleteAsync(entity);
+                await _userManager.UpdateAsync(entity);
             }
             catch (Exception ex)
             {
