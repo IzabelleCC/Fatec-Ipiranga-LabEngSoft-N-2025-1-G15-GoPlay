@@ -46,6 +46,10 @@ namespace GoPlay_UserManagementService_Infra.Repository.Mapping
 
             builder.Property(p => p.TShirtSize)
                 .HasColumnName("TShirtSize");
+
+            builder.Property(p => p.IsActive)
+                .HasColumnName("IsActive")
+                .IsRequired();
         }
     }
 }
