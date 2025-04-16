@@ -37,11 +37,6 @@ namespace GoPlay_Core.Business
         }
         public async Task Update(UserEntity entity, CancellationToken cancellationToken)
         {
-            var validationResult = await _validator.ValidateAsync(entity, cancellationToken);
-            if (!validationResult.IsValid)
-            {
-                throw new ValidationException(validationResult.Errors);
-            }
 
             var entityToUpdate = await _repository.GetById(entity.Id);
 
@@ -88,7 +83,7 @@ namespace GoPlay_Core.Business
             }
 
             var players = result
-                .Where(p => p != null)
+                .Where(p => p != null && p.IsActive == true)
                 .Select(UserResponse.ConvertToUserResponse)
                 .ToList();
 
