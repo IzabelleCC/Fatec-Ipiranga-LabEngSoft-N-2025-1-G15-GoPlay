@@ -3,7 +3,7 @@
 namespace GoPlay_Core.Entities
 {
     [ExcludeFromCodeCoverage]
-    public class Category
+    public class CategoryEntity
     {
         public int Id { get; set; }
         public string CategoryType { get; set; } = string.Empty;
@@ -12,7 +12,7 @@ namespace GoPlay_Core.Entities
         public bool IsActive { get; set; } = true;
         public IEnumerable<UserEntity> Players { get; set; } = new List<UserEntity>();
 
-        public Category()
+        public CategoryEntity()
         {
 
         }

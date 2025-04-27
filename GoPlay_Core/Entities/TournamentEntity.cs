@@ -1,6 +1,6 @@
 ﻿namespace GoPlay_Core.Entities
 {
-    public class Tournament
+    public class TournamentEntity
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -14,9 +14,9 @@
         public decimal RegistrationFee { get; set; } = 0;
         public bool IsActive { get; set; } = true;
         public int CourtQuantity { get; set; } = 0;
-        public IEnumerable<Category> Categories { get; set; } = new List<Category>();
+        public List<CategoryEntity> Categories { get; set; } = new List<CategoryEntity>();
 
-        public Tournament()
+        public TournamentEntity()
         {
             
         }

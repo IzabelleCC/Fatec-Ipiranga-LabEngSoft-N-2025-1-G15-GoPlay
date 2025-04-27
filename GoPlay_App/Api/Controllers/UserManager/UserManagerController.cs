@@ -16,23 +16,17 @@ namespace GoPlay_App.Api.Controllers.UserController
     public class UserManagerController : ControllerBase
     {
         private readonly IUserBusiness<UserEntity, UserResponse> _business;
-        private readonly IEmailService _emailService;
         private readonly UserManager<UserEntity> _user;
-        private readonly IConfiguration _configuration;
 
         /// <summary>
         /// Construtor do UserManagerController
         /// </summary>
         public UserManagerController(
             IUserBusiness<UserEntity, UserResponse> business,
-            IEmailService emailService,
-            UserManager<UserEntity> user,
-            IConfiguration configuration)
+            UserManager<UserEntity> user)
         {
             _business = business ?? throw new ArgumentNullException(nameof(business));
-            _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
             _user = user ?? throw new ArgumentNullException(nameof(user));
-            _configuration = configuration;
         }
 
         private IActionResult HandleException(Exception ex)

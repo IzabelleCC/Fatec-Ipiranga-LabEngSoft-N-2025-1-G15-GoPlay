@@ -6,9 +6,9 @@ using System.Diagnostics.CodeAnalysis;
 namespace GoPlay_Infra.Repository.Mapping
 {
     [ExcludeFromCodeCoverage]
-    public class TournamentMap : IEntityTypeConfiguration<Tournament>
+    public class TournamentMap : IEntityTypeConfiguration<TournamentEntity>
     {
-        public void Configure(EntityTypeBuilder<Tournament> builder)
+        public void Configure(EntityTypeBuilder<TournamentEntity> builder)
         {
             builder.ToTable("Tournament");
             builder.HasKey(t => t.Id);

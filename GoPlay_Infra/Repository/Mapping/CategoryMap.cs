@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GoPlay_Infra.Repository.Mapping
 {
-    public class CategoryMap : IEntityTypeConfiguration<Category>
+    public class CategoryMap : IEntityTypeConfiguration<CategoryEntity>
     {
-        public void Configure(EntityTypeBuilder<Category> builder)
+        public void Configure(EntityTypeBuilder<CategoryEntity> builder)
         {
             builder.ToTable("Category");
 
@@ -28,7 +28,7 @@ namespace GoPlay_Infra.Repository.Mapping
                 .HasColumnName("IsActive")
                 .IsRequired();
 
-            builder.HasOne<Tournament>()
+            builder.HasOne<TournamentEntity>()
                 .WithMany(t => t.Categories)
                 .HasForeignKey(c => c.TournamentId)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -41,7 +41,7 @@ namespace GoPlay_Infra.Repository.Mapping
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade),
-                    left => left.HasOne<Category>()
+                    left => left.HasOne<CategoryEntity>()
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade),

@@ -5,35 +5,35 @@ namespace GoPlay_Infra.Repository
 {
     public class TournamentRepository : ITournamentRepository
     {
-        public Task Add(Tournament entity)
+        public async Task Add(TournamentEntity entity)
+        {
+
+         }
+        public async Task Update(TournamentEntity entity)
         {
             throw new NotImplementedException();
         }
-        public Task Update(Tournament entity)
+        public async Task Delete(TournamentEntity entity)
         {
             throw new NotImplementedException();
         }
-        public Task Delete(Tournament entity)
+        public async Task<List<TournamentEntity?>> GetAllTournaments()
         {
             throw new NotImplementedException();
         }
-        public Task<List<Tournament?>> GetAllTournaments()
+        public async Task<TournamentEntity?> GetById(int id)
         {
             throw new NotImplementedException();
         }
-        public Task<Tournament?> GetById(int id)
+        public async Task<TournamentEntity?> GetByName(string name)
         {
             throw new NotImplementedException();
         }
-        public Task<Tournament?> GetByName(string name)
+        public async Task<List<TournamentEntity?>> GetByLocation(string location)
         {
             throw new NotImplementedException();
         }
-        public Task<List<Tournament?>> GetByLocation(string location)
-        {
-            throw new NotImplementedException();
-        }
-        public Task<List<Tournament?>> GetByDate(DateTime date)
+        public async Task<List<TournamentEntity?>> GetByDate(DateTime date)
         {
             throw new NotImplementedException();
         }

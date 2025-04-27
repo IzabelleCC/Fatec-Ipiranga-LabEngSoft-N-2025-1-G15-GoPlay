@@ -4,13 +4,13 @@ namespace GoPlay_Core.Repository.Interfaces
 {
     public interface ITournamentRepository
     {
-        Task Add(Tournament entity);
-        Task Update(Tournament entity);
-        Task Delete(Tournament entity);
-        Task<List<Tournament?>> GetAllTournaments();
-        Task<Tournament?> GetById(int id);
-        Task<Tournament?> GetByName(string name);
-        Task<List<Tournament?>> GetByLocation(string location);
-        Task<List<Tournament?>> GetByDate(DateTime date);
+        Task Add(TournamentEntity entity);
+        Task Update(TournamentEntity entity);
+        Task Delete(TournamentEntity entity);
+        Task<List<TournamentEntity?>> GetAllTournaments();
+        Task<TournamentEntity?> GetById(int id);
+        Task<TournamentEntity?> GetByName(string name);
+        Task<List<TournamentEntity?>> GetByLocation(string location);
+        Task<List<TournamentEntity?>> GetByDate(DateTime date);
     }
 }
