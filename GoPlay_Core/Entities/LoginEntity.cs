@@ -1,20 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace GoPlay_Core.Entities
 {
+    /// <summary>
+    /// LoginEntity is used to represent the login information of a user.
+    /// </summary>
+    [ExcludeFromCodeCoverage]
     public class LoginEntity
     {
         [Required]
-        public  string UserName { get; set; }
+        public required string UserName { get; set; }
         [Required]
-        public string Password { get; set; }
+        public required string Password { get; set; }
 
+        /// <summary>
+        /// Default constructor for LoginEntity.
+        /// </summary>
         public LoginEntity()
         {
         }

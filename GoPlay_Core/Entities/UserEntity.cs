@@ -1,8 +1,13 @@
-﻿using GoPlay_Core.Enum;
+﻿using System.Diagnostics.CodeAnalysis;
+using GoPlay_Core.Enum;
 using Microsoft.AspNetCore.Identity;
 
 namespace GoPlay_Core.Entities
 {
+    /// <summary>
+    /// Represents a user in the system.
+    /// </summary>
+    [ExcludeFromCodeCoverage]
     public class UserEntity : IdentityUser
     {
         public string Name { get; set; } = string.Empty;
@@ -13,6 +18,8 @@ namespace GoPlay_Core.Entities
         public DateTime? BirthDate { get; set; }
         public string? TShirtSize { get; set; }
         public bool IsActive { get; set; } = true;
+
+        public IEnumerable<Category> Categories { get; set; } = new List<Category>();
 
         public UserEntity()
         {

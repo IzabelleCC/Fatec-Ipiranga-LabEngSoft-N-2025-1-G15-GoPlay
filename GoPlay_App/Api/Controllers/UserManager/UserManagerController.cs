@@ -3,7 +3,6 @@ using GoPlay_Core.Business.Interfaces;
 using GoPlay_Core.Entities;
 using GoPlay_Core.Exceptions;
 using GoPlay_Core.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 

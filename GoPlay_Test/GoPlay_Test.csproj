@@ -12,6 +12,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Infra\**" />
+	  <Compile Remove="TestUtil\**" />
+	  <EmbeddedResource Remove="Infra\**" />
+	  <EmbeddedResource Remove="TestUtil\**" />
+	  <None Remove="Infra\**" />
+	  <None Remove="TestUtil\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="coverlet.collector" Version="6.0.4">
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		  <PrivateAssets>all</PrivateAssets>
@@ -35,12 +44,6 @@
 		<PackageReference Include="Npgsql.OpenTelemetry" Version="9.0.3" />
 		<PackageReference Include="NUnit" Version="4.3.2" />
 		<PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="Core\" />
-		<Folder Include="Infra\" />
-		<Folder Include="TestUtil\" />
 	</ItemGroup>
 
 	<ItemGroup>
