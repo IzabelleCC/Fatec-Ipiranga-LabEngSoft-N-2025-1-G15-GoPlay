@@ -2,12 +2,10 @@
 using GoPlay_Core.Entities;
 using GoPlay_Core.Exceptions;
 using GoPlay_Core.Repository.Interfaces;
-using GoPlay_Core.Services;
 using GoPlay_Core.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace GoPlay_App.Api.Controllers.AccessManager
 {
@@ -21,7 +19,6 @@ namespace GoPlay_App.Api.Controllers.AccessManager
         private readonly IUserService _userService;
         private readonly ITokenService _tokenService;
         private readonly IEmailService _emailService;
-        private readonly IConfiguration _configuration;
         private readonly UserManager<UserEntity> _user;
         private readonly IUserRepository _repository;
 
@@ -30,12 +27,11 @@ namespace GoPlay_App.Api.Controllers.AccessManager
         /// </summary>
         /// <param name="userService"></param>
         /// <param name="tokenService"></param>
-        public AccessManagerController(IUserService userService, ITokenService tokenService, IEmailService emailService, IConfiguration configuration, UserManager<UserEntity> user, IUserRepository repository)
+        public AccessManagerController(IUserService userService, ITokenService tokenService, IEmailService emailService, UserManager<UserEntity> user, IUserRepository repository)
         {
             _userService = userService;
             _tokenService = tokenService;
             _emailService = emailService;
-            _configuration = configuration;
             _user = user;
             _repository = repository;
         }
