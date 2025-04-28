@@ -25,10 +25,6 @@ namespace GoPlay_Infra.Repository.Mapping
                 .HasColumnName("TournamentId")
                 .IsRequired();
 
-            builder.Property(c => c.IsActive)
-                .HasColumnName("IsActive")
-                .IsRequired();
-
             builder.HasOne<TournamentEntity>()
                 .WithMany(t => t.Categories)
                 .HasForeignKey(c => c.TournamentId)
