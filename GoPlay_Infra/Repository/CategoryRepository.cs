@@ -5,31 +5,31 @@ namespace GoPlay_Infra.Repository
 {
     public class CategoryRepository : ICategoryRepository
     {
-        public Task Add(Category entity)
+        public Task Add(CategoryEntity entity)
         {
             throw new NotImplementedException();
         }
-        public Task Update(Category entity)
+        public Task Update(CategoryEntity entity)
         {
             throw new NotImplementedException();
         }
-        public Task Delete(Category entity)
+        public Task Delete(CategoryEntity entity)
         {
             throw new NotImplementedException();
         }
-        public Task<List<Category?>> GetAllCategories()
+        public Task<List<CategoryEntity?>> GetAllCategories()
         {
             throw new NotImplementedException();
         }
-        public Task<Category?> GetById(int id)
+        public Task<CategoryEntity?> GetById(int id)
         {
             throw new NotImplementedException();
         }
-        public Task<Category?> GetByCategoryType(string categoryType)
+        public Task<CategoryEntity?> GetByCategoryType(string categoryType)
         {
             throw new NotImplementedException();
         }
-        public Task<List<Category?>> GetByTournamentId(int tournamentId)
+        public Task<List<CategoryEntity?>> GetByTournamentId(int tournamentId)
         {
             throw new NotImplementedException();
         }

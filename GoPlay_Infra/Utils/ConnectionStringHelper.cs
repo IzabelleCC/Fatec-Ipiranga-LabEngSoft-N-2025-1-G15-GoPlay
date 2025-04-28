@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace GoPlay_Core.Utils
+namespace GoPlay_Infra.Utils
 {
     public  class ConnectionStringHelper
     {

@@ -4,7 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <BaseOutputPath>C:\Users\Izabelle\Documents\Fatec\GoPlay\GoPlay_App\bin</BaseOutputPath>
+    <BaseOutputPath>C:\Users\Izabelle\ProjetosFatec\GoPlay_Fatec\GoPlay_Back\GoPlay_App\bin</BaseOutputPath>
+    <UserSecretsId>0525bba4-1338-44da-a3e7-92e23c29d55e</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
