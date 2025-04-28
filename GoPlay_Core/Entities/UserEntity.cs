@@ -11,7 +11,7 @@ namespace GoPlay_Core.Entities
     public class UserEntity : IdentityUser
     {
         public string Name { get; set; } = string.Empty;
-        public UserTypeEnum UserType { get; set; }
+        public UserTypeEnum UserType { get; set; } = UserTypeEnum.Player;
         public string? InstagramPage { get; set; }
         public string CpfCnpj { get; set; } = string.Empty;
         public string? Gender { get; set; }

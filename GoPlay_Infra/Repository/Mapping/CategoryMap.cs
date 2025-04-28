@@ -11,6 +11,7 @@ namespace GoPlay_Infra.Repository.Mapping
             builder.ToTable("Category");
 
             builder.HasKey(c => c.Id);
+            builder.Property(c => c.Id).ValueGeneratedOnAdd();
 
             builder.Property(c => c.CategoryType)
                 .HasColumnName("CategoryType")
@@ -48,8 +49,6 @@ namespace GoPlay_Infra.Repository.Mapping
                     join =>
                     {
                         join.HasKey("CategoryId", "UserId");
-                        join.Property<int>("CategoryId").HasColumnName("CategoryId");
-                        join.Property<int>("UserId").HasColumnName("UserId");
                         join.ToTable("CategoryPlayer");
                     }
                 );

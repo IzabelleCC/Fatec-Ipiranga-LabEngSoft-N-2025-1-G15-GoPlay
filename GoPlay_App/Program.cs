@@ -1,19 +1,19 @@
 using System.Reflection;
 using FluentValidation;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using GoPlay_App.Api.Controllers.UserController.Models;
 using GoPlay_Core.Business;
 using GoPlay_Core.Business.Interfaces;
 using GoPlay_Core.Entities;
 using GoPlay_Core.Repository.Interfaces;
 using GoPlay_Core.Services;
 using GoPlay_Core.Services.Interfaces;
-using GoPlay_Core.Utils;
+using GoPlay_Infra.Utils;
 using GoPlay_Infra;
 using GoPlay_Infra.Repository;
-using GoPlay_App.Api.Controllers.UserController.Models;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
