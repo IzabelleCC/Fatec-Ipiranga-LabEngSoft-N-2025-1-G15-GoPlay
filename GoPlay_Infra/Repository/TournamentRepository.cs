@@ -1,57 +1,173 @@
 ﻿using GoPlay_Core.Entities;
 using GoPlay_Core.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace GoPlay_Infra.Repository
 {
     public class TournamentRepository : ITournamentRepository
     {
         private readonly GoPlayDbContext _context;
+        private readonly ILogger<TournamentRepository> _logger;
 
-        public TournamentRepository(GoPlayDbContext context)
+        public TournamentRepository(GoPlayDbContext context, ILogger<TournamentRepository> logger)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task Add(TournamentEntity entity)
         {
-            await _context.Tournaments.AddAsync(entity);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.Tournaments.AddAsync(entity);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao adicionar novo torneio.");
+                throw new InvalidOperationException("Erro ao adicionar torneio.", ex);
+            }
         }
 
         public async Task Update(TournamentEntity entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _context.Tournaments.Update(entity);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao atualizar torneio.");
+                throw new InvalidOperationException("Erro ao atualizar torneio.", ex);
+            }
         }
 
         public async Task Delete(TournamentEntity entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                entity.IsActive = false;
+                _context.Tournaments.Update(entity);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao desativar torneio.");
+                throw new InvalidOperationException("Erro ao desativar torneio.", ex);
+            }
         }
 
         public async Task<List<TournamentEntity?>> GetAllTournaments()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var tournaments = await _context.Tournaments
+                    .Include(t => t.Categories)
+                    .ToListAsync();
+
+                if (tournaments == null || tournaments.Count == 0)
+                {
+                    _logger.LogWarning("Nenhum torneio encontrado.");
+                    return new List<TournamentEntity?>();
+                }
+
+                return tournaments;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao recuperar torneios.");
+                throw new InvalidOperationException("Erro ao recuperar torneios.", ex);
+            }
         }
 
         public async Task<TournamentEntity?> GetById(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var tournament = await _context.Tournaments
+                    .Include(t => t.Categories)
+                    .FirstOrDefaultAsync(t => t.Id == id);
+
+                if (tournament == null)
+                {
+                    _logger.LogWarning("Torneio não encontrado com ID: {Id}", id);
+                    throw new InvalidOperationException($"Torneio não encontrado para o ID {id}.");
+                }
+
+                return tournament;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao recuperar torneio por ID.");
+                throw new InvalidOperationException("Erro ao recuperar torneio por ID.", ex);
+            }
         }
 
         public async Task<TournamentEntity?> GetByName(string name)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var tournament = await _context.Tournaments
+                    .Include(t => t.Categories)
+                    .FirstOrDefaultAsync(t => t.Name.ToLower() == name.ToLower());
+
+                return tournament;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao recuperar torneio por nome.");
+                throw new InvalidOperationException("Erro ao recuperar torneio por nome.", ex);
+            }
         }
 
         public async Task<List<TournamentEntity?>> GetByLocation(string location)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var tournaments = await _context.Tournaments
+                    .Include(t => t.Categories)
+                    .Where(t => t.Location.ToLower().Contains(location.ToLower()))
+                    .ToListAsync();
+
+                if (tournaments == null || tournaments.Count == 0)
+                {
+                    _logger.LogWarning("Nenhum torneio encontrado para o local: {Location}", location);
+                    return new List<TournamentEntity?>();
+                }
+
+                return tournaments;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao recuperar torneios por local.");
+                throw new InvalidOperationException("Erro ao recuperar torneios por local.", ex);
+            }
         }
 
         public async Task<List<TournamentEntity?>> GetByDate(DateTime date)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var tournaments = await _context.Tournaments
+                    .Include(t => t.Categories)
+                    .Where(t => t.GamesStartDate.Date == date.Date)
+                    .ToListAsync();
+
+                if (tournaments == null || tournaments.Count == 0)
+                {
+                    _logger.LogWarning("Nenhum torneio encontrado para a data: {Date}", date.ToShortDateString());
+                    return new List<TournamentEntity?>();
+                }
+
+                return tournaments;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao recuperar torneios por data.");
+                throw new InvalidOperationException("Erro ao recuperar torneios por data.", ex);
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ namespace GoPlay_Core.Entities
         public string? TShirtSize { get; set; }
         public bool IsActive { get; set; } = true;
 
-        public IEnumerable<CategoryEntity> Categories { get; set; } = new List<CategoryEntity>();
+        public List<CategoryEntity> Categories { get; set; } = new List<CategoryEntity>();
 
         public UserEntity()
         {
