@@ -122,6 +122,24 @@ namespace GoPlay_Infra.Repository
             }
         }
 
+        public async Task<List<TournamentEntity?>> GetAllByName(string name)
+        {
+            try
+            {
+                var tournament = await _context.Tournaments
+                    .Include(t => t.Categories)
+                    .Where(t => t.Name.ToLower().Contains(name.ToLower()))
+                    .ToListAsync();
+
+                return tournament;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao recuperar torneio por nome.");
+                throw new InvalidOperationException("Erro ao recuperar torneio por nome.", ex);
+            }
+        }
+
         public async Task<List<TournamentEntity?>> GetByLocation(string location)
         {
             try

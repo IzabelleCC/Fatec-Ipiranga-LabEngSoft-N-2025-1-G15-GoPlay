@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using GoPlay_App.Api.Controllers.TournamentManager;
+using GoPlay_App.Api.Controllers.TournamentManager.Models;
 using GoPlay_Core.Entities;
 using GoPlay_Core.Repository.Interfaces;
 
@@ -32,15 +33,43 @@ namespace GoPlay_Core.Business
         }
         public async Task<List<TournamentEntity>> GetAllTournaments(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var result = await _repository.GetAllTournaments();
+            if (result == null)
+            {
+                throw new InvalidOperationException("Nenhum torneio encontrado.");
+            }
+
+            var tournaments = result
+                .Where(t => t != null && t.IsActive == true)
+                .ToList();
+
+            return tournaments;
         }
-        public async Task<TournamentEntity> GetByTournamentName(string tournamentName, CancellationToken cancellationToken)
+        public async Task<List<TournamentEntity>> GetAllByTournamentName(string tournamentName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var result = await _repository.GetAllByName(tournamentName);
+
+            if (result == null)
+            {
+                throw new InvalidOperationException("Nenhum torneio encontrado.");
+            }
+
+            var tournaments = result
+                .Where(t => t != null && t.IsActive == true)
+                .ToList();
+
+            return tournaments;
         }
         public async Task<TournamentEntity> GetTournamentById(int tournamentId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var result = await _repository.GetById(tournamentId);
+
+            if (result == null)
+            {
+                throw new InvalidOperationException("Nenhum torneio encontrado.");
+            }
+
+            return result;
         }
         public async Task Update(TournamentEntity entity, CancellationToken cancellationToken)
         {
