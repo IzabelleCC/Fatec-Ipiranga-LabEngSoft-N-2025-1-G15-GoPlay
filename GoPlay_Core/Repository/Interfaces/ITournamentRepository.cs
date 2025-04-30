@@ -10,6 +10,7 @@ namespace GoPlay_Core.Repository.Interfaces
         Task<List<TournamentEntity?>> GetAllTournaments();
         Task<TournamentEntity?> GetById(int id);
         Task<TournamentEntity?> GetByName(string name);
+        Task<List<TournamentEntity?>> GetAllByName(string name);
         Task<List<TournamentEntity?>> GetByLocation(string location);
         Task<List<TournamentEntity?>> GetByDate(DateTime date);
     }

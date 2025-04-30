@@ -32,7 +32,7 @@
         /// <param name="tournamentName"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<T1> GetByTournamentName(string tournamentName, CancellationToken cancellationToken);
+        Task<List<T1>> GetAllByTournamentName(string tournamentName, CancellationToken cancellationToken);
 
         /// <summary>
         /// Busca todos os Torneios

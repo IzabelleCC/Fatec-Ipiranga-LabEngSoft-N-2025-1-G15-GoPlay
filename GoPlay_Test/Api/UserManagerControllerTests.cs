@@ -28,6 +28,7 @@ namespace GoPlay_Test.Api
         {
             _mockBusiness = new Mock<IUserBusiness<UserEntity, UserResponse>>();
             _mockUserManager = CreateMockUserManager();
+            _mockEmailService = new Mock<IEmailService>();
 
             _controller = new UserManagerController(
                 _mockBusiness.Object,
