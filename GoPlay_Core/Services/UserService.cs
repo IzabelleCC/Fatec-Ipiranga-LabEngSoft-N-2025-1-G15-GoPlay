@@ -1,4 +1,6 @@
-﻿using GoPlay_Core.Entities;
+﻿using GoPlay_App.Api.Controllers.AccessManager.Models;
+using GoPlay_App.Api.Controllers.UserController.Models;
+using GoPlay_Core.Entities;
 using GoPlay_Core.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +21,7 @@ namespace GoPlay_Core.Services
             _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
         }
 
-        public async Task<string> Login(LoginEntity entity)
+        public async Task<UserLoginResponse> Login(LoginEntity entity)
         {
             try
             {
@@ -38,9 +40,16 @@ namespace GoPlay_Core.Services
                 var user = await _signInManeger.UserManager.Users
                     .FirstOrDefaultAsync(u => u.NormalizedUserName == entity.UserName.ToUpper());
 
-                var token = await _tokenService.GenerateToken(user!);
 
-                return token;
+                if (user == null)
+                {
+                    throw new InvalidOperationException("Usuário não encontrado.");
+                }
+                var userResponse = UserResponse.ConvertToUserResponse(user);
+
+                var token = await _tokenService.GenerateToken(user);
+
+                return new UserLoginResponse(token, userResponse);
             }
             catch
             {

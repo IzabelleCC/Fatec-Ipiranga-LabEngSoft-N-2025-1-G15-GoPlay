@@ -77,12 +77,12 @@ namespace GoPlay_App.Api.Controllers.AccessManager
             try
             {
                 var entity = request.Data.ToLoginEntity();
-                var token = await _userService.Login(entity);
+                var result = await _userService.Login(entity);
 
                 return Ok(new
                 {
                     message = "Login realizado com sucesso.",
-                    token = token
+                    result = result,
                 });
             }
             catch (NotFoundException ex)
