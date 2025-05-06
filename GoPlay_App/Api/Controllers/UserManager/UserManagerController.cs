@@ -126,7 +126,9 @@ namespace GoPlay_App.Api.Controllers.UserController
                     return BadRequest(new { message = "Dados enviados inválidos. " });
 
                 var entity = request.Data.ToUserEntity();
+
                 await _business.Update(entity, cancellationToken);
+
                 return Ok(new { message = "Usuário atualizado com sucesso." });
             }
             catch (Exception ex)

@@ -34,8 +34,32 @@ namespace GoPlay_Infra.Repository
         {
             try
             {
-                _context.Tournaments.Update(entity);
-                await _context.SaveChangesAsync();
+                var existingTournament = await _context.Tournaments
+                    .Include(t => t.Categories)
+                    .FirstOrDefaultAsync(t => t.Id == entity.Id);
+
+                if (existingTournament != null)
+                {
+                    // Atualizar propriedades do torneio
+                    _context.Entry(existingTournament).CurrentValues.SetValues(entity);
+
+                    // Atualizar categorias
+                    foreach (var category in entity.Categories)
+                    {
+                        existingTournament.Categories.Add(category);
+                    }
+
+                    // Remover categorias que não estão mais na lista
+                    foreach (var category in existingTournament.Categories.ToList())
+                    {
+                        if (!entity.Categories.Any(c => c.Id == category.Id))
+                        {
+                            _context.Categories.Remove(category);
+                        }
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
             }
             catch (Exception ex)
             {

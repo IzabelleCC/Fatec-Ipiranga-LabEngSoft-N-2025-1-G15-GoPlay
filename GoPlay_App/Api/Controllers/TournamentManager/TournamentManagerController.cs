@@ -145,5 +145,57 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
                 return HandleException(ex);
             }
         }
+
+        /// <summary>
+        /// Edita um torneio
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Update([FromBody] TournamentRequestBase<TournamentUpdateRequest> request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (request?.Data == null)
+                    return BadRequest(new { message = "Dados enviados inválidos." });
+
+                var entity = request.Data.ToTournamentEntity();
+
+                await _business.Update(entity, cancellationToken);
+
+                return Ok(new { message = "Torneio atualizado com sucesso." });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var tournament = await _business.GetTournamentById(id, cancellationToken);
+
+                if (tournament == null)
+                    return NotFound(new { message = "Torneio não encontrado." });
+
+                await _business.Delete(tournament, cancellationToken);
+
+                return Ok(new { message = "Torneio deletado com sucesso." });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
     }
 }
