@@ -1,19 +1,21 @@
 using System.Reflection;
 using FluentValidation;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using GoPlay_App.Api.Controllers.UserController.Models;
 using GoPlay_Core.Business;
 using GoPlay_Core.Business.Interfaces;
 using GoPlay_Core.Entities;
 using GoPlay_Core.Repository.Interfaces;
 using GoPlay_Core.Services;
 using GoPlay_Core.Services.Interfaces;
-using GoPlay_Core.Utils;
+using GoPlay_Infra.Utils;
 using GoPlay_Infra;
 using GoPlay_Infra.Repository;
-using GoPlay_App.Api.Controllers.UserController.Models;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using GoPlay_App.Api.Controllers.TournamentManager;
+using GoPlay_Core.Validators;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -101,6 +103,12 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<EmailSender>();
+builder.Services.AddScoped<ITournamentBusiness<TournamentEntity>, TournamentBusiness>();
+builder.Services.AddScoped<ITournamentRepository, TournamentRepository>();
+builder.Services.AddScoped<IValidator<TournamentEntity>, TournamentEntityValidator>();
+builder.Services.AddScoped<ICategoryBusiness<CategoryEntity>, CategoryBusiness>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IValidator<CategoryEntity>, CategoryEntityValidator>();
 
 #endregion
 

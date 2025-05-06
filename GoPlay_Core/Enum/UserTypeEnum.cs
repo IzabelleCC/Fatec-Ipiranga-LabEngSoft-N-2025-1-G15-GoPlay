@@ -1,5 +1,4 @@
-﻿
-namespace GoPlay_Core.Enum
+﻿namespace GoPlay_Core.Enum
 {
     public enum UserTypeEnum
     {

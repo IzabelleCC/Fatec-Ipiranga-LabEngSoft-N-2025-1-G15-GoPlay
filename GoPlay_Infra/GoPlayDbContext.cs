@@ -1,11 +1,9 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using GoPlay_Core.Entities;
+using GoPlay_Infra.Repository.Mapping;
 using GoPlay_UserManagementService_Infra.Repository.Mapping;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-
 
 namespace GoPlay_Infra
 {
@@ -16,11 +14,15 @@ namespace GoPlay_Infra
         {
         }
 
+        public DbSet<TournamentEntity> Tournaments { get; set; }
+        public DbSet<CategoryEntity> Categories { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserMap());
+            modelBuilder.ApplyConfiguration(new TournamentMap());
+            modelBuilder.ApplyConfiguration(new CategoryMap());
             base.OnModelCreating(modelBuilder);
         }
-
     }
 }

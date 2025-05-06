@@ -3,7 +3,6 @@ using GoPlay_Core.Business.Interfaces;
 using GoPlay_Core.Entities;
 using GoPlay_Core.Exceptions;
 using GoPlay_Core.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,23 +16,17 @@ namespace GoPlay_App.Api.Controllers.UserController
     public class UserManagerController : ControllerBase
     {
         private readonly IUserBusiness<UserEntity, UserResponse> _business;
-        private readonly IEmailService _emailService;
         private readonly UserManager<UserEntity> _user;
-        private readonly IConfiguration _configuration;
 
         /// <summary>
         /// Construtor do UserManagerController
         /// </summary>
         public UserManagerController(
             IUserBusiness<UserEntity, UserResponse> business,
-            IEmailService emailService,
-            UserManager<UserEntity> user,
-            IConfiguration configuration)
+            UserManager<UserEntity> user)
         {
             _business = business ?? throw new ArgumentNullException(nameof(business));
-            _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
             _user = user ?? throw new ArgumentNullException(nameof(user));
-            _configuration = configuration;
         }
 
         private IActionResult HandleException(Exception ex)
@@ -133,7 +126,9 @@ namespace GoPlay_App.Api.Controllers.UserController
                     return BadRequest(new { message = "Dados enviados inválidos. " });
 
                 var entity = request.Data.ToUserEntity();
+
                 await _business.Update(entity, cancellationToken);
+
                 return Ok(new { message = "Usuário atualizado com sucesso." });
             }
             catch (Exception ex)
