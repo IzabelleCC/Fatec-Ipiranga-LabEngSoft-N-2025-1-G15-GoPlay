@@ -27,10 +27,12 @@ namespace GoPlay_Core.Business
             await _repository.Add(entity);
         }
 
-        public async Task Delete(string tournamentName, CancellationToken cancellationToken)
+        public async Task Delete(TournamentEntity entity, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await _repository.Delete(entity);
         }
+
+
         public async Task<List<TournamentEntity>> GetAllTournaments(CancellationToken cancellationToken)
         {
             var result = await _repository.GetAllTournaments();
@@ -73,7 +75,15 @@ namespace GoPlay_Core.Business
         }
         public async Task Update(TournamentEntity entity, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var existingTournament = await _repository.GetById(entity.Id);
+            if (existingTournament == null)
+            {
+                throw new InvalidOperationException("Torneio não encontrado para atualização.");
+            }
+
+            await _repository.Update(entity);
         }
+
+
     }
 }

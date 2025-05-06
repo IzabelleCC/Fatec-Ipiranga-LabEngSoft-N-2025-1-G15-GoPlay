@@ -21,10 +21,10 @@
         /// <summary>
         /// Deleta Torneio
         /// </summary>
-        /// <param name="tournamentName"></param>
+        /// <param name="entity"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task Delete(string tournamentName, CancellationToken cancellationToken);
+        Task Delete(T1 entity, CancellationToken cancellationToken);
 
         /// <summary>
         /// Busca Torneio por Nome
