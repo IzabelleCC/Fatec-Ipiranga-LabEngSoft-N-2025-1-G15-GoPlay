@@ -15,6 +15,7 @@ namespace GoPlay_App.Api.Controllers.UserController.Models
         public DateTime? BirthDate { get; set; }
         public string? TShirtSize { get; set; }
         public string? Phone { get; set; }
+        public int? UserType { get; set; }
 
         /// <summary>
         /// Construtor da classe UserCreateRequest
@@ -34,7 +35,8 @@ namespace GoPlay_App.Api.Controllers.UserController.Models
                                  string? gender,
                                  DateTime? birthDate,
                                  string? tShirtSize,
-                                 string? phone)
+                                 string? phone,
+                                 int? userType)
         {
             Name = name;
             UserName = userName;
@@ -44,6 +46,7 @@ namespace GoPlay_App.Api.Controllers.UserController.Models
             BirthDate = birthDate;
             TShirtSize = tShirtSize;
             Phone = phone;
+            UserType = userType;
         }
         public static UserResponse ConvertToUserResponse(UserEntity userEntity)
         {
@@ -60,7 +63,8 @@ namespace GoPlay_App.Api.Controllers.UserController.Models
                 userEntity.Gender,
                 userEntity.BirthDate,
                 userEntity.TShirtSize,
-                userEntity.PhoneNumber
+                userEntity.PhoneNumber,
+                (int?)userEntity.UserType
             );
         }
 
