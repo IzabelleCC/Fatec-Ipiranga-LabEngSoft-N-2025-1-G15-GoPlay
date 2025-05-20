@@ -78,7 +78,7 @@ namespace GoPlay_App.Api.Controllers.UserController.Models
                 InstagramPage = InstagramPage,
                 CpfCnpj = CpfCnpj,
                 Gender = Gender,
-                BirthDate = BirthDate?.ToUniversalTime(),
+                BirthDate = BirthDate?.ToUniversalTime() ?? null,
                 TShirtSize = TShirtSize,
                 PhoneNumber = Phone
             };

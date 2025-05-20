@@ -10,8 +10,8 @@ namespace GoPlay_Core.Repository.Interfaces
         Task<List<UserEntity?>> GetAllPlayers();
         Task<UserEntity?> GetById(string id);
         Task<UserEntity?> GetByUserName(string userName);
-        Task<UserEntity?> GetByEmail(string email);
-        Task<UserEntity?> GetByCpfCnpj(string cpfCnpj);
+        Task<UserEntity?> GetByEmailAndUserType(string email, int userType);
+        Task<UserEntity?> GetByCpfCnpjAndUserType(string cpfCnpj, int userType);
         Task<bool> UpDatePassword(string userName, string password);
 
     }

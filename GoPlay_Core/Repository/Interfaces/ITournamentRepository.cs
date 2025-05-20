@@ -13,5 +13,6 @@ namespace GoPlay_Core.Repository.Interfaces
         Task<List<TournamentEntity?>> GetAllByName(string name);
         Task<List<TournamentEntity?>> GetByLocation(string location);
         Task<List<TournamentEntity?>> GetByDate(DateTime date);
+        Task<List<TournamentEntity?>> GetTournamentByAdmUserId(string id);
     }
 }

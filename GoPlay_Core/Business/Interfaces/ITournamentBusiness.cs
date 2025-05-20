@@ -49,5 +49,13 @@
         /// <returns></returns>
         Task<T1> GetTournamentById(int tournamentId, CancellationToken cancellationToken);
 
+        /// <summary>
+        /// Busca um torneio pelo ID do administrador
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<List<TournamentEntity?>> GetTournamentByAdmUserId(string id, CancellationToken cancellationToken);
+
     }
 }
