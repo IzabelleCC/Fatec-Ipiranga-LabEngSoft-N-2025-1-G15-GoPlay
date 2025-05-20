@@ -22,7 +22,7 @@ namespace GoPlay_Core.Services
         private string GetSecretKey()
         {
             var key = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
-            return string.IsNullOrEmpty(key) ? _configuration["SymmetricSecurityKey"] : key;
+            return string.IsNullOrEmpty(key) ? _configuration["JWT_SECRET_KEY"] : key;
         }
 
         public async Task<string> GenerateToken(UserEntity user)
@@ -39,6 +39,7 @@ namespace GoPlay_Core.Services
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
+
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
             var audience = _configuration["Jwt:Audience"];

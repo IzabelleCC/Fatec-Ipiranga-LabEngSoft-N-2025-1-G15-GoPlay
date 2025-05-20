@@ -7,6 +7,7 @@ namespace GoPlay_App.Api.Controllers.UserController.Models
     /// </summary>
     public class UserResponse
     {
+        public string Id { get; set; }
         public string Name { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
@@ -20,6 +21,7 @@ namespace GoPlay_App.Api.Controllers.UserController.Models
         /// <summary>
         /// Construtor da classe UserCreateRequest
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="email"></param>
         /// <param name="userName"></param>
@@ -28,7 +30,9 @@ namespace GoPlay_App.Api.Controllers.UserController.Models
         /// <param name="birthDate"></param>
         /// <param name="tShirtSize"></param>
         /// <param name="phone"></param>
-        public UserResponse(string name,
+        /// <param name="userType"></param>
+        public UserResponse( string id,
+                                 string name,
                                  string email,
                                  string userName,
                                  string? instagramPage,
@@ -38,6 +42,7 @@ namespace GoPlay_App.Api.Controllers.UserController.Models
                                  string? phone,
                                  int? userType)
         {
+            Id = id;
             Name = name;
             UserName = userName;
             Email = email;
@@ -56,6 +61,7 @@ namespace GoPlay_App.Api.Controllers.UserController.Models
             }
 
             return new UserResponse(
+                userEntity.Id,
                 userEntity.Name,
                 userEntity.Email,
                 userEntity.UserName,
