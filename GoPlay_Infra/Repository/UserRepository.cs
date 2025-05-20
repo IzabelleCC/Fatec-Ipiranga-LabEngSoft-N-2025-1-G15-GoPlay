@@ -104,11 +104,14 @@ namespace GoPlay_Infra.Repository
             }
         }
 
-        public async Task<UserEntity?> GetByEmail(string email)
+        public async Task<UserEntity?> GetByEmailAndUserType(string email, int userType)
         {
             try
             {
-                return await _userManager.FindByEmailAsync(email);
+                var user = await _userManager.Users
+                               .FirstOrDefaultAsync(u => u.Email == email && (int)u.UserType == userType);
+
+                return user;
             }
             catch (Exception ex)
             {
@@ -117,16 +120,18 @@ namespace GoPlay_Infra.Repository
             }
         }
 
-        public async Task<UserEntity?> GetByCpfCnpj(string cpfCnpj)
+        public async Task<UserEntity?> GetByCpfCnpjAndUserType(string cpfCnpj, int userType)
         {
             try
             {
-                var user = await _userManager.Users.FirstOrDefaultAsync(u => u.CpfCnpj == cpfCnpj);
+                var user = await _userManager.Users
+                    .FirstOrDefaultAsync(u => u.CpfCnpj == cpfCnpj && (int)u.UserType == userType);
+
                 return user;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Ocorreu um erro ao recuperar o usuário.");
+                _logger.LogError(ex, "Ocorreu um erro ao recuperar o usuário por CPF/CNPJ e tipo.");
                 throw new InvalidOperationException("Ocorreu um erro ao recuperar o usuário.", ex);
             }
         }

@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Threading;
+using FluentValidation;
 using GoPlay_App.Api.Controllers.TournamentManager;
 using GoPlay_App.Api.Controllers.TournamentManager.Models;
 using GoPlay_Core.Entities;
@@ -72,6 +73,21 @@ namespace GoPlay_Core.Business
             }
 
             return result;
+        }
+
+        public async Task<List<TournamentEntity>> GetTournamentByAdmUserId(string id, CancellationToken cancellationToken)
+        {
+            var result = await _repository.GetTournamentByAdmUserId(id);
+            if (result == null)
+            {
+                throw new InvalidOperationException("Nenhum torneio encontrado.");
+            }
+            var tournaments = result
+                .Where(t => t != null && t.IsActive == true)
+                .ToList();
+
+            return tournaments;
+
         }
         public async Task Update(TournamentEntity entity, CancellationToken cancellationToken)
         {

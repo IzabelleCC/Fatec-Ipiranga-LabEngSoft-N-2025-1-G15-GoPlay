@@ -21,6 +21,8 @@ namespace GoPlay_Core.Entities
 
         public List<CategoryEntity> Categories { get; set; } = new List<CategoryEntity>();
 
+        public List<TournamentEntity> Tournaments { get; set; } = new();
+
         public UserEntity()
         {
 

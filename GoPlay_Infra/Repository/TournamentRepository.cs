@@ -106,6 +106,28 @@ namespace GoPlay_Infra.Repository
             }
         }
 
+        public async Task<List<TournamentEntity?>> GetTournamentByAdmUserId(string id)
+        {
+            try
+            {
+                var tournaments = await _context.Tournaments
+                    .Include(t => t.Categories)
+                    .Where(t => t.AdmUserId == id)
+                    .ToListAsync();
+
+                if (tournaments.Count == 0)
+                {
+                    _logger.LogWarning("Nenhum torneio encontrado para o ID do administrador: {Id}", id);
+                }
+
+                return tournaments;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao recuperar torneios por ID do administrador.");
+                throw new InvalidOperationException("Erro ao recuperar torneios por ID do administrador.", ex);
+            }
+        }
         public async Task<TournamentEntity?> GetById(int id)
         {
             try
