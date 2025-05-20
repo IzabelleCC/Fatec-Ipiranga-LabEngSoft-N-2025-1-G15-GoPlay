@@ -1,4 +1,6 @@
-﻿public class TournamentEntity
+﻿using GoPlay_Core.Entities;
+
+public class TournamentEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -12,6 +14,8 @@
     public decimal RegistrationFee { get; set; } = 0;
     public bool IsActive { get; set; } = true;
     public int CourtQuantity { get; set; } = 0;
+    public string AdmUserId { get; set; } = string.Empty;
+    public UserEntity AdmUser { get; set; } = null!;
 
     public List<CategoryEntity> Categories { get; set; } = new List<CategoryEntity>();
 }

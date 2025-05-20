@@ -12,6 +12,7 @@ public class TournamentCreateRequest
     public string Location { get; set; }
     public decimal RegistrationFee { get; set; }
     public int CourtQuantity { get; set; }
+    public string AdmUserId { get; set; } = string.Empty;
     public IEnumerable<CategoryCreateRequest> Categories { get; set; }
 
     public TournamentCreateRequest(string name,
@@ -23,6 +24,7 @@ public class TournamentCreateRequest
                                  string location,
                                  decimal registrationFee,
                                  int courtQuantity,
+                                 string admUserId,
                                  IEnumerable<CategoryCreateRequest> categories)
     {
         Name = name;
@@ -34,6 +36,7 @@ public class TournamentCreateRequest
         Location = location;
         RegistrationFee = registrationFee;
         CourtQuantity = courtQuantity;
+        AdmUserId = admUserId;
         Categories = categories;
     }
 
@@ -50,6 +53,7 @@ public class TournamentCreateRequest
             Location = Location,
             RegistrationFee = RegistrationFee,
             CourtQuantity = CourtQuantity,
+            AdmUserId = AdmUserId,
             Categories = new List<CategoryEntity>()
         };
 

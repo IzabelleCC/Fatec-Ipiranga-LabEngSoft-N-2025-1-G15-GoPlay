@@ -3,6 +3,7 @@ using GoPlay_Core.Entities;
 using System.Text.RegularExpressions;
 using CpfCnpjLibrary;
 using GoPlay_Core.Repository.Interfaces;
+using GoPlay_Core.Enum;
 
 public class UserEntityValidator : AbstractValidator<UserEntity>
 {
@@ -11,6 +12,7 @@ public class UserEntityValidator : AbstractValidator<UserEntity>
     public UserEntityValidator(IUserRepository userRepository)
     {
         _userRepository = userRepository;
+
         // Senha
         RuleFor(x => x.PasswordHash)
             .NotEmpty().WithMessage("A senha é obrigatória.")
@@ -24,13 +26,15 @@ public class UserEntityValidator : AbstractValidator<UserEntity>
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("O e-mail é obrigatório.")
             .EmailAddress().WithMessage("Formato de e-mail inválido.")
-            .MustAsync(BeUniqueEmail).WithMessage("E-mail já está em uso.");
+            .MustAsync((user, email, ct) => BeUniqueEmailByUserType(email, user.UserType, ct))
+            .WithMessage("E-mail já está em uso.");
 
         // CPF ou CNPJ
         RuleFor(x => x.CpfCnpj)
             .NotEmpty().WithMessage("O CPF ou CNPJ é obrigatório.")
             .Must(IsValidCpfOrCnpj).WithMessage("CPF ou CNPJ inválido.")
-            .MustAsync(BeUniqueCpfCnpj).WithMessage("CPF ou CNPJ já está em uso.");
+            .MustAsync((user, cpfCnpj, ct) => BeUniqueCpfCnpjByUserType(cpfCnpj, user.UserType, ct))
+            .WithMessage("Já existe um usuário com o mesmo CPF/CNPJ e tipo de usuário.");
 
         // Nome completo
         RuleFor(x => x.Name)
@@ -70,9 +74,9 @@ public class UserEntityValidator : AbstractValidator<UserEntity>
         return false;
     }
 
-    private async Task<bool> BeUniqueEmail(string email, CancellationToken cancellationToken)
+    private async Task<bool> BeUniqueEmailByUserType(string email, UserTypeEnum userType, CancellationToken cancellationToken)
     {
-        var existingUser = await _userRepository.GetByEmail(email);
+        var existingUser = await _userRepository.GetByEmailAndUserType(email, (int)userType);
         return existingUser == null;
     }
 
@@ -82,9 +86,9 @@ public class UserEntityValidator : AbstractValidator<UserEntity>
         return existingUser == null;
     }
 
-    private async Task<bool> BeUniqueCpfCnpj(string cpfCnpj, CancellationToken cancellationToken)
+    private async Task<bool> BeUniqueCpfCnpjByUserType(string cpfCnpj, UserTypeEnum userType, CancellationToken cancellationToken)
     {
-        var existingUser = await _userRepository.GetByCpfCnpj(cpfCnpj);
+        var existingUser = await _userRepository.GetByCpfCnpjAndUserType(cpfCnpj, (int)userType);
         return existingUser == null;
     }
 }

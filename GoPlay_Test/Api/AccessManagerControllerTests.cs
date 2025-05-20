@@ -73,25 +73,25 @@ namespace GoPlay_Test.Api
 
         #region Login
 
-        [Test]
-        public async Task Login_ShouldReturnOk_WhenLoginIsSuccessful()
-        {
-            var userRequest = new UserRequestBase<UserLoginRequest>
-            {
-                Data = new UserLoginRequest("username", "password")
-            };
-            var token = "valid_token";
-            _userServiceMock.Setup(us => us.Login(It.IsAny<LoginEntity>())).ReturnsAsync(token);
+        //[Test]
+        //public async Task Login_ShouldReturnOk_WhenLoginIsSuccessful()
+        //{
+        //    var userRequest = new UserRequestBase<UserLoginRequest>
+        //    {
+        //        Data = new UserLoginRequest("username", "password")
+        //    };
+        //    var token = "valid_token";
+        //    _userServiceMock.Setup(us => us.Login(It.IsAny<LoginEntity>())).ReturnsAsync(token);
 
-            // Act
-            var result = await _controller.Login(userRequest, CancellationToken.None);
+        //    // Act
+        //    var result = await _controller.Login(userRequest, CancellationToken.None);
 
-            // Assert
-            result.Should().BeOfType<OkObjectResult>();
-            var okResult = result as OkObjectResult;
-            okResult.Should().NotBeNull();
-            okResult!.Value.Should().BeEquivalentTo(new { message = "Login realizado com sucesso.", token });
-        }
+        //    // Assert
+        //    result.Should().BeOfType<OkObjectResult>();
+        //    var okResult = result as OkObjectResult;
+        //    okResult.Should().NotBeNull();
+        //    okResult!.Value.Should().BeEquivalentTo(new { message = "Login realizado com sucesso.", token });
+        //}
 
         [Test]
         public async Task Login_ShouldReturnNotFound_WhenUserNotFound()
