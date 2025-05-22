@@ -1,4 +1,6 @@
-﻿namespace GoPlay_App.Api.Controllers.TournamentManager.Models
+﻿using Microsoft.Identity.Client;
+
+namespace GoPlay_App.Api.Controllers.TournamentManager.Models
 {
     public class TournamentUpdateRequest
     {
@@ -12,6 +14,7 @@
         public string Location { get; set; }
         public decimal RegistrationFee { get; set; }
         public int CourtQuantity { get; set; }
+        public string AdmUserId { get; set; } = string.Empty;
         public IEnumerable<CategoryCreateRequest> Categories { get; set; }
 
         public TournamentUpdateRequest(int id,
@@ -24,6 +27,7 @@
                                      string location,
                                      decimal registrationFee,
                                      int courtQuantity,
+                                     string admUserId,
                                      IEnumerable<CategoryCreateRequest> categories)
         {
             Id = id;
@@ -36,7 +40,9 @@
             Location = location;
             RegistrationFee = registrationFee;
             CourtQuantity = courtQuantity;
+            AdmUserId = admUserId;
             Categories = categories;
+
         }
 
         public TournamentEntity ToTournamentEntity()
@@ -53,6 +59,7 @@
                 Location = Location,
                 RegistrationFee = RegistrationFee,
                 CourtQuantity = CourtQuantity,
+                AdmUserId = AdmUserId,
                 Categories = new List<CategoryEntity>()
             };
 
