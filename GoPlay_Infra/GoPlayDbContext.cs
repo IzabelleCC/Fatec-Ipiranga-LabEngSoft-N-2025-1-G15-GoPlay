@@ -22,6 +22,7 @@ namespace GoPlay_Infra
             modelBuilder.ApplyConfiguration(new UserMap());
             modelBuilder.ApplyConfiguration(new TournamentMap());
             modelBuilder.ApplyConfiguration(new CategoryMap());
+            modelBuilder.ApplyConfiguration(new CategoryPlayerMap());
             base.OnModelCreating(modelBuilder);
         }
     }

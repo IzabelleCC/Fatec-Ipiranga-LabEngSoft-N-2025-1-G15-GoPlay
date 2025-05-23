@@ -196,9 +196,16 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
             catch (Exception ex)
             {
                 return HandleException(ex);
+
             }
         }
 
+        /// <summary>
+        /// Deleta um torneio
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -221,5 +228,33 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
                 return HandleException(ex);
             }
         }
+
+        /// <summary>
+        /// Inscreve um usuário em uma categoria de torneio.
+        /// </summary>
+        /// <param name="request">Dados da inscrição.</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPost("RegisterToCategory")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> RegisterToCategory([FromBody] CategoryRegistrationRequest request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (request == null || request.CategoryId <= 0 || string.IsNullOrEmpty(request.FirstUserId))
+                    return BadRequest(new { message = "Dados enviados inválidos." });
+
+                await _business.RegisterUserToCategory(request.CategoryId, request.FirstUserId, request.SecondUserId, cancellationToken);
+
+                return Ok(new { message = "Usuário inscrito com sucesso na categoria." });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
     }
 }

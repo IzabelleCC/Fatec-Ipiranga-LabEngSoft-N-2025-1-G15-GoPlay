@@ -1,4 +1,6 @@
-﻿namespace GoPlay_App.Api.Controllers.TournamentManager
+﻿using System.Threading;
+
+namespace GoPlay_App.Api.Controllers.TournamentManager
 {
     public interface ITournamentBusiness<T1>
     {
@@ -57,5 +59,13 @@
         /// <returns></returns>
         Task<List<TournamentEntity?>> GetTournamentByAdmUserId(string id, CancellationToken cancellationToken);
 
+        /// <summary>
+        /// Registra um usuário em uma categoria
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <param name="userId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task RegisterUserToCategory(int categoryId, string firstUserId, string? secongUserId, CancellationToken cancellationToken);
     }
 }

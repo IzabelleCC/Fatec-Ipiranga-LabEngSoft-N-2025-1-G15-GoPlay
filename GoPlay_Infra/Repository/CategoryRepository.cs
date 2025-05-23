@@ -58,18 +58,18 @@ namespace GoPlay_Infra.Repository
             }
         }
 
-        public async Task<List<CategoryEntity?>> GetAllCategories()
+        public async Task<List<CategoryEntity>> GetAllCategories()
         {
             try
             {
                 var categories = await _context.Categories
-                    .Include(c => c.Players)
+                    .Include(c => c.CategoryPlayers)
                     .ToListAsync();
 
                 if (categories == null || categories.Count == 0)
                 {
                     _logger.LogWarning("Nenhuma categoria encontrada.");
-                    return new List<CategoryEntity?>();
+                    return new List<CategoryEntity>();
                 }
 
                 return categories;
@@ -86,7 +86,7 @@ namespace GoPlay_Infra.Repository
             try
             {
                 return await _context.Categories
-                    .Include(c => c.Players)
+                    .Include(c => c.CategoryPlayers)
                     .FirstOrDefaultAsync(c => c.Id == id);
             }
             catch (Exception ex)
@@ -101,7 +101,7 @@ namespace GoPlay_Infra.Repository
             try
             {
                 return await _context.Categories
-                    .Include(c => c.Players)
+                    .Include(c => c.CategoryPlayers)
                     .FirstOrDefaultAsync(c => c.CategoryType.ToLower() == categoryType.ToLower());
             }
             catch (Exception ex)
@@ -111,12 +111,12 @@ namespace GoPlay_Infra.Repository
             }
         }
 
-        public async Task<List<CategoryEntity?>> GetByTournamentId(int tournamentId)
+        public async Task<List<CategoryEntity>> GetByTournamentId(int tournamentId)
         {
             try
             {
                 return await _context.Categories
-                    .Include(c => c.Players)
+                    .Include(c => c.CategoryPlayers)
                     .Where(c => c.TournamentId == tournamentId)
                     .ToListAsync();
             }

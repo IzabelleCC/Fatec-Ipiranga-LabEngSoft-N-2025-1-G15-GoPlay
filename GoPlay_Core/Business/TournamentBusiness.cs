@@ -100,6 +100,9 @@ namespace GoPlay_Core.Business
             await _repository.Update(entity);
         }
 
+        public async Task RegisterUserToCategory(int categoryId, string firstUserId, string? secongUserId, CancellationToken cancellationToken)
+        {
 
+        }
     }
 }
