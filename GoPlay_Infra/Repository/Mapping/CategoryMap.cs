@@ -30,24 +30,10 @@ namespace GoPlay_Infra.Repository.Mapping
                 .HasForeignKey(c => c.TournamentId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(c => c.Players)
-                .WithMany(u => u.Categories)
-                .UsingEntity<Dictionary<string, object>>(
-                    "CategoryPlayer",
-                    right => right.HasOne<UserEntity>()
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade),
-                    left => left.HasOne<CategoryEntity>()
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade),
-                    join =>
-                    {
-                        join.HasKey("CategoryId", "UserId");
-                        join.ToTable("CategoryPlayer");
-                    }
-                );
+            builder.HasMany(c => c.CategoryPlayers)
+                   .WithOne(cp => cp.Category)
+                   .HasForeignKey(cp => cp.CategoryId)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

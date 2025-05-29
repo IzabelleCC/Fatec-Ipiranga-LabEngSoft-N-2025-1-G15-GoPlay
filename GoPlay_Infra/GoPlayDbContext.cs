@@ -16,12 +16,14 @@ namespace GoPlay_Infra
 
         public DbSet<TournamentEntity> Tournaments { get; set; }
         public DbSet<CategoryEntity> Categories { get; set; }
+        public DbSet<CategoryPlayerEntity> CategoryPlayers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserMap());
             modelBuilder.ApplyConfiguration(new TournamentMap());
             modelBuilder.ApplyConfiguration(new CategoryMap());
+            modelBuilder.ApplyConfiguration(new CategoryPlayerMap());
             base.OnModelCreating(modelBuilder);
         }
     }

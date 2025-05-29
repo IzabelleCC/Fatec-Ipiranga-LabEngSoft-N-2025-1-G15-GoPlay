@@ -109,6 +109,10 @@ builder.Services.AddScoped<IValidator<TournamentEntity>, TournamentEntityValidat
 builder.Services.AddScoped<ICategoryBusiness<CategoryEntity>, CategoryBusiness>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IValidator<CategoryEntity>, CategoryEntityValidator>();
+builder.Services.AddScoped<ICategoryPlayerRepository, CategoryPlayerRepository>();
+builder.Services.AddScoped<ICategoryPlayerBusiness, CategoryPlayerBusiness>();
+
+
 
 #endregion
 

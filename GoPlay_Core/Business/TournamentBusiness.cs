@@ -33,7 +33,6 @@ namespace GoPlay_Core.Business
             await _repository.Delete(entity);
         }
 
-
         public async Task<List<TournamentEntity>> GetAllTournaments(CancellationToken cancellationToken)
         {
             var result = await _repository.GetAllTournaments();
@@ -99,7 +98,5 @@ namespace GoPlay_Core.Business
 
             await _repository.Update(entity);
         }
-
-
     }
 }

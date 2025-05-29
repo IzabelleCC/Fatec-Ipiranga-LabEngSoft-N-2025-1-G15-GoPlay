@@ -1,4 +1,5 @@
-﻿using GoPlay_Core.Entities;
+﻿using System.Threading.Tasks;
+using GoPlay_Core.Entities;
 
 namespace GoPlay_Core.Repository.Interfaces
 {

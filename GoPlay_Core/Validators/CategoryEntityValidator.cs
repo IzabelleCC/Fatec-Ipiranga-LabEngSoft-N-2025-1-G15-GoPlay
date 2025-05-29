@@ -11,7 +11,6 @@ namespace GoPlay_Core.Validators
                 .NotEmpty().WithMessage("O tipo da categoria é obrigatório.");
 
             RuleFor(x => x.PlayerLimit)
-                .GreaterThanOrEqualTo(2).WithMessage("A quantidade mínima de jogadores deve ser 2.")
                 .Must(BePositiveInteger).WithMessage("A quantidade de jogadores deve ser um número inteiro positivo.");
         }
 
