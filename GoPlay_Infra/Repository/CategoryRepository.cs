@@ -58,7 +58,7 @@ namespace GoPlay_Infra.Repository
             }
         }
 
-        public async Task<List<CategoryEntity>> GetAllCategories()
+        public async Task<List<CategoryEntity>> GetAll()
         {
             try
             {

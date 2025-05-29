@@ -16,6 +16,7 @@ namespace GoPlay_Infra
 
         public DbSet<TournamentEntity> Tournaments { get; set; }
         public DbSet<CategoryEntity> Categories { get; set; }
+        public DbSet<CategoryPlayerEntity> CategoryPlayers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

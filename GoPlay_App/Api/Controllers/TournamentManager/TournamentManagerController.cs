@@ -1,4 +1,6 @@
 ﻿using GoPlay_App.Api.Controllers.TournamentManager.Models;
+using GoPlay_Core.Business.Interfaces;
+using GoPlay_Core.Entities;
 using GoPlay_Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,8 +13,8 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
     [ApiController]
     public class TournamentManagerController : ControllerBase
     {
-        private readonly ITournamentBusiness<TournamentEntity> _business;
-        private readonly IConfiguration _configuration;
+        private readonly ITournamentBusiness<TournamentEntity> _tournamentBusiness;
+        private readonly ICategoryPlayerBusiness _categoryPlayerBusiness;
 
         /// <summary>
         /// Construtor do Controller
@@ -22,10 +24,10 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         /// <exception cref="ArgumentNullException"></exception>
         public TournamentManagerController(
             ITournamentBusiness<TournamentEntity> business,
-            IConfiguration configuration)
+            ICategoryPlayerBusiness categoryPlayerBusiness)
         {
-            _business = business ?? throw new ArgumentNullException(nameof(business));
-            _configuration = configuration;
+            _tournamentBusiness = business ?? throw new ArgumentNullException(nameof(business));
+            _categoryPlayerBusiness = categoryPlayerBusiness ?? throw new ArgumentNullException(nameof(categoryPlayerBusiness));
         }
 
         /// <summary>
@@ -59,7 +61,7 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
 
                 var entity = request.Data.ToTournamentEntity();
 
-                await _business.Add(entity, cancellationToken);
+                await _tournamentBusiness.Add(entity, cancellationToken);
 
                 return Ok(new { message = "Torneio criado com sucesso." });
             }
@@ -81,7 +83,7 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         {
             try
             {
-                var tournaments = await _business.GetAllTournaments(cancellationToken);
+                var tournaments = await _tournamentBusiness.GetAllTournaments(cancellationToken);
 
                 if (tournaments == null || tournaments.Count == 0)
                     return NotFound(new { message = "Nenhum torneio encontrado." });
@@ -108,7 +110,7 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         {
             try
             {
-                var tournament = await _business.GetAllByTournamentName(tournamentName, cancellationToken);
+                var tournament = await _tournamentBusiness.GetAllByTournamentName(tournamentName, cancellationToken);
 
                 if (tournament == null)
                     return NotFound(new { message = "Torneio não encontrado." });
@@ -134,7 +136,7 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         {
             try
             {
-                var tournament = await _business.GetTournamentById(id, cancellationToken);
+                var tournament = await _tournamentBusiness.GetTournamentById(id, cancellationToken);
                 if (tournament == null)
                     return NotFound(new { message = "Torneio não encontrado." });
                 return Ok(tournament);
@@ -159,7 +161,7 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         {
             try
             {
-                var tournament = await _business.GetTournamentByAdmUserId(id, cancellationToken);
+                var tournament = await _tournamentBusiness.GetTournamentByAdmUserId(id, cancellationToken);
                 if (tournament == null)
                     return NotFound(new { message = "Torneio não encontrado." });
                 return Ok(tournament);
@@ -189,7 +191,7 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
 
                 var entity = request.Data.ToTournamentEntity();
 
-                await _business.Update(entity, cancellationToken);
+                await _tournamentBusiness.Update(entity, cancellationToken);
 
                 return Ok(new { message = "Torneio atualizado com sucesso." });
             }
@@ -214,41 +216,14 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         {
             try
             {
-                var tournament = await _business.GetTournamentById(id, cancellationToken);
+                var tournament = await _tournamentBusiness.GetTournamentById(id, cancellationToken);
 
                 if (tournament == null)
                     return NotFound(new { message = "Torneio não encontrado." });
 
-                await _business.Delete(tournament, cancellationToken);
+                await _tournamentBusiness.Delete(tournament, cancellationToken);
 
                 return Ok(new { message = "Torneio deletado com sucesso." });
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
-        /// <summary>
-        /// Inscreve um usuário em uma categoria de torneio.
-        /// </summary>
-        /// <param name="request">Dados da inscrição.</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        [HttpPost("RegisterToCategory")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RegisterToCategory([FromBody] CategoryRegistrationRequest request, CancellationToken cancellationToken)
-        {
-            try
-            {
-                if (request == null || request.CategoryId <= 0 || string.IsNullOrEmpty(request.FirstUserId))
-                    return BadRequest(new { message = "Dados enviados inválidos." });
-
-                await _business.RegisterUserToCategory(request.CategoryId, request.FirstUserId, request.SecondUserId, cancellationToken);
-
-                return Ok(new { message = "Usuário inscrito com sucesso na categoria." });
             }
             catch (Exception ex)
             {

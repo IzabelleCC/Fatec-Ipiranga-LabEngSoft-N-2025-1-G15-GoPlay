@@ -1,4 +1,5 @@
 ﻿using GoPlay_Core.Entities;
+using GoPlay_Core.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -16,6 +17,18 @@ namespace GoPlay_Infra.Repository.Mapping
             builder.Property(cp => cp.CategoryId).IsRequired();
             builder.Property(cp => cp.FirstUserId).IsRequired();
             builder.Property(cp => cp.SecondUserId).IsRequired(false);
+
+            builder.Property(cp => cp.RegisterStatus)
+                   .IsRequired()
+                   .HasConversion<int>();
+
+            builder.Property(cp => cp.FirstUserPaymentConfirmed)
+                   .IsRequired()
+                   .HasDefaultValue(false);
+
+            builder.Property(cp => cp.SecondUserPaymentConfirmed)
+                   .IsRequired()
+                   .HasDefaultValue(false);
 
             builder.HasOne(cp => cp.Category)
                    .WithMany(c => c.CategoryPlayers)

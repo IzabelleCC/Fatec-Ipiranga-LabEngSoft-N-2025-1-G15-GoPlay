@@ -59,13 +59,5 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         /// <returns></returns>
         Task<List<TournamentEntity?>> GetTournamentByAdmUserId(string id, CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Registra um usuário em uma categoria
-        /// </summary>
-        /// <param name="categoryId"></param>
-        /// <param name="userId"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        Task RegisterUserToCategory(int categoryId, string firstUserId, string? secongUserId, CancellationToken cancellationToken);
     }
 }

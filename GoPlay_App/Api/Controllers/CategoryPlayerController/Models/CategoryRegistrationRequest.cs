@@ -1,4 +1,4 @@
-﻿namespace GoPlay_App.Api.Controllers.TournamentManager.Models
+﻿namespace GoPlay_App.Api.Controllers.CategoryPlayerController.Models
 {
     public class CategoryRegistrationRequest
     {
