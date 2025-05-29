@@ -1,4 +1,6 @@
-﻿namespace GoPlay_App.Api.Controllers.TournamentManager
+﻿using System.Threading;
+
+namespace GoPlay_App.Api.Controllers.TournamentManager
 {
     public interface ITournamentBusiness<T1>
     {

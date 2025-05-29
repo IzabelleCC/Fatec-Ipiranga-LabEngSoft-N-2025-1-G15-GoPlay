@@ -3,6 +3,7 @@ using System;
 using GoPlay_Infra;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GoPlay_Infra.Migrations
 {
     [DbContext(typeof(GoPlayDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250523011940_GOP-104-Adiciona-novos-campos-na-tabela-CategoryPlayer")]
+    partial class GOP104AdicionanovoscamposnatabelaCategoryPlayer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,21 +73,8 @@ namespace GoPlay_Infra.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("FirstUserPaymentConfirmed")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<int>("RegisterStatus")
-                        .HasColumnType("integer");
-
                     b.Property<string>("SecondUserId")
                         .HasColumnType("text");
-
-                    b.Property<bool>("SecondUserPaymentConfirmed")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
