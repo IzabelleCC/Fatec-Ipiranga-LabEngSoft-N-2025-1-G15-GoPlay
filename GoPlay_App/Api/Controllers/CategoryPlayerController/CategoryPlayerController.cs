@@ -174,6 +174,7 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> WebhookPix([FromBody] JsonElement payload, CancellationToken cancellationToken)
         {
+            Console.WriteLine("Webhook de validação recebido.");
             try
             {
                 var pixArray = payload.GetProperty("pix");
@@ -214,6 +215,7 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
         [HttpGet("Webhook/{*extra}")]
         public IActionResult WebhookValidation()
         {
+            Console.WriteLine("Webhook de validação recebido.");
             return Ok("Webhook de validação respondido com sucesso.");
         }
     }
