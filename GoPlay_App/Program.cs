@@ -1,3 +1,4 @@
+using System.Net;
 using System.Reflection;
 using FluentValidation;
 using GoPlay_App.Api.Controllers.TournamentManager;
@@ -26,6 +27,7 @@ builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+    .AddJsonFile("appsettings.Secrets.json", optional: true, reloadOnChange: true) // Para testes locais
     .AddEnvironmentVariables();
 
 #endregion
@@ -56,7 +58,10 @@ builder.Services.AddSwaggerGen(c =>
 
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath);
+    if (File.Exists(xmlPath))
+    {
+        c.IncludeXmlComments(xmlPath);
+    }
 });
 
 #endregion
@@ -123,10 +128,14 @@ var app = builder.Build();
 
 #region Configuração para Railway / Proxy Reverso
 
-app.UseForwardedHeaders(new ForwardedHeadersOptions
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear(); // Permitir IPs externos como o da Efí
+    options.KnownProxies.Clear();
 });
+
+app.UseForwardedHeaders();
 
 // Middleware opcional para debug de chamadas recebidas
 app.Use(async (context, next) =>
@@ -147,10 +156,10 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "GoPlay API v1"));
 
-app.UseStaticFiles();
-app.UseCors("AllowAll");
+app.UseRouting(); // deve vir antes
 
-app.UseRouting();
+app.UseStaticFiles(); // ordem correta aqui
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
