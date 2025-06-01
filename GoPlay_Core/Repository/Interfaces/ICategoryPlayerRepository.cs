@@ -11,5 +11,6 @@ namespace GoPlay_Core.Repository.Interfaces
         Task AddAsync(CategoryPlayerEntity entity);
         Task DeleteAsync(int id);
         Task UpdatePlayersAsync(CategoryPlayerEntity entity);
+        Task<CategoryPlayerEntity?> GetByTxIdAsync(string txid);
     }
 }

@@ -1,20 +1,21 @@
 using System.Reflection;
 using FluentValidation;
+using GoPlay_App.Api.Controllers.TournamentManager;
 using GoPlay_App.Api.Controllers.UserController.Models;
 using GoPlay_Core.Business;
 using GoPlay_Core.Business.Interfaces;
 using GoPlay_Core.Entities;
 using GoPlay_Core.Repository.Interfaces;
 using GoPlay_Core.Services;
+using GoPlay_Core.Services.Gerencianet;
 using GoPlay_Core.Services.Interfaces;
-using GoPlay_Infra.Utils;
+using GoPlay_Core.Validators;
 using GoPlay_Infra;
 using GoPlay_Infra.Repository;
+using GoPlay_Infra.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using GoPlay_App.Api.Controllers.TournamentManager;
-using GoPlay_Core.Validators;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -111,8 +112,8 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IValidator<CategoryEntity>, CategoryEntityValidator>();
 builder.Services.AddScoped<ICategoryPlayerRepository, CategoryPlayerRepository>();
 builder.Services.AddScoped<ICategoryPlayerBusiness, CategoryPlayerBusiness>();
-
-
+builder.Services.AddScoped<IPixBusiness, PixBusiness>();
+builder.Services.AddScoped<IPixService, PixService>();
 
 #endregion
 
