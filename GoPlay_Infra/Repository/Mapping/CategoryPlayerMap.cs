@@ -45,7 +45,11 @@ namespace GoPlay_Infra.Repository.Mapping
                    .HasForeignKey(cp => cp.SecondUserId)
                    .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Property(cp => cp.TxId)
+            builder.Property(cp => cp.FirstUserTxId)
+                        .HasMaxLength(100)
+                        .IsRequired(false);
+
+            builder.Property(cp => cp.SecondUserTxId)
                         .HasMaxLength(100)
                         .IsRequired(false);
         }

@@ -4,7 +4,6 @@ using System.Text.Json;
 using GoPlay_Core.Entities;
 using GoPlay_Core.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GoPlay_Core.Services.Gerencianet
 {

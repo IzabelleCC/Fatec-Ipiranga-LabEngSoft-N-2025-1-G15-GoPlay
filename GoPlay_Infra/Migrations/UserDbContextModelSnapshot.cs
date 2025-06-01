@@ -75,6 +75,10 @@ namespace GoPlay_Infra.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
+                    b.Property<string>("FirstUserTxId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.Property<int>("RegisterStatus")
                         .HasColumnType("integer");
 
@@ -86,7 +90,7 @@ namespace GoPlay_Infra.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
-                    b.Property<string>("TxId")
+                    b.Property<string>("SecondUserTxId")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 

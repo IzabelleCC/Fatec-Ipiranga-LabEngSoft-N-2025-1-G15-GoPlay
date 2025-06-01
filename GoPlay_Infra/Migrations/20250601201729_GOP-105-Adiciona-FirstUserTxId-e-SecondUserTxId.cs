@@ -5,13 +5,18 @@
 namespace GoPlay_Infra.Migrations
 {
     /// <inheritdoc />
-    public partial class GOP105AdicionaTxId : Migration
+    public partial class GOP105AdicionaFirstUserTxIdeSecondUserTxId : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
+            migrationBuilder.RenameColumn(
                 name: "TxId",
+                table: "CategoryPlayer",
+                newName: "SecondUserTxId");
+
+            migrationBuilder.AddColumn<string>(
+                name: "FirstUserTxId",
                 table: "CategoryPlayer",
                 type: "character varying(100)",
                 maxLength: 100,
@@ -22,8 +27,13 @@ namespace GoPlay_Infra.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "TxId",
+                name: "FirstUserTxId",
                 table: "CategoryPlayer");
+
+            migrationBuilder.RenameColumn(
+                name: "SecondUserTxId",
+                table: "CategoryPlayer",
+                newName: "TxId");
         }
     }
 }

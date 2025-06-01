@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GoPlay_Infra.Migrations
 {
     [DbContext(typeof(GoPlayDbContext))]
-    [Migration("20250428024048_GOP-18-Add-Tournament-e-Category")]
-    partial class GOP18AddTournamenteCategory
+    [Migration("20250601201729_GOP-105-Adiciona-FirstUserTxId-e-SecondUserTxId")]
+    partial class GOP105AdicionaFirstUserTxIdeSecondUserTxId
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,10 +38,6 @@ namespace GoPlay_Infra.Migrations
                         .HasColumnType("text")
                         .HasColumnName("CategoryType");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean")
-                        .HasColumnName("IsActive");
-
                     b.Property<int>("PlayerLimit")
                         .HasColumnType("integer")
                         .HasColumnName("PlayerLimit");
@@ -50,24 +46,64 @@ namespace GoPlay_Infra.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("TournamentId");
 
+                    b.Property<string>("UserEntityId")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("TournamentId");
 
+                    b.HasIndex("UserEntityId");
+
                     b.ToTable("Category", (string)null);
                 });
 
-            modelBuilder.Entity("CategoryPlayer", b =>
+            modelBuilder.Entity("GoPlay_Core.Entities.CategoryPlayerEntity", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("FirstUserId")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("CategoryId", "UserId");
+                    b.Property<bool>("FirstUserPaymentConfirmed")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
-                    b.HasIndex("UserId");
+                    b.Property<string>("FirstUserTxId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("RegisterStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SecondUserId")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("SecondUserPaymentConfirmed")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("SecondUserTxId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("FirstUserId");
+
+                    b.HasIndex("SecondUserId");
 
                     b.ToTable("CategoryPlayer", (string)null);
                 });
@@ -310,6 +346,11 @@ namespace GoPlay_Infra.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AdmUserId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("AdmUserId");
+
                     b.Property<int>("CourtQuantity")
                         .HasColumnType("integer")
                         .HasColumnName("CourtQuantity");
@@ -359,6 +400,8 @@ namespace GoPlay_Infra.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AdmUserId");
+
                     b.ToTable("Tournament", (string)null);
                 });
 
@@ -369,21 +412,36 @@ namespace GoPlay_Infra.Migrations
                         .HasForeignKey("TournamentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("GoPlay_Core.Entities.UserEntity", null)
+                        .WithMany("Categories")
+                        .HasForeignKey("UserEntityId");
                 });
 
-            modelBuilder.Entity("CategoryPlayer", b =>
+            modelBuilder.Entity("GoPlay_Core.Entities.CategoryPlayerEntity", b =>
                 {
-                    b.HasOne("CategoryEntity", null)
-                        .WithMany()
+                    b.HasOne("CategoryEntity", "Category")
+                        .WithMany("CategoryPlayers")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GoPlay_Core.Entities.UserEntity", null)
+                    b.HasOne("GoPlay_Core.Entities.UserEntity", "FirstUser")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("FirstUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("GoPlay_Core.Entities.UserEntity", "SecondUser")
+                        .WithMany()
+                        .HasForeignKey("SecondUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Category");
+
+                    b.Navigation("FirstUser");
+
+                    b.Navigation("SecondUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -435,6 +493,29 @@ namespace GoPlay_Infra.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TournamentEntity", b =>
+                {
+                    b.HasOne("GoPlay_Core.Entities.UserEntity", "AdmUser")
+                        .WithMany("Tournaments")
+                        .HasForeignKey("AdmUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("AdmUser");
+                });
+
+            modelBuilder.Entity("CategoryEntity", b =>
+                {
+                    b.Navigation("CategoryPlayers");
+                });
+
+            modelBuilder.Entity("GoPlay_Core.Entities.UserEntity", b =>
+                {
+                    b.Navigation("Categories");
+
+                    b.Navigation("Tournaments");
                 });
 
             modelBuilder.Entity("TournamentEntity", b =>

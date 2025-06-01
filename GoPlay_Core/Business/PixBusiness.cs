@@ -1,5 +1,6 @@
 ﻿using GoPlay_Core.Business.Interfaces;
 using GoPlay_Core.Entities;
+using GoPlay_Core.Enum;
 using GoPlay_Core.Repository.Interfaces;
 using GoPlay_Core.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -43,11 +44,20 @@ namespace GoPlay_Core.Business
             // Geração e persistência do TxId
             var guid = Guid.NewGuid().ToString("N");
             string txid = $"goplay{registrationId}{guid.Substring(0, 20)}";
-            entity.TxId = txid;
+
+            if(entity.FirstUserId == userId) entity.FirstUserTxId = txid;
+            else entity.SecondUserTxId = txid;
+
+            var response = await _pixService.GeneratePixAsync(pixRequestData, txid);
+
+            if(response.Contains("error"))
+            {
+                throw new Exception($"Erro ao gerar cobrança Pix: {response}");
+            }
+            entity.RegisterStatus = RegisterStatus.PagamentoPendente;
 
             await _categoryPlayerBusiness.UpdatePlayersAsync(entity, cancellationToken);
 
-            var response = await _pixService.GeneratePixAsync(pixRequestData, txid);
             return response;
         }
 
@@ -71,7 +81,7 @@ namespace GoPlay_Core.Business
                 throw new UnauthorizedAccessException("Usuário não pertence a esta inscrição.");
             }
 
-            await _categoryPlayerRepository.UpdatePlayersAsync(registration);
+            await _categoryPlayerBusiness.UpdatePlayersAsync(registration, cancellationToken);
         }
 
         public async Task<PixRequestData> CreatePixRequestData(int registrationId, string userId, CancellationToken cancellationToken)

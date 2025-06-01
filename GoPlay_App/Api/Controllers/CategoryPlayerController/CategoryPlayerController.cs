@@ -165,37 +165,6 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
             }
         }
 
-
-        [HttpGet("TestCertificate")]
-        public async Task<IActionResult> TestCertificate()
-        {
-            try
-            {
-                var base64 = _configuration["Gerencianet:CertificateBase64"];
-
-                if (string.IsNullOrWhiteSpace(base64))
-                    return BadRequest(new { message = "Configurações de certificado não encontradas." });
-
-                var bytes = Convert.FromBase64String(base64);
-                var tempPath = Path.Combine(Path.GetTempPath(), "efi-test.p12");
-
-                await System.IO.File.WriteAllBytesAsync(tempPath, bytes);
-
-                var certificate = new X509Certificate2(tempPath);
-
-                return Ok(new
-                {
-                    message = "✅ Certificado carregado com sucesso.",
-                    subject = certificate.Subject,
-                    validUntil = certificate.NotAfter
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "❌ Erro ao carregar certificado: " + ex.Message });
-            }
-        }
-
         /// <summary>
         /// Webhook para receber notificações de Pix da Gerencianet.
         /// </summary>
@@ -207,11 +176,25 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
         {
             try
             {
-                var txid = payload.GetProperty("pix")[0].GetProperty("txid").GetString();
-                var userId = payload.GetProperty("pix")[0].GetProperty("infoPagador").GetString();
+                var pixArray = payload.GetProperty("pix");
+                if (pixArray.GetArrayLength() == 0)
+                    return BadRequest(new { message = "Payload não contém dados de pagamento." });
+
+                var pixItem = pixArray[0];
+
+                var txid = pixItem.GetProperty("txid").GetString();
+                var userId = pixItem.GetProperty("infoPagador").GetString();
+                var status = pixItem.TryGetProperty("status", out var statusElement)
+                             ? statusElement.GetString()
+                             : null;
 
                 if (string.IsNullOrWhiteSpace(txid) || string.IsNullOrWhiteSpace(userId))
                     return BadRequest(new { message = "txid ou userId ausente no payload." });
+
+                if (!string.Equals(status, "CONCLUIDA", StringComparison.OrdinalIgnoreCase))
+                {
+                    return Ok(new { message = $"Pagamento com status '{status ?? "desconhecido"}' ignorado." });
+                }
 
                 await _pixBusiness.ConfirmPaymentByTxIdAsync(txid, userId, cancellationToken);
 
@@ -226,8 +209,6 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
                 return StatusCode(500, new { message = $"Erro ao processar webhook: {ex.Message}" });
             }
         }
-
-
 
     }
 }
