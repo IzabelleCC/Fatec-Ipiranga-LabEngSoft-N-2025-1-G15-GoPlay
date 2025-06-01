@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GoPlay_Infra.Migrations
 {
     /// <inheritdoc />
-    public partial class GOP18AddTournamenteCategory : Migration
+    public partial class GOP105CorrigeIdCategoryPlayer : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,11 +28,18 @@ namespace GoPlay_Infra.Migrations
                     Location = table.Column<string>(type: "text", nullable: false),
                     RegistrationFee = table.Column<decimal>(type: "numeric", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    CourtQuantity = table.Column<int>(type: "integer", nullable: false)
+                    CourtQuantity = table.Column<int>(type: "integer", nullable: false),
+                    AdmUserId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tournament", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tournament_AspNetUsers_AdmUserId",
+                        column: x => x.AdmUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -44,11 +51,16 @@ namespace GoPlay_Infra.Migrations
                     CategoryType = table.Column<string>(type: "text", nullable: false),
                     PlayerLimit = table.Column<int>(type: "integer", nullable: false),
                     TournamentId = table.Column<int>(type: "integer", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
+                    UserEntityId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Category", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Category_AspNetUsers_UserEntityId",
+                        column: x => x.UserEntityId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Category_Tournament_TournamentId",
                         column: x => x.TournamentId,
@@ -61,18 +73,31 @@ namespace GoPlay_Infra.Migrations
                 name: "CategoryPlayer",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CategoryId = table.Column<int>(type: "integer", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false)
+                    FirstUserId = table.Column<string>(type: "text", nullable: false),
+                    SecondUserId = table.Column<string>(type: "text", nullable: true),
+                    RegisterStatus = table.Column<int>(type: "integer", nullable: false),
+                    FirstUserPaymentConfirmed = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    SecondUserPaymentConfirmed = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    TxId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CategoryPlayer", x => new { x.CategoryId, x.UserId });
+                    table.PrimaryKey("PK_CategoryPlayer", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CategoryPlayer_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_CategoryPlayer_AspNetUsers_FirstUserId",
+                        column: x => x.FirstUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CategoryPlayer_AspNetUsers_SecondUserId",
+                        column: x => x.SecondUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_CategoryPlayer_Category_CategoryId",
                         column: x => x.CategoryId,
@@ -87,9 +112,29 @@ namespace GoPlay_Infra.Migrations
                 column: "TournamentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CategoryPlayer_UserId",
+                name: "IX_Category_UserEntityId",
+                table: "Category",
+                column: "UserEntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CategoryPlayer_CategoryId",
                 table: "CategoryPlayer",
-                column: "UserId");
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CategoryPlayer_FirstUserId",
+                table: "CategoryPlayer",
+                column: "FirstUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CategoryPlayer_SecondUserId",
+                table: "CategoryPlayer",
+                column: "SecondUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tournament_AdmUserId",
+                table: "Tournament",
+                column: "AdmUserId");
         }
 
         /// <inheritdoc />

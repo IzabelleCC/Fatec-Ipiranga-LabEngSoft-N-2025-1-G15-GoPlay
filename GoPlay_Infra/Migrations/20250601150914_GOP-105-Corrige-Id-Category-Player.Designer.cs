@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GoPlay_Infra.Migrations
 {
     [DbContext(typeof(GoPlayDbContext))]
-    [Migration("20250529003345_GOP-104-Adiciona-campos-referente-status")]
-    partial class GOP104Adicionacamposreferentestatus
+    [Migration("20250601150914_GOP-105-Corrige-Id-Category-Player")]
+    partial class GOP105CorrigeIdCategoryPlayer
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -88,6 +88,10 @@ namespace GoPlay_Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
+
+                    b.Property<string>("TxId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 

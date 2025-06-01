@@ -55,10 +55,6 @@ namespace GoPlay_Core.Business
             {
                 entity.RegisterStatus = RegisterStatus.InscricaoConfirmada;
             }
-            else
-            {
-                entity.RegisterStatus = RegisterStatus.InscricaoRealizada;
-            }
 
             await _categoryPlayerRepository.UpdatePlayersAsync(entity);
         }
