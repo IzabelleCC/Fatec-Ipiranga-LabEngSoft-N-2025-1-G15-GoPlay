@@ -12,7 +12,8 @@ namespace GoPlay_Core.Entities
         public RegisterStatus RegisterStatus { get; set; } = RegisterStatus.InscricaoRealizada;
         public bool FirstUserPaymentConfirmed { get; set; } = false;
         public bool SecondUserPaymentConfirmed { get; set; }
-        public string? TxId { get; set; }
+        public string? FirstUserTxId { get; set; }
+        public string? SecondUserTxId { get; set; }
 
         [JsonIgnore]
         public CategoryEntity Category { get; set; } = null!;
