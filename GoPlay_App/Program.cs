@@ -13,10 +13,10 @@ using GoPlay_Core.Validators;
 using GoPlay_Infra;
 using GoPlay_Infra.Repository;
 using GoPlay_Infra.Utils;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -121,6 +121,22 @@ builder.Services.AddScoped<IPixService, PixService>();
 
 var app = builder.Build();
 
+#region Configuração para Railway / Proxy Reverso
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
+
+// Middleware opcional para debug de chamadas recebidas
+app.Use(async (context, next) =>
+{
+    Console.WriteLine($"[DEBUG] {context.Request.Method} {context.Request.Path}{context.Request.QueryString}");
+    await next();
+});
+
+#endregion
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
@@ -134,7 +150,6 @@ app.UseSwaggerUI(c =>
 app.UseStaticFiles();
 app.UseCors("AllowAll");
 
-app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
@@ -143,7 +158,7 @@ app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
-    endpoints.MapRazorPages(); 
+    endpoints.MapRazorPages();
 });
 
 app.UseHealthChecks("/health");
