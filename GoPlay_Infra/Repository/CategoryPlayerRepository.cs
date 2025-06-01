@@ -131,5 +131,19 @@ namespace GoPlay_Infra.Repository
                 throw new InvalidOperationException("Erro ao atualizar a inscrição.", ex);
             }
         }
+
+        public async Task<CategoryPlayerEntity?> GetByTxIdAsync(string txid)
+        {
+            try
+            {
+                return await _context.CategoryPlayers
+                    .FirstOrDefaultAsync(cp => cp.TxId == txid);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao buscar inscrição por TxId.");
+                throw new InvalidOperationException("Erro ao buscar inscrição por TxId.", ex);
+            }
+        }
     }
 }

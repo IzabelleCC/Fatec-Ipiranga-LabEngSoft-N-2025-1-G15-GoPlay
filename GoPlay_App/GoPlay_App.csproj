@@ -50,4 +50,10 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
+	<ItemGroup>
+		<None Update="C:\Users\Izabelle\ProjetosFatec\GoPlay_Fatec\GoPlay_Back\GoPlay_App\Certs">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
 </Project>

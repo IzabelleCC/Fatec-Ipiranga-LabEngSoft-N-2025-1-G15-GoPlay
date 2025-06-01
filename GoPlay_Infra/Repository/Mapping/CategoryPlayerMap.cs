@@ -44,6 +44,10 @@ namespace GoPlay_Infra.Repository.Mapping
                    .WithMany()
                    .HasForeignKey(cp => cp.SecondUserId)
                    .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Property(cp => cp.TxId)
+                        .HasMaxLength(100)
+                        .IsRequired(false);
         }
     }
 }
