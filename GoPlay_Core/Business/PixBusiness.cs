@@ -44,7 +44,9 @@ namespace GoPlay_Core.Business
             // Geração e persistência do TxId
             var guid = Guid.NewGuid().ToString("N");
             string txid = $"goplay{registrationId}{guid.Substring(0, 20)}";
-            entity.TxId = txid;
+
+            if(entity.FirstUserId == userId) entity.FirstUserTxId = txid;
+            else entity.SecondUserTxId = txid;
 
             var response = await _pixService.GeneratePixAsync(pixRequestData, txid);
 

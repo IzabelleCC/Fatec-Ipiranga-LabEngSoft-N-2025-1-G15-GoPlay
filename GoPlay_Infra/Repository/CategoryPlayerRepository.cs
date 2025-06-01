@@ -137,7 +137,7 @@ namespace GoPlay_Infra.Repository
             try
             {
                 return await _context.CategoryPlayers
-                    .FirstOrDefaultAsync(cp => cp.TxId == txid);
+                    .FirstOrDefaultAsync(cp => cp.FirstUserTxId == txid || cp.SecondUserTxId == txid);
             }
             catch (Exception ex)
             {
