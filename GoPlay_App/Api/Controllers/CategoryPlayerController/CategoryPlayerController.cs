@@ -211,6 +211,7 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
         }
 
         [HttpGet("Webhook")]
+        [HttpGet("Webhook/{*extra}")]
         public IActionResult WebhookValidation()
         {
             return Ok("Webhook de validação respondido com sucesso.");
