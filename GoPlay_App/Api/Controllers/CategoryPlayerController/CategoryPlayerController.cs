@@ -2,7 +2,6 @@
 using GoPlay_Core.Business.Interfaces;
 using GoPlay_Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 
 namespace GoPlay_App.Api.Controllers.CategoryPlayerController
@@ -15,7 +14,6 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
         private readonly IConfiguration _configuration;
         private readonly IPixBusiness _pixBusiness;
 
-
         public CategoryPlayerController(ICategoryPlayerBusiness business, IConfiguration configuration, IPixBusiness pixBusiness)
         {
             _business = business;
@@ -23,9 +21,6 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
             _pixBusiness = pixBusiness;
         }
 
-        /// <summary>
-        /// Inscreve um jogador (ou dupla) em uma categoria.
-        /// </summary>
         [HttpPost("Register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -38,7 +33,6 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
                     return BadRequest(new { message = "Dados enviados inválidos." });
 
                 await _business.RegisterUserToCategory(request.CategoryId, request.FirstUserId, request.SecondUserId, cancellationToken);
-
                 return Ok(new { message = "Usuário inscrito com sucesso na categoria." });
             }
             catch (Exception ex)
@@ -47,9 +41,6 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
             }
         }
 
-        /// <summary>
-        /// Retorna todas as inscrições.
-        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
@@ -57,9 +48,6 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
             return Ok(result);
         }
 
-        /// <summary>
-        /// Retorna uma inscrição por ID.
-        /// </summary>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
         {
@@ -69,9 +57,6 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
                 : Ok(result);
         }
 
-        /// <summary>
-        /// Retorna todas as inscrições por categoria.
-        /// </summary>
         [HttpGet("ByCategory/{categoryId}")]
         public async Task<IActionResult> GetByCategory(int categoryId, CancellationToken cancellationToken)
         {
@@ -79,9 +64,6 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
             return Ok(result);
         }
 
-        /// <summary>
-        /// Retorna todas as inscrições por usuário (como jogador 1 ou 2).
-        /// </summary>
         [HttpGet("ByUser/{userId}")]
         public async Task<IActionResult> GetByUser(string userId, CancellationToken cancellationToken)
         {
@@ -89,9 +71,6 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
             return Ok(result);
         }
 
-        /// <summary>
-        /// Atualiza os jogadores de uma inscrição existente.
-        /// </summary>
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] CategoryPlayerUpdateRequest request, CancellationToken cancellationToken)
         {
@@ -102,7 +81,6 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
                     return NotFound(new { message = "Inscrição não encontrada." });
 
                 request.ToEntity(entity);
-
                 await _business.UpdatePlayersAsync(entity, cancellationToken);
                 return Ok(new { message = "Inscrição atualizada com sucesso." });
             }
@@ -112,9 +90,6 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
             }
         }
 
-        /// <summary>
-        /// Exclui uma inscrição por ID.
-        /// </summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
@@ -129,9 +104,6 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
             }
         }
 
-        /// <summary>
-        /// Gera uma solicitação de pagamento para um jogador.
-        /// </summary>
         [HttpPost("GeneratePayment")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -165,16 +137,32 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
             }
         }
 
-        /// <summary>
-        /// Webhook para receber notificações de Pix da Gerencianet.
-        /// </summary>
         [HttpPost("Webhook")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> WebhookPix([FromBody] JsonElement payload, CancellationToken cancellationToken)
         {
-            Console.WriteLine("Webhook de validação recebido.");
+            var remoteIp = HttpContext.Connection.RemoteIpAddress?.ToString();
+
+            // ✅ Validação de IP da Efí
+            if (remoteIp != "34.193.116.226")
+            {
+                Console.WriteLine($"[ALERTA] IP não autorizado: {remoteIp}");
+                return StatusCode(403, new { message = "IP não autorizado." });
+            }
+
+            // ✅ Validação do HMAC via secrets
+            var queryHmac = HttpContext.Request.Query["hmac"].ToString();
+            var hmacSecret = _configuration["WEBHOOK:HMAC"];
+
+            if (string.IsNullOrWhiteSpace(hmacSecret) || queryHmac != hmacSecret)
+            {
+                Console.WriteLine($"[ALERTA] HMAC inválido ou não configurado. Recebido: {queryHmac}");
+                return StatusCode(403, new { message = "HMAC inválido." });
+            }
+
             try
             {
                 var pixArray = payload.GetProperty("pix");
@@ -182,7 +170,6 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
                     return BadRequest(new { message = "Payload não contém dados de pagamento." });
 
                 var pixItem = pixArray[0];
-
                 var txid = pixItem.GetProperty("txid").GetString();
                 var userId = pixItem.GetProperty("infoPagador").GetString();
                 var status = pixItem.TryGetProperty("status", out var statusElement)
