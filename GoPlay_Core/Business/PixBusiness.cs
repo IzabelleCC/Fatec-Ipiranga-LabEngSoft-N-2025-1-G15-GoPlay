@@ -126,12 +126,12 @@ namespace GoPlay_Core.Business
             var baseUrl = _configuration["Gerencianet:BaseUrl"];
             var (client, token) = await _authenticator.AuthenticateAsync();
 
-            webhookUrl = $"{baseUrl}/api/CategoryPlayer/Webhook?hmac=GOPLAY#2025";
-            Console.WriteLine($"Webhook URL: {webhookUrl}");
+            var webhookUrl_base = $"{baseUrl}/api/CategoryPlayer/Webhook?hmac=GOPLAY#2025";
+            Console.WriteLine($"Webhook URL: {webhookUrl_base}");
 
             var request = new HttpRequestMessage(HttpMethod.Put, $"https://pix.api.efipay.com.br/v2/webhook/{chavePix}")
             {
-                Content = new StringContent(JsonSerializer.Serialize(new { webhookUrl }), Encoding.UTF8, "application/json")
+                Content = new StringContent(JsonSerializer.Serialize(new { webhookUrl_base }), Encoding.UTF8, "application/json")
             };
 
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
