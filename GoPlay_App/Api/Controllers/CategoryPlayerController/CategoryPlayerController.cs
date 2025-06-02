@@ -85,6 +85,7 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
         [HttpPost("Webhook")]
         public async Task<IActionResult> WebhookPix([FromBody] JsonElement payload, CancellationToken cancellationToken)
         {
+            Console.WriteLine("Webhook Pix recebido.");
             var remoteIp = HttpContext.Connection.RemoteIpAddress?.ToString();
             if (remoteIp != "34.193.116.226")
                 return StatusCode(403, new { message = $"IP não autorizado: {remoteIp}" });
@@ -121,12 +122,16 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
 
         [HttpGet("Webhook")]
         [HttpGet("Webhook/{*extra}")]
-        public IActionResult WebhookValidation()
-            => Ok("Webhook de validação respondido com sucesso.");
+        public IActionResult WebhookValidation() 
+        {
+            Console.WriteLine("Webhook de validação recebido.");
+            return Ok("Webhook de validação respondido com sucesso.");
+        }
 
         [HttpPost("SetupWebhook")]
         public async Task<IActionResult> SetupWebhook(CancellationToken cancellationToken)
         {
+            Console.WriteLine("Iniciando configuração do Webhook...");
             var chavePix = "goplay.fatec@gmail.com";
             var webhookUrl = "https://goplay-production.up.railway.app/api/CategoryPlayer/Webhook?hmac=GOPLAY#2025";
 

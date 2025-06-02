@@ -18,6 +18,7 @@ namespace GoPlay_Core.Services.Gerencianet
 
         public async Task<(HttpClient client, string accessToken)> AuthenticateAsync()
         {
+            Console.WriteLine("Iniciando autenticação com Gerencianet...");
             var baseUrl = _configuration["Gerencianet:BaseUrl"];
             var clientId = _configuration["Gerencianet:ClientId"];
             var clientSecret = _configuration["Gerencianet:ClientSecret"];
