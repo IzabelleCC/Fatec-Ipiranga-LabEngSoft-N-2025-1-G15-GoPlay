@@ -43,10 +43,6 @@ namespace GoPlay_Core.Services.Gerencianet
                     });
                 }
 
-                //using var doc = JsonDocument.Parse(responseBody);
-                //var qrCode = doc.RootElement.GetProperty("loc").GetProperty("location").GetString();
-                //var brCode = doc.RootElement.GetProperty("pixCopiaECola").GetString();
-
                 return JsonSerializer.Serialize(new
                 {
                     message = "Cobrança Pix gerada com sucesso.",
