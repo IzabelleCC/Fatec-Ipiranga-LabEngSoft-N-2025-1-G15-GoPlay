@@ -2,9 +2,13 @@
 using GoPlay_Core.Entities;
 using GoPlay_Core.Enum;
 using GoPlay_Core.Repository.Interfaces;
+using GoPlay_Core.Services.Gerencianet;
 using GoPlay_Core.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Globalization;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 
 
 namespace GoPlay_Core.Business
@@ -18,8 +22,9 @@ namespace GoPlay_Core.Business
         private readonly ICategoryRepository _categoryRepository;
         private readonly IPixService _pixService;
         private readonly IConfiguration _configuration;
+        private readonly GerencianetAuthenticator _authenticator;
 
-        public PixBusiness(ICategoryPlayerBusiness categoryPlayerBusiness, ICategoryPlayerRepository categoryPlayerRepository, IPixService pixService, IConfiguration configuration, IUserRepository userRepository, ITournamentRepository turnamentRepository, ICategoryRepository categoryRepository)
+        public PixBusiness(ICategoryPlayerBusiness categoryPlayerBusiness, ICategoryPlayerRepository categoryPlayerRepository, IPixService pixService, IConfiguration configuration, IUserRepository userRepository, ITournamentRepository turnamentRepository, ICategoryRepository categoryRepository, GerencianetAuthenticator authenticator)
         {
             _categoryPlayerBusiness = categoryPlayerBusiness;
             _categoryPlayerRepository = categoryPlayerRepository;
@@ -28,6 +33,7 @@ namespace GoPlay_Core.Business
             _userRepository = userRepository;
             _turnamentRepository = turnamentRepository;
             _categoryRepository = categoryRepository;
+            _authenticator = authenticator;
         }
 
         public async Task<string> GeneratePixForRegistration(int registrationId, string userId, CancellationToken cancellationToken)
@@ -45,12 +51,12 @@ namespace GoPlay_Core.Business
             var guid = Guid.NewGuid().ToString("N");
             string txid = $"goplay{registrationId}{guid.Substring(0, 20)}";
 
-            if(entity.FirstUserId == userId) entity.FirstUserTxId = txid;
+            if (entity.FirstUserId == userId) entity.FirstUserTxId = txid;
             else entity.SecondUserTxId = txid;
 
             var response = await _pixService.GeneratePixAsync(pixRequestData, txid);
 
-            if(response.Contains("error"))
+            if (response.Contains("error"))
             {
                 throw new Exception($"Erro ao gerar cobrança Pix: {response}");
             }
@@ -113,6 +119,25 @@ namespace GoPlay_Core.Business
                 solicitacaoPagador = "Pagamento da inscrição GoPlay"
             };
         }
+
+        public async Task RegisterWebhookAsync(string chavePix, string webhookUrl, CancellationToken cancellationToken)
+        {
+            var baseUrl = _configuration["Gerencianet:BaseUrl"];
+            var (client, token) = await _authenticator.AuthenticateAsync();
+
+            var request = new HttpRequestMessage(HttpMethod.Put, $"{baseUrl}/v2/webhook/{chavePix}")
+            {
+                Content = new StringContent(JsonSerializer.Serialize(new { webhookUrl }), Encoding.UTF8, "application/json")
+            };
+
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var response = await client.SendAsync(request, cancellationToken);
+            var body = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+                throw new Exception($"Erro ao registrar webhook: {body}");
+        }
+
     }
 }
 
