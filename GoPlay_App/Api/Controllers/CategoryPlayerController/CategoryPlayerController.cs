@@ -95,28 +95,29 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
 
             var hmac = HttpContext.Request.Query["hmac"].ToString();
             Console.WriteLine($"HMAC: -> {hmac}");
+
             if (hmac != _configuration["WEBHOOK:HMAC"])
                 return StatusCode(403, new { message = "HMAC inválido." });
 
             try
             {
                 Console.WriteLine("Processando payload do Webhook...");
-                //var pixArray = payload.GetProperty("pix");
-                //if (pixArray.GetArrayLength() == 0)
-                //    return BadRequest(new { message = "Payload não contém dados." });
+                var pixArray = payload.GetProperty("pix");
+                if (pixArray.GetArrayLength() == 0)
+                    return BadRequest(new { message = "Payload não contém dados." });
 
-                //var pixItem = pixArray[0];
-                //var txid = pixItem.GetProperty("txid").GetString();
-                //var userId = pixItem.GetProperty("infoPagador").GetString();
-                //var status = pixItem.TryGetProperty("status", out var st) ? st.GetString() : null;
+                var pixItem = pixArray[0];
+                var txid = pixItem.GetProperty("txid").GetString();
+                var userId = pixItem.GetProperty("infoPagador").GetString();
+                var status = pixItem.TryGetProperty("status", out var st) ? st.GetString() : null;
 
-                //if (string.IsNullOrWhiteSpace(txid) || string.IsNullOrWhiteSpace(userId))
-                //    return BadRequest(new { message = "txid ou userId ausente." });
+                if (string.IsNullOrWhiteSpace(txid) || string.IsNullOrWhiteSpace(userId))
+                    return BadRequest(new { message = "txid ou userId ausente." });
 
-                //if (!string.Equals(status, "CONCLUIDA", StringComparison.OrdinalIgnoreCase))
-                //    return Ok(new { message = $"Status '{status}' ignorado." });
+                if (!string.Equals(status, "CONCLUIDA", StringComparison.OrdinalIgnoreCase))
+                    return Ok(new { message = $"Status '{status}' ignorado." });
 
-                //await _pixBusiness.ConfirmPaymentByTxIdAsync(txid, userId, cancellationToken);
+                await _pixBusiness.ConfirmPaymentByTxIdAsync(txid, userId, cancellationToken);
                 return Ok(new { message = "Pagamento confirmado com sucesso." });
             }
             catch (Exception ex)
@@ -133,22 +134,22 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
             return Ok("Webhook de validação respondido com sucesso.");
         }
 
-        [HttpPost("SetupWebhook")]
-        public async Task<IActionResult> SetupWebhook(CancellationToken cancellationToken)
-        {
-            Console.WriteLine("Iniciando configuração do Webhook...");
-            var chavePix = "goplay.fatec@gmail.com";
-            var webhookUrl = "https://goplay-production.up.railway.app/api/CategoryPlayer/Webhook?hmac=GOPLAY2025";
+        //[HttpPost("SetupWebhook")]
+        //public async Task<IActionResult> SetupWebhook(CancellationToken cancellationToken)
+        //{
+        //    Console.WriteLine("Iniciando configuração do Webhook...");
+        //    var chavePix = "goplay.fatec@gmail.com";
+        //    var webhookUrl = "https://goplay-production.up.railway.app/api/CategoryPlayer/Webhook?hmac=GOPLAY2025";
 
-            try
-            {
-                await _pixBusiness.RegisterWebhookAsync(chavePix, webhookUrl, cancellationToken);
-                return Ok(new { message = "Webhook registrado com sucesso." });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = ex.Message });
-            }
-        }
+        //    try
+        //    {
+        //        await _pixBusiness.RegisterWebhookAsync(chavePix, webhookUrl, cancellationToken);
+        //        return Ok(new { message = "Webhook registrado com sucesso." });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, new { message = ex.Message });
+        //    }
+        //}
     }
 }
