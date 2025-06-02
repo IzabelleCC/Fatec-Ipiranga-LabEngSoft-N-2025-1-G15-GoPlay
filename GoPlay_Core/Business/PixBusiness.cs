@@ -120,36 +120,36 @@ namespace GoPlay_Core.Business
             };
         }
 
-        public async Task RegisterWebhookAsync(string chavePix, string webhookUrl, CancellationToken cancellationToken)
-        {
-            Console.WriteLine("Iniciando registro do Webhook...");
-            var baseUrl = "https://goplay-production.up.railway.app";
-            var (client, token) = await _authenticator.AuthenticateAsync();
+        //public async Task RegisterWebhookAsync(string chavePix, string webhookUrl, CancellationToken cancellationToken)
+        //{
+        //    Console.WriteLine("Iniciando registro do Webhook...");
+        //    var baseUrl = "https://goplay-production.up.railway.app";
+        //    var (client, token) = await _authenticator.AuthenticateAsync();
 
-            var webhookUrl_base = $"{baseUrl}/api/CategoryPlayer/Webhook?hmac=GOPLAY#2025";
-            Console.WriteLine($"Webhook URL: {webhookUrl_base}");
+        //    var webhookUrl_base = $"{baseUrl}/api/CategoryPlayer/Webhook?hmac=GOPLAY#2025";
+        //    Console.WriteLine($"Webhook URL: {webhookUrl_base}");
 
-            var bodyObject = new { webhookUrl };
-            var json = JsonSerializer.Serialize(bodyObject);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+        //    var bodyObject = new { webhookUrl };
+        //    var json = JsonSerializer.Serialize(bodyObject);
+        //    var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var request = new HttpRequestMessage(
-                HttpMethod.Put,
-                $"https://pix.api.efipay.com.br/v2/webhook/{chavePix}"
-            )
-            {
-                Content = content
-            };
+        //    var request = new HttpRequestMessage(
+        //        HttpMethod.Put,
+        //        $"https://pix.api.efipay.com.br/v2/webhook/{chavePix}"
+        //    )
+        //    {
+        //        Content = content
+        //    };
 
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            request.Headers.Add("x-skip-mtls-checking", "true"); // conforme Postman
+        //    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        //    request.Headers.Add("x-skip-mtls-checking", "true"); // conforme Postman
 
-            var response = await client.SendAsync(request, cancellationToken);
-            var responseBody = await response.Content.ReadAsStringAsync();
+        //    var response = await client.SendAsync(request, cancellationToken);
+        //    var responseBody = await response.Content.ReadAsStringAsync();
 
-            if (!response.IsSuccessStatusCode)
-                throw new Exception($"Erro ao registrar webhook: {responseBody}");
-        }
+        //    if (!response.IsSuccessStatusCode)
+        //        throw new Exception($"Erro ao registrar webhook: {responseBody}");
+        //}
 
     }
 }
