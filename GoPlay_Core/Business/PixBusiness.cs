@@ -67,18 +67,22 @@ namespace GoPlay_Core.Business
             return response;
         }
 
-        public async Task ConfirmPaymentByTxIdAsync(string txid, string userId, CancellationToken cancellationToken)
+        public async Task ConfirmPaymentByTxIdAsync(string txid, CancellationToken cancellationToken)
         {
             var registration = await _categoryPlayerRepository.GetByTxIdAsync(txid);
-
+            Console.WriteLine($"Inscrição encontrada: {registration}");
+            Console.WriteLine($"Confirmando pagamento para TxId: {txid}");
             if (registration == null)
+            {
+                Console.WriteLine("Inscrição não encontrada para o TxId informado.");
                 throw new KeyNotFoundException("Inscrição não encontrada com o TxId informado.");
+            }
 
-            if (registration.FirstUserId == userId)
+            if (registration.FirstUserTxId == txid)
             {
                 registration.FirstUserPaymentConfirmed = true;
             }
-            else if (registration.SecondUserId == userId)
+            else if (registration.SecondUserTxId == txid)
             {
                 registration.SecondUserPaymentConfirmed = true;
             }
