@@ -102,6 +102,7 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
             try
             {
                 Console.WriteLine("Processando payload do Webhook...");
+                Console.WriteLine($"Payload: {payload}");
                 var pixArray = payload.GetProperty("pix");
                 if (pixArray.GetArrayLength() == 0)
                     return BadRequest(new { message = "Payload não contém dados." });
