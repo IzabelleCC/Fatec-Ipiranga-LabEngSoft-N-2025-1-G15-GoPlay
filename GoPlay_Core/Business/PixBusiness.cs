@@ -123,7 +123,7 @@ namespace GoPlay_Core.Business
         public async Task RegisterWebhookAsync(string chavePix, string webhookUrl, CancellationToken cancellationToken)
         {
             Console.WriteLine("Iniciando registro do Webhook...");
-            var baseUrl = _configuration["Gerencianet:BaseUrl"];
+            var baseUrl = "https://goplay-production.up.railway.app";
             var (client, token) = await _authenticator.AuthenticateAsync();
 
             var webhookUrl_base = $"{baseUrl}/api/CategoryPlayer/Webhook?hmac=GOPLAY#2025";
