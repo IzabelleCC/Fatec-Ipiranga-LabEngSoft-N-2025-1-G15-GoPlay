@@ -87,31 +87,36 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
         {
             Console.WriteLine("Webhook Pix recebido.");
             var remoteIp = HttpContext.Connection.RemoteIpAddress?.ToString();
+
+            Console.WriteLine($"IP remoto: {remoteIp}");
+
             if (remoteIp != "34.193.116.226")
                 return StatusCode(403, new { message = $"IP não autorizado: {remoteIp}" });
 
             var hmac = HttpContext.Request.Query["hmac"].ToString();
+            Console.WriteLine($"HMAC: -> {hmac}");
             if (hmac != _configuration["WEBHOOK:HMAC"])
                 return StatusCode(403, new { message = "HMAC inválido." });
 
             try
             {
-                var pixArray = payload.GetProperty("pix");
-                if (pixArray.GetArrayLength() == 0)
-                    return BadRequest(new { message = "Payload não contém dados." });
+                Console.WriteLine("Processando payload do Webhook...");
+                //var pixArray = payload.GetProperty("pix");
+                //if (pixArray.GetArrayLength() == 0)
+                //    return BadRequest(new { message = "Payload não contém dados." });
 
-                var pixItem = pixArray[0];
-                var txid = pixItem.GetProperty("txid").GetString();
-                var userId = pixItem.GetProperty("infoPagador").GetString();
-                var status = pixItem.TryGetProperty("status", out var st) ? st.GetString() : null;
+                //var pixItem = pixArray[0];
+                //var txid = pixItem.GetProperty("txid").GetString();
+                //var userId = pixItem.GetProperty("infoPagador").GetString();
+                //var status = pixItem.TryGetProperty("status", out var st) ? st.GetString() : null;
 
-                if (string.IsNullOrWhiteSpace(txid) || string.IsNullOrWhiteSpace(userId))
-                    return BadRequest(new { message = "txid ou userId ausente." });
+                //if (string.IsNullOrWhiteSpace(txid) || string.IsNullOrWhiteSpace(userId))
+                //    return BadRequest(new { message = "txid ou userId ausente." });
 
-                if (!string.Equals(status, "CONCLUIDA", StringComparison.OrdinalIgnoreCase))
-                    return Ok(new { message = $"Status '{status}' ignorado." });
+                //if (!string.Equals(status, "CONCLUIDA", StringComparison.OrdinalIgnoreCase))
+                //    return Ok(new { message = $"Status '{status}' ignorado." });
 
-                await _pixBusiness.ConfirmPaymentByTxIdAsync(txid, userId, cancellationToken);
+                //await _pixBusiness.ConfirmPaymentByTxIdAsync(txid, userId, cancellationToken);
                 return Ok(new { message = "Pagamento confirmado com sucesso." });
             }
             catch (Exception ex)
@@ -133,7 +138,7 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
         {
             Console.WriteLine("Iniciando configuração do Webhook...");
             var chavePix = "goplay.fatec@gmail.com";
-            var webhookUrl = "https://goplay-production.up.railway.app/api/CategoryPlayer/Webhook?hmac=GOPLAY#2025";
+            var webhookUrl = "https://goplay-production.up.railway.app/api/CategoryPlayer/Webhook?hmac=GOPLAY2025";
 
             try
             {
