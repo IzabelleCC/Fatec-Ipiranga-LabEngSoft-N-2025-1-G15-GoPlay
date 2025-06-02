@@ -119,6 +119,8 @@ builder.Services.AddScoped<ICategoryPlayerRepository, CategoryPlayerRepository>(
 builder.Services.AddScoped<ICategoryPlayerBusiness, CategoryPlayerBusiness>();
 builder.Services.AddScoped<IPixBusiness, PixBusiness>();
 builder.Services.AddScoped<IPixService, PixService>();
+builder.Services.AddScoped<GerencianetAuthenticator>();
+
 
 #endregion
 
