@@ -129,17 +129,26 @@ namespace GoPlay_Core.Business
             var webhookUrl_base = $"{baseUrl}/api/CategoryPlayer/Webhook?hmac=GOPLAY#2025";
             Console.WriteLine($"Webhook URL: {webhookUrl_base}");
 
-            var request = new HttpRequestMessage(HttpMethod.Put, $"https://pix.api.efipay.com.br/v2/webhook/{chavePix}")
+            var bodyObject = new { webhookUrl };
+            var json = JsonSerializer.Serialize(bodyObject);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var request = new HttpRequestMessage(
+                HttpMethod.Put,
+                $"https://pix.api.efipay.com.br/v2/webhook/{chavePix}"
+            )
             {
-                Content = new StringContent(JsonSerializer.Serialize(new { webhookUrl_base }), Encoding.UTF8, "application/json")
+                Content = content
             };
 
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            request.Headers.Add("x-skip-mtls-checking", "true"); // conforme Postman
+
             var response = await client.SendAsync(request, cancellationToken);
-            var body = await response.Content.ReadAsStringAsync();
+            var responseBody = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
-                throw new Exception($"Erro ao registrar webhook: {body}");
+                throw new Exception($"Erro ao registrar webhook: {responseBody}");
         }
 
     }
