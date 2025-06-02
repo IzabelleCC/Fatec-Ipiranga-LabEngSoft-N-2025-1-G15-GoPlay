@@ -124,16 +124,17 @@ builder.Services.AddScoped<IPixService, PixService>();
 
 #region Pipeline da Aplicação
 
-var app = builder.Build();
 
 #region Configuração para Railway / Proxy Reverso
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-    options.KnownNetworks.Clear(); // Permitir IPs externos como o da Efí
+    options.KnownNetworks.Clear();
     options.KnownProxies.Clear();
 });
+
+var app = builder.Build();
 
 app.UseForwardedHeaders();
 
@@ -156,9 +157,9 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "GoPlay API v1"));
 
-app.UseRouting(); // deve vir antes
+app.UseRouting();
 
-app.UseStaticFiles(); // ordem correta aqui
+app.UseStaticFiles();
 app.UseCors("AllowAll");
 
 app.UseAuthentication();
