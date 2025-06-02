@@ -90,28 +90,19 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
             try
             {
                 Console.WriteLine("Processando payload do Webhook...");
-                Console.WriteLine($"Payload: {payload}");
                 var pixArray = payload.GetProperty("pix");
+
                 if (pixArray.GetArrayLength() == 0)
                     return BadRequest(new { message = "Payload não contém dados de pagamento." });
 
                 var pixItem = pixArray[0];
 
                 var txid = pixItem.GetProperty("txid").GetString();
-                var userId = pixItem.GetProperty("infoPagador").GetString();
-                var status = pixItem.TryGetProperty("status", out var statusElement)
-                             ? statusElement.GetString()
-                             : null;
+                Console.WriteLine($"TxId recebido: {txid}");
+                if (string.IsNullOrWhiteSpace(txid))
+                    return BadRequest(new { message = "txid ausente no payload." });
 
-                if (string.IsNullOrWhiteSpace(txid) || string.IsNullOrWhiteSpace(userId))
-                    return BadRequest(new { message = "txid ou userId ausente no payload." });
-
-                if (!string.Equals(status, "CONCLUIDA", StringComparison.OrdinalIgnoreCase))
-                {
-                    return Ok(new { message = $"Pagamento com status '{status ?? "desconhecido"}' ignorado." });
-                }
-
-                await _pixBusiness.ConfirmPaymentByTxIdAsync(txid, userId, cancellationToken);
+                await _pixBusiness.ConfirmPaymentByTxIdAsync(txid, cancellationToken);
 
                 return Ok(new { message = "Pagamento confirmado com sucesso." });
             }
