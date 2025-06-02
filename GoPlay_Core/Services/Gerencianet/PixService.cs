@@ -12,10 +12,10 @@ namespace GoPlay_Core.Services.Gerencianet
         private readonly IConfiguration _configuration;
         private readonly GerencianetAuthenticator _authenticator;
 
-        public PixService(IConfiguration configuration)
+        public PixService(IConfiguration configuration, GerencianetAuthenticator authenticator)
         {
             _configuration = configuration;
-            _authenticator = new GerencianetAuthenticator(configuration);
+            _authenticator = authenticator;
         }
 
         public async Task<string> GeneratePixAsync(PixRequestData data, string txid)
