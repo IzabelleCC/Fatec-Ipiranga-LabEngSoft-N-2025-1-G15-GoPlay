@@ -125,7 +125,7 @@ namespace GoPlay_Core.Business
             var baseUrl = _configuration["Gerencianet:BaseUrl"];
             var (client, token) = await _authenticator.AuthenticateAsync();
 
-            var request = new HttpRequestMessage(HttpMethod.Put, $"{baseUrl}/v2/webhook/{chavePix}")
+            var request = new HttpRequestMessage(HttpMethod.Put, $"https://pix.api.efipay.com.br/v2/webhook/{chavePix}")
             {
                 Content = new StringContent(JsonSerializer.Serialize(new { webhookUrl }), Encoding.UTF8, "application/json")
             };
