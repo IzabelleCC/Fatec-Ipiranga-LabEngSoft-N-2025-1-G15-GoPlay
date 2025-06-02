@@ -70,9 +70,13 @@ namespace GoPlay_Core.Business
         public async Task ConfirmPaymentByTxIdAsync(string txid, CancellationToken cancellationToken)
         {
             var registration = await _categoryPlayerRepository.GetByTxIdAsync(txid);
-
+            Console.WriteLine($"Inscrição encontrada: {registration}");
+            Console.WriteLine($"Confirmando pagamento para TxId: {txid}");
             if (registration == null)
+            {
+                Console.WriteLine("Inscrição não encontrada para o TxId informado.");
                 throw new KeyNotFoundException("Inscrição não encontrada com o TxId informado.");
+            }
 
             if (registration.FirstUserTxId == txid)
             {

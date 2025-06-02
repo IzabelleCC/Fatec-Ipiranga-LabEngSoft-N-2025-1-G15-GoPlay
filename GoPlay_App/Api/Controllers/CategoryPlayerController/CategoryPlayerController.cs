@@ -99,6 +99,7 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
 
                 var txid = pixItem.GetProperty("txid").GetString();
                 Console.WriteLine($"TxId recebido: {txid}");
+
                 if (string.IsNullOrWhiteSpace(txid))
                     return BadRequest(new { message = "txid ausente no payload." });
 
