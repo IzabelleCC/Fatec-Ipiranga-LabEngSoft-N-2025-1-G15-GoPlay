@@ -14,7 +14,7 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
     public class TournamentManagerController : ControllerBase
     {
         private readonly ITournamentBusiness<TournamentEntity> _tournamentBusiness;
-        private readonly ICategoryPlayerBusiness _categoryPlayerBusiness;
+        private readonly IMatchGroupBusiness _matchGroupBusiness;
 
         /// <summary>
         /// Construtor do Controller
@@ -23,11 +23,10 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         /// <param name="configuration"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public TournamentManagerController(
-            ITournamentBusiness<TournamentEntity> business,
-            ICategoryPlayerBusiness categoryPlayerBusiness)
+            ITournamentBusiness<TournamentEntity> business, IMatchGroupBusiness matchGroupBusiness)
         {
             _tournamentBusiness = business ?? throw new ArgumentNullException(nameof(business));
-            _categoryPlayerBusiness = categoryPlayerBusiness ?? throw new ArgumentNullException(nameof(categoryPlayerBusiness));
+            _matchGroupBusiness = matchGroupBusiness;
         }
 
         /// <summary>
@@ -231,5 +230,29 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
             }
         }
 
+        [HttpPost("GenerateGroupMatches/{tournamentId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GenerateGroupMatches(int tournamentId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var matchGroup = await _matchGroupBusiness.GenerateMatchesForTournament(tournamentId, cancellationToken);
+
+                if (matchGroup == null)
+                    return NotFound(new { message = "Nenhum grupo de partidas encontrado." });
+
+                return Ok(new
+                {
+                    message = "Partidas geradas com sucesso.",
+                    data = matchGroup // Tipo: TournamentMatchesResultDto
+                });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
     }
 }

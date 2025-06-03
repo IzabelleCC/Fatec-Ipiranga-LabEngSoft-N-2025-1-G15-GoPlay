@@ -10,13 +10,11 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
     public class CategoryPlayerController : ControllerBase
     {
         private readonly ICategoryPlayerBusiness _business;
-        private readonly IConfiguration _configuration;
         private readonly IPixBusiness _pixBusiness;
 
-        public CategoryPlayerController(ICategoryPlayerBusiness business, IConfiguration configuration, IPixBusiness pixBusiness)
+        public CategoryPlayerController(ICategoryPlayerBusiness business, IPixBusiness pixBusiness)
         {
             _business = business;
-            _configuration = configuration;
             _pixBusiness = pixBusiness;
         }
 
@@ -115,28 +113,11 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
 
         [HttpGet("Webhook")]
         [HttpGet("Webhook/{*extra}")]
-        public IActionResult WebhookValidation() 
+        public IActionResult WebhookValidation()
         {
             Console.WriteLine("Webhook de validação recebido.");
             return Ok("Webhook de validação respondido com sucesso.");
         }
 
-        //[HttpPost("SetupWebhook")]
-        //public async Task<IActionResult> SetupWebhook(CancellationToken cancellationToken)
-        //{
-        //    Console.WriteLine("Iniciando configuração do Webhook...");
-        //    var chavePix = "goplay.fatec@gmail.com";
-        //    var webhookUrl = "https://goplay-production.up.railway.app/api/CategoryPlayer/Webhook?hmac=GOPLAY2025";
-
-        //    try
-        //    {
-        //        await _pixBusiness.RegisterWebhookAsync(chavePix, webhookUrl, cancellationToken);
-        //        return Ok(new { message = "Webhook registrado com sucesso." });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, new { message = ex.Message });
-        //    }
-        //}
     }
 }
