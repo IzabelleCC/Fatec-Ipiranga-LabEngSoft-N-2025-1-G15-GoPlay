@@ -8,6 +8,7 @@
         public int RegistrationCategoryId { get; set; } 
         public DateTime? ScheduledAt { get; set; }
         public string? Result { get; set; }
+        public bool AttendanceConfirmed { get; set; } = false;
         public CategoryPlayerEntity RegistrationCategory { get; set; } = null!;
         public CategoryEntity Category { get; set; } = null!;
     }
