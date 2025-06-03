@@ -105,7 +105,7 @@ namespace GoPlay_Infra.Migrations
                     b.ToTable("CategoryPlayer", (string)null);
                 });
 
-            modelBuilder.Entity("GoPlay_Core.Entities.MatchEntity", b =>
+            modelBuilder.Entity("GoPlay_Core.Entities.MatchGroupEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -116,15 +116,15 @@ namespace GoPlay_Infra.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Player1RegistrationId")
+                    b.Property<int>("GroupNumber")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Player2RegistrationId")
+                    b.Property<int>("RegistrationCategoryId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Result")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<DateTime?>("ScheduledAt")
                         .HasColumnType("timestamp with time zone");
@@ -133,11 +133,9 @@ namespace GoPlay_Infra.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("Player1RegistrationId");
+                    b.HasIndex("RegistrationCategoryId");
 
-                    b.HasIndex("Player2RegistrationId");
-
-                    b.ToTable("Matches", (string)null);
+                    b.ToTable("MatchGroup", (string)null);
                 });
 
             modelBuilder.Entity("GoPlay_Core.Entities.UserEntity", b =>
@@ -476,31 +474,23 @@ namespace GoPlay_Infra.Migrations
                     b.Navigation("SecondUser");
                 });
 
-            modelBuilder.Entity("GoPlay_Core.Entities.MatchEntity", b =>
+            modelBuilder.Entity("GoPlay_Core.Entities.MatchGroupEntity", b =>
                 {
                     b.HasOne("CategoryEntity", "Category")
-                        .WithMany()
+                        .WithMany("MatchGroups")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GoPlay_Core.Entities.CategoryPlayerEntity", "Player1")
-                        .WithMany()
-                        .HasForeignKey("Player1RegistrationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("GoPlay_Core.Entities.CategoryPlayerEntity", "Player2")
-                        .WithMany()
-                        .HasForeignKey("Player2RegistrationId")
+                    b.HasOne("GoPlay_Core.Entities.CategoryPlayerEntity", "RegistrationCategory")
+                        .WithMany("MatchGroups")
+                        .HasForeignKey("RegistrationCategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Category");
 
-                    b.Navigation("Player1");
-
-                    b.Navigation("Player2");
+                    b.Navigation("RegistrationCategory");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -568,6 +558,13 @@ namespace GoPlay_Infra.Migrations
             modelBuilder.Entity("CategoryEntity", b =>
                 {
                     b.Navigation("CategoryPlayers");
+
+                    b.Navigation("MatchGroups");
+                });
+
+            modelBuilder.Entity("GoPlay_Core.Entities.CategoryPlayerEntity", b =>
+                {
+                    b.Navigation("MatchGroups");
                 });
 
             modelBuilder.Entity("GoPlay_Core.Entities.UserEntity", b =>

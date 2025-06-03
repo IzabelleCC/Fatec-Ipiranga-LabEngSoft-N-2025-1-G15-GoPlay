@@ -9,10 +9,10 @@ namespace GoPlay_Core.Repository.Interfaces
 {
     public interface IMatchRepository
     {
-        Task AddRangeAsync(List<MatchEntity> matches);
-        Task<List<MatchEntity>> GetByCategoryAsync(int categoryId);
-        Task<MatchEntity?> GetByIdAsync(int id);
-        Task UpdateAsync(MatchEntity match);
-        Task DeleteAsync(MatchEntity match);
+        Task AddRangeAsync(List<MatchGroupEntity> matches);
+        Task<List<MatchGroupEntity>> GetByCategoryAsync(int categoryId);
+        Task<MatchGroupEntity?> GetByIdAsync(int id);
+        Task UpdateAsync(MatchGroupEntity match);
+        Task DeleteAsync(MatchGroupEntity match);
     }
 }

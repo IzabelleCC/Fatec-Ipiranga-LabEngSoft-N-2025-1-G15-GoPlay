@@ -23,5 +23,8 @@ namespace GoPlay_Core.Entities
 
         [JsonIgnore]
         public UserEntity? SecondUser { get; set; }
+
+        public ICollection<MatchGroupEntity> MatchGroups { get; set; } = new List<MatchGroupEntity>();
+
     }
 }

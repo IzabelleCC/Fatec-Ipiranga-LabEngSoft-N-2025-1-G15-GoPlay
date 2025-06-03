@@ -1,4 +1,5 @@
-﻿using GoPlay_Core.Entities;
+﻿using System.Threading;
+using GoPlay_Core.Entities;
 
 namespace GoPlay_Core.Business.Interfaces
 {
@@ -11,5 +12,6 @@ namespace GoPlay_Core.Business.Interfaces
         Task RegisterUserToCategory(int categoryId, string firstUserId, string? secondUserId, CancellationToken cancellationToken);
         Task DeleteAsync(int id, CancellationToken cancellationToken);
         Task UpdatePlayersAsync(CategoryPlayerEntity entity, CancellationToken cancellationToken);
+
     }
 }

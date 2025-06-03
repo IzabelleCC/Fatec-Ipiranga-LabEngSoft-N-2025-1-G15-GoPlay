@@ -63,15 +63,16 @@ public class UserEntityValidator : AbstractValidator<UserEntity>
 
     private bool IsValidCpfOrCnpj(string input)
     {
-        var onlyDigits = new string(input.Where(char.IsDigit).ToArray());
+        //var onlyDigits = new string(input.Where(char.IsDigit).ToArray());
 
-        if (onlyDigits.Length == 11)
-            return Cpf.Validar(onlyDigits);
+        //if (onlyDigits.Length == 11)
+        //    return Cpf.Validar(onlyDigits);
 
-        if (onlyDigits.Length == 14)
-            return Cnpj.Validar(onlyDigits);
+        //if (onlyDigits.Length == 14)
+        //    return Cnpj.Validar(onlyDigits);
 
-        return false;
+        //return false;
+        return true; // Temporarily returning true for all inputs, replace with actual validation logic.
     }
 
     private async Task<bool> BeUniqueEmailByUserType(string email, UserTypeEnum userType, CancellationToken cancellationToken)

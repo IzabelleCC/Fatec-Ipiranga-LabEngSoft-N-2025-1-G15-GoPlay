@@ -13,38 +13,34 @@ namespace GoPlay_Infra.Repository
             _context = context;
         }
 
-        public async Task AddRangeAsync(List<MatchEntity> matches)
+        public async Task AddRangeAsync(List<MatchGroupEntity> matches)
         {
             await _context.Matches.AddRangeAsync(matches);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<MatchEntity>> GetByCategoryAsync(int categoryId)
+        public async Task<List<MatchGroupEntity>> GetByCategoryAsync(int categoryId)
         {
             return await _context.Matches
                 .Where(m => m.CategoryId == categoryId)
-                .Include(m => m.Player1)
-                .Include(m => m.Player2)
                 .Include(m => m.Category)
                 .ToListAsync();
         }
 
-        public async Task<MatchEntity?> GetByIdAsync(int id)
+        public async Task<MatchGroupEntity?> GetByIdAsync(int id)
         {
             return await _context.Matches
-                .Include(m => m.Player1)
-                .Include(m => m.Player2)
                 .Include(m => m.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
 
-        public async Task UpdateAsync(MatchEntity match)
+        public async Task UpdateAsync(MatchGroupEntity match)
         {
             _context.Matches.Update(match);
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(MatchEntity match)
+        public async Task DeleteAsync(MatchGroupEntity match)
         {
             _context.Matches.Remove(match);
             await _context.SaveChangesAsync();

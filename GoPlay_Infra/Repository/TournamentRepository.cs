@@ -135,6 +135,7 @@ namespace GoPlay_Infra.Repository
             {
                 var tournament = await _context.Tournaments
                     .Include(t => t.Categories)
+                        .ThenInclude(c => c.CategoryPlayers)
                     .FirstOrDefaultAsync(t => t.Id == id);
 
                 if (tournament == null)

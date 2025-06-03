@@ -7,67 +7,56 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GoPlay_Infra.Migrations
 {
     /// <inheritdoc />
-    public partial class GOP142CriatabelaMatch : Migration
+    public partial class GOP105CriatabelaMatchGroup : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Matches",
+                name: "MatchGroup",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CategoryId = table.Column<int>(type: "integer", nullable: false),
-                    Player1RegistrationId = table.Column<int>(type: "integer", nullable: false),
-                    Player2RegistrationId = table.Column<int>(type: "integer", nullable: false),
+                    GroupNumber = table.Column<int>(type: "integer", nullable: false),
+                    RegistrationCategoryId = table.Column<int>(type: "integer", nullable: false),
                     ScheduledAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Result = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true)
+                    Result = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Matches", x => x.Id);
+                    table.PrimaryKey("PK_MatchGroup", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Matches_CategoryPlayer_Player1RegistrationId",
-                        column: x => x.Player1RegistrationId,
+                        name: "FK_MatchGroup_CategoryPlayer_RegistrationCategoryId",
+                        column: x => x.RegistrationCategoryId,
                         principalTable: "CategoryPlayer",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Matches_CategoryPlayer_Player2RegistrationId",
-                        column: x => x.Player2RegistrationId,
-                        principalTable: "CategoryPlayer",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Matches_Category_CategoryId",
+                        name: "FK_MatchGroup_Category_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Category",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Matches_CategoryId",
-                table: "Matches",
+                name: "IX_MatchGroup_CategoryId",
+                table: "MatchGroup",
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Matches_Player1RegistrationId",
-                table: "Matches",
-                column: "Player1RegistrationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Matches_Player2RegistrationId",
-                table: "Matches",
-                column: "Player2RegistrationId");
+                name: "IX_MatchGroup_RegistrationCategoryId",
+                table: "MatchGroup",
+                column: "RegistrationCategoryId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Matches");
+                name: "MatchGroup");
         }
     }
 }
