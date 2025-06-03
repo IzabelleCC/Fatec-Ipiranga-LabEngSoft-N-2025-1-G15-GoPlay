@@ -9,11 +9,19 @@ namespace GoPlay_Core.Business
     {
         private readonly ICategoryPlayerRepository _categoryPlayerRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IMatchRepository _matchRepository;
+        private readonly ITournamentRepository _tournamentRepository;
 
-        public CategoryPlayerBusiness(ICategoryPlayerRepository categoryPlayerRepository, ICategoryRepository categoryRepository)
+        public CategoryPlayerBusiness(
+            ICategoryPlayerRepository categoryPlayerRepository,
+            ICategoryRepository categoryRepository,
+            IMatchRepository matchRepository,
+            ITournamentRepository tournamentRepository)
         {
             _categoryPlayerRepository = categoryPlayerRepository ?? throw new ArgumentNullException(nameof(categoryPlayerRepository));
             _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
+            _matchRepository = matchRepository ?? throw new ArgumentNullException(nameof(matchRepository));
+            _tournamentRepository = tournamentRepository;
         }
 
         public async Task<List<CategoryPlayerEntity>> GetAllAsync(CancellationToken cancellationToken)
@@ -48,7 +56,6 @@ namespace GoPlay_Core.Business
 
             bool firstPaid = entity.FirstUserPaymentConfirmed;
             bool secondPaid = entity.SecondUserPaymentConfirmed;
-
             bool isDupla = !string.IsNullOrEmpty(entity.SecondUserId);
 
             if ((firstPaid && secondPaid && isDupla) || (firstPaid && !isDupla))
@@ -98,5 +105,6 @@ namespace GoPlay_Core.Business
 
             await _categoryPlayerRepository.AddAsync(newRegistration);
         }
+
     }
 }

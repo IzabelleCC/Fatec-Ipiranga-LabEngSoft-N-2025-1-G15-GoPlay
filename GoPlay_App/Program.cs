@@ -102,25 +102,39 @@ builder.Services.AddAuthorization();
 
 #region Injeção de Dependência (DI)
 
-builder.Services.AddScoped<IUserBusiness<UserEntity, UserResponse>, UserBusiness>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IValidator<UserEntity>, UserEntityValidator>();
-builder.Services.AddScoped<IUserService, UserService>();
+// ---------- Autenticação / Segurança ----------
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<EmailSender>();
+
+// ---------- Domínio: Usuário ----------
+builder.Services.AddScoped<IUserBusiness<UserEntity, UserResponse>, UserBusiness>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IValidator<UserEntity>, UserEntityValidator>();
+
+// ---------- Domínio: Torneio ----------
 builder.Services.AddScoped<ITournamentBusiness<TournamentEntity>, TournamentBusiness>();
 builder.Services.AddScoped<ITournamentRepository, TournamentRepository>();
 builder.Services.AddScoped<IValidator<TournamentEntity>, TournamentEntityValidator>();
+
+// ---------- Domínio: Categoria ----------
 builder.Services.AddScoped<ICategoryBusiness<CategoryEntity>, CategoryBusiness>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IValidator<CategoryEntity>, CategoryEntityValidator>();
-builder.Services.AddScoped<ICategoryPlayerRepository, CategoryPlayerRepository>();
+
+// ---------- Domínio: Participantes em Categorias ----------
 builder.Services.AddScoped<ICategoryPlayerBusiness, CategoryPlayerBusiness>();
+builder.Services.AddScoped<ICategoryPlayerRepository, CategoryPlayerRepository>();
+
+// ---------- Domínio: Partidas e Grupos ----------
+builder.Services.AddScoped<IMatchGroupBusiness, MatchGroupBusiness>();
+builder.Services.AddScoped<IMatchRepository, MatchRepository>();
+
+// ---------- Pagamento: Pix / Gerencianet ----------
 builder.Services.AddScoped<IPixBusiness, PixBusiness>();
 builder.Services.AddScoped<IPixService, PixService>();
 builder.Services.AddScoped<GerencianetAuthenticator>();
-
 
 #endregion
 

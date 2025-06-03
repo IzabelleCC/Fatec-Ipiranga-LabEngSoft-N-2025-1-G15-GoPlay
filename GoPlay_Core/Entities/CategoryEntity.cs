@@ -7,5 +7,6 @@ public class CategoryEntity
     public int PlayerLimit { get; set; } = 0;
     public int TournamentId { get; set; } = 0;
     public ICollection<CategoryPlayerEntity> CategoryPlayers { get; set; } = new List<CategoryPlayerEntity>();
+    public ICollection<MatchGroupEntity> MatchGroups { get; set; } = new List<MatchGroupEntity>();
 
 }
