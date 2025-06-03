@@ -17,6 +17,7 @@ namespace GoPlay_Infra
         public DbSet<TournamentEntity> Tournaments { get; set; }
         public DbSet<CategoryEntity> Categories { get; set; }
         public DbSet<CategoryPlayerEntity> CategoryPlayers { get; set; }
+        public DbSet<MatchEntity> Matches { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,6 +25,7 @@ namespace GoPlay_Infra
             modelBuilder.ApplyConfiguration(new TournamentMap());
             modelBuilder.ApplyConfiguration(new CategoryMap());
             modelBuilder.ApplyConfiguration(new CategoryPlayerMap());
+            modelBuilder.ApplyConfiguration(new MatchMap());
             base.OnModelCreating(modelBuilder);
         }
     }
