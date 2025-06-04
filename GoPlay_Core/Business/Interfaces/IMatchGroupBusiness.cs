@@ -1,5 +1,7 @@
-﻿using GoPlay_Core.Models.Dto;
-using GoPlay_Core.Entities;
+﻿using GoPlay_Core.Entities;
+using GoPlay_Core.Models;
+using GoPlay_Core.Models.Dto;
+
 
 namespace GoPlay_Core.Business.Interfaces
 {
@@ -14,5 +16,7 @@ namespace GoPlay_Core.Business.Interfaces
         Task<CategoryGroupsDto?> ProcessCategory(CategoryEntity category);
 
         List<List<CategoryPlayerEntity>> DistributeIntoGroups(List<CategoryPlayerEntity> confirmed);
+
+        Task<bool> ConfirmAttendance(int registrationCategoryId, double latitude, double longitude, CancellationToken cancellationToken);
     }
 }

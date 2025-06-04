@@ -31,6 +31,10 @@ namespace GoPlay_Infra.Repository.Mapping
                 .HasMaxLength(255)
                 .IsRequired(false);
 
+            builder.Property(m => m.AttendanceConfirmed)
+                .IsRequired()
+                .HasDefaultValue(false);
+
             // Relacionamento com Category (Category.MatchGroups)
             builder.HasOne(m => m.Category)
                 .WithMany(c => c.MatchGroups)
@@ -42,6 +46,7 @@ namespace GoPlay_Infra.Repository.Mapping
                 .WithMany(cp => cp.MatchGroups)
                 .HasForeignKey(m => m.RegistrationCategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }
