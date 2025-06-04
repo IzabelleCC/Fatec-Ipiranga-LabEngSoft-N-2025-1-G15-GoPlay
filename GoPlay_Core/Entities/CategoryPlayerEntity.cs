@@ -9,7 +9,7 @@ namespace GoPlay_Core.Entities
         public int CategoryId { get; set; }
         public string FirstUserId { get; set; } = null!;
         public string? SecondUserId { get; set; }
-        public RegisterStatus RegisterStatus { get; set; } = RegisterStatus.InscricaoRealizada;
+        public RegisterStatusEnum RegisterStatus { get; set; } = RegisterStatusEnum.InscricaoRealizada;
         public bool FirstUserPaymentConfirmed { get; set; } = false;
         public bool SecondUserPaymentConfirmed { get; set; }
         public string? FirstUserTxId { get; set; }

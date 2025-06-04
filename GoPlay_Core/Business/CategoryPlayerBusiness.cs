@@ -60,7 +60,7 @@ namespace GoPlay_Core.Business
 
             if ((firstPaid && secondPaid && isDupla) || (firstPaid && !isDupla))
             {
-                entity.RegisterStatus = RegisterStatus.InscricaoConfirmada;
+                entity.RegisterStatus = RegisterStatusEnum.InscricaoConfirmada;
             }
 
             await _categoryPlayerRepository.UpdatePlayersAsync(entity);
@@ -100,7 +100,7 @@ namespace GoPlay_Core.Business
                 SecondUserId = secondUserId,
                 FirstUserPaymentConfirmed = false,
                 SecondUserPaymentConfirmed = false,
-                RegisterStatus = RegisterStatus.InscricaoRealizada
+                RegisterStatus = RegisterStatusEnum.InscricaoRealizada
             };
 
             await _categoryPlayerRepository.AddAsync(newRegistration);

@@ -88,7 +88,7 @@ namespace GoPlay_Core.Business
             _logger.LogInformation("Processing category ID {CategoryId}...", category.Id);
 
             var confirmed = category.CategoryPlayers
-                .Where(p => p.RegisterStatus == RegisterStatus.InscricaoConfirmada)
+                .Where(p => p.RegisterStatus == RegisterStatusEnum.InscricaoConfirmada)
                 .ToList();
 
             if (confirmed.Count < 3)
@@ -138,6 +138,7 @@ namespace GoPlay_Core.Business
                         ScheduledAt = null, // Scheduled time can be set later
                         Result = null,
                         AttendanceConfirmed = false,
+                        MatchStage = MatchStageEnum.GroupStage
                     };
 
                     await _matchRepository.AddAsync(registration);

@@ -60,7 +60,7 @@ namespace GoPlay_Core.Business
             {
                 throw new Exception($"Erro ao gerar cobrança Pix: {response}");
             }
-            entity.RegisterStatus = RegisterStatus.PagamentoPendente;
+            entity.RegisterStatus = RegisterStatusEnum.PagamentoPendente;
 
             await _categoryPlayerBusiness.UpdatePlayersAsync(entity, cancellationToken);
 
