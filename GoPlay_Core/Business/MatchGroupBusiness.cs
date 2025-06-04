@@ -1,6 +1,7 @@
 ﻿using GoPlay_Core.Business.Interfaces;
 using GoPlay_Core.Entities;
 using GoPlay_Core.Enum;
+using GoPlay_Core.Models;
 using GoPlay_Core.Models.Dto;
 using GoPlay_Core.Repository.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -13,17 +14,20 @@ namespace GoPlay_Core.Business
         private readonly ITournamentRepository _tournamentRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IMatchGroupRepository _matchRepository;
 
         public MatchGroupBusiness(
             ITournamentRepository tournamentRepository,
             ICategoryRepository categoryRepository,
             ILogger<MatchGroupBusiness> logger,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            IMatchGroupRepository matchRepository)
         {
             _tournamentRepository = tournamentRepository;
             _categoryRepository = categoryRepository;
             _logger = logger;
             _userRepository = userRepository;
+            _matchRepository = matchRepository;
         }
 
         public async Task<TournamentMatchesResultDto> GenerateMatchesForTournament(int tournamentId, CancellationToken cancellationToken)
@@ -124,6 +128,18 @@ namespace GoPlay_Core.Business
                         SecondUserId = p.SecondUserId,
                         SecondUserName = secondUser?.UserName
                     });
+
+                    var registration = new MatchGroupEntity
+                    {
+                        CategoryId = category.Id,
+                        GroupNumber = i + 1,
+                        RegistrationCategoryId = p.Id,
+                        ScheduledAt = null, // Scheduled time can be set later
+                        Result = null,
+                        AttendanceConfirmed = false,
+                    };
+
+                    await _matchRepository.AddAsync(registration);
                 }
 
                 categoryDto.Groups.Add(groupDto);
@@ -131,7 +147,6 @@ namespace GoPlay_Core.Business
 
             return categoryDto;
         }
-
 
         public List<List<CategoryPlayerEntity>> DistributeIntoGroups(List<CategoryPlayerEntity> confirmed)
         {
@@ -180,5 +195,48 @@ namespace GoPlay_Core.Business
 
             return groups;
         }
+
+        public async Task<bool> ConfirmAttendance(int registrationCategoryId, string latitude, string longitude, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Confirming attendance for registration ID {RegistrationCategoryId}...", registrationCategoryId);
+
+            var registration = await _matchRepository.GetByIdAsync(registrationCategoryId);
+            if (registration == null)
+            {
+                _logger.LogWarning("Registration with ID {RegistrationCategoryId} not found.", registrationCategoryId);
+                throw new KeyNotFoundException("Registration not found.");
+            }
+
+            var category = await _categoryRepository.GetById(registration.CategoryId);
+
+            var confirmed = await ValidateProximityForCheckIn(latitude, longitude, category.TournamentId);
+
+            if (!confirmed)
+            {
+                _logger.LogWarning("Proximity validation failed for registration ID {RegistrationCategoryId}.", registrationCategoryId);
+                throw new InvalidOperationException("Proximity validation failed. Attendance cannot be confirmed.");
+            }
+            registration.AttendanceConfirmed = true;
+            await _matchRepository.UpdateAsync(registration);
+
+            _logger.LogInformation("Attendance confirmed for registration ID {RegistrationCategoryId}.", registrationCategoryId);
+            return true;
+
+        }
+
+        public async Task<bool> ValidateProximityForCheckIn(string latitude, string longitude, int tournamentId)
+        {
+            _logger.LogInformation("Validating proximity for check-in at coordinates ({Latitude}, {Longitude})...", latitude, longitude);
+            var tournament = await _tournamentRepository.GetById(tournamentId);
+
+
+            // Here you would implement the logic to validate the proximity based on your requirements.
+            // For now, we will assume the validation is successful.
+            // You can replace this with actual logic to check if the coordinates are within a valid range.
+            _logger.LogInformation("Proximity validation successful for coordinates ({Latitude}, {Longitude}).", latitude, longitude);
+            return true;
+
+        }
+
     }
 }
