@@ -196,7 +196,7 @@ namespace GoPlay_Core.Business
             return groups;
         }
 
-        public async Task<bool> ConfirmAttendance(int registrationCategoryId, string latitude, string longitude, CancellationToken cancellationToken)
+        public async Task<bool> ConfirmAttendance(int registrationCategoryId, double latitude, double longitude, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Confirming attendance for registration ID {RegistrationCategoryId}...", registrationCategoryId);
 
@@ -224,7 +224,7 @@ namespace GoPlay_Core.Business
 
         }
 
-        public async Task<bool> ValidateProximityForCheckIn(string latitude, string longitude, int tournamentId)
+        public async Task<bool> ValidateProximityForCheckIn(double latitude, double longitude, int tournamentId)
         {
             _logger.LogInformation("Validating proximity for check-in at coordinates ({Latitude}, {Longitude})...", latitude, longitude);
             var tournament = await _tournamentRepository.GetById(tournamentId);
