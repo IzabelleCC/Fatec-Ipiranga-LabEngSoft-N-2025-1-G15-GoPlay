@@ -4,6 +4,7 @@ using GoPlay_Core.Enum;
 using GoPlay_Core.Models;
 using GoPlay_Core.Models.Dto;
 using GoPlay_Core.Repository.Interfaces;
+using GoPlay_Core.Utils;
 using Microsoft.Extensions.Logging;
 
 namespace GoPlay_Core.Business
@@ -226,17 +227,24 @@ namespace GoPlay_Core.Business
 
         public async Task<bool> ValidateProximityForCheckIn(double latitude, double longitude, int tournamentId)
         {
-            _logger.LogInformation("Validating proximity for check-in at coordinates ({Latitude}, {Longitude})...", latitude, longitude);
+            _logger.LogInformation("Validando proximidade para check-in nas coordenadas ({Latitude}, {Longitude})...", latitude, longitude);
+
             var tournament = await _tournamentRepository.GetById(tournamentId);
+            if (tournament == null)
+                throw new InvalidOperationException("Torneio não encontrado.");
 
+            var distance = GeoUtils.CalculateDistanceInMeters(latitude, longitude, tournament.Latitude, tournament.Longitude);
 
-            // Here you would implement the logic to validate the proximity based on your requirements.
-            // For now, we will assume the validation is successful.
-            // You can replace this with actual logic to check if the coordinates are within a valid range.
-            _logger.LogInformation("Proximity validation successful for coordinates ({Latitude}, {Longitude}).", latitude, longitude);
+            if (distance > 300)
+            {
+                _logger.LogWarning("Usuário está a {Distance} metros do torneio (limite: 300m).", distance);
+                throw new InvalidOperationException("Não é possível confirmar a presença a uma distância maior que 300 metros do torneio.");
+            }
+
+            _logger.LogInformation("Proximidade validada com sucesso: {Distance} metros.", distance);
             return true;
-
         }
+
 
     }
 }

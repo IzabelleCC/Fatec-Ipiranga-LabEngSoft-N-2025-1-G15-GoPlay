@@ -266,11 +266,11 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpPost("ConfirmPresence")]
+        [HttpPost("ConfirmAttendance")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ConfirmPresence([FromBody] ConfirmAttendanceRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> ConfirmAttendance([FromBody] ConfirmAttendanceRequest request, CancellationToken cancellationToken)
         {
             try
             {
