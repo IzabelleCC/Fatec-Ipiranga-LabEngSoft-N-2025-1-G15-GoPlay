@@ -1,6 +1,5 @@
 ﻿using GoPlay_App.Api.Controllers.TournamentManager.Models;
 using GoPlay_Core.Business.Interfaces;
-using GoPlay_Core.Entities;
 using GoPlay_Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -230,6 +229,12 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
             }
         }
 
+        /// <summary>
+        /// Gera grupos para um torneio específico
+        /// </summary>
+        /// <param name="tournamentId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPost("GenerateGroupMatches/{tournamentId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -248,6 +253,35 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
                     message = "Partidas geradas com sucesso.",
                     data = matchGroup // Tipo: TournamentMatchesResultDto
                 });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Confirma presença da dupla ou do jogador em uma partida
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPost("ConfirmAttendance")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ConfirmAttendance([FromBody] ConfirmAttendanceRequest request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (request == null)
+                    return BadRequest(new { message = "Dados enviados inválidos." });
+
+                var result = await _matchGroupBusiness.ConfirmAttendance(request.RegistrationCategoryId, request.Latitude, request.Longitude, cancellationToken);
+
+                if (!result)
+                    return NotFound(new { message = "Confirmação de presença não encontrada." });
+                return Ok(new { message = "Presença confirmada com sucesso." });
             }
             catch (Exception ex)
             {

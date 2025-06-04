@@ -25,6 +25,13 @@ public class TournamentMap : IEntityTypeConfiguration<TournamentEntity>
        .HasColumnName("AdmUserId")
        .IsRequired();
 
+        builder.Property(t => t.Latitude)
+               .HasColumnName("Latitude")
+               .IsRequired();
+        builder.Property(t => t.Longitude)
+                .HasColumnName("Longitude")
+                .IsRequired();
+
         builder.HasOne(t => t.AdmUser)
                .WithMany(u => u.Tournaments) 
                .HasForeignKey(t => t.AdmUserId)

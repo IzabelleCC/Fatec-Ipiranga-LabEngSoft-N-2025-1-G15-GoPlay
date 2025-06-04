@@ -1,9 +1,8 @@
 ﻿using System.Net.Http.Headers;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
-using Microsoft.Extensions.Configuration;
 using GoPlay_Core.Utils;
+using Microsoft.Extensions.Configuration;
 
 namespace GoPlay_Core.Services.Gerencianet
 {

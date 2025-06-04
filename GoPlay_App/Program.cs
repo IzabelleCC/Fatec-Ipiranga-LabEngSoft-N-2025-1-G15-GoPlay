@@ -129,7 +129,7 @@ builder.Services.AddScoped<ICategoryPlayerRepository, CategoryPlayerRepository>(
 
 // ---------- Domínio: Partidas e Grupos ----------
 builder.Services.AddScoped<IMatchGroupBusiness, MatchGroupBusiness>();
-builder.Services.AddScoped<IMatchRepository, MatchRepository>();
+builder.Services.AddScoped<IMatchGroupRepository, MatchGroupRepository>();
 
 // ---------- Pagamento: Pix / Gerencianet ----------
 builder.Services.AddScoped<IPixBusiness, PixBusiness>();

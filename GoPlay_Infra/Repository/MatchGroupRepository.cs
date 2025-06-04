@@ -4,18 +4,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GoPlay_Infra.Repository
 {
-    public class MatchRepository : IMatchRepository
+    public class MatchGroupRepository : IMatchGroupRepository
     {
         private readonly GoPlayDbContext _context;
 
-        public MatchRepository(GoPlayDbContext context)
+        public MatchGroupRepository(GoPlayDbContext context)
         {
             _context = context;
         }
 
-        public async Task AddRangeAsync(List<MatchGroupEntity> matches)
+        public async Task AddAsync(MatchGroupEntity matches)
         {
-            await _context.Matches.AddRangeAsync(matches);
+            await _context.Matches.AddAsync(matches);
             await _context.SaveChangesAsync();
         }
 

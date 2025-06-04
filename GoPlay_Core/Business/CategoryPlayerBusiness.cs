@@ -9,13 +9,13 @@ namespace GoPlay_Core.Business
     {
         private readonly ICategoryPlayerRepository _categoryPlayerRepository;
         private readonly ICategoryRepository _categoryRepository;
-        private readonly IMatchRepository _matchRepository;
+        private readonly IMatchGroupRepository _matchRepository;
         private readonly ITournamentRepository _tournamentRepository;
 
         public CategoryPlayerBusiness(
             ICategoryPlayerRepository categoryPlayerRepository,
             ICategoryRepository categoryRepository,
-            IMatchRepository matchRepository,
+            IMatchGroupRepository matchRepository,
             ITournamentRepository tournamentRepository)
         {
             _categoryPlayerRepository = categoryPlayerRepository ?? throw new ArgumentNullException(nameof(categoryPlayerRepository));
