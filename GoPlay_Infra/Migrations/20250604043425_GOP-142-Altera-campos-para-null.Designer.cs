@@ -3,6 +3,7 @@ using System;
 using GoPlay_Infra;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GoPlay_Infra.Migrations
 {
     [DbContext(typeof(GoPlayDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250604043425_GOP-142-Altera-campos-para-null")]
+    partial class GOP142Alteracamposparanull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,47 +168,21 @@ namespace GoPlay_Infra.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("Game1")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Game2")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Game3")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Game4")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Game5")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("GamesBalance")
-                        .HasColumnType("integer");
-
                     b.Property<int>("GroupNumber")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("Losses")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Position")
+                    b.Property<int>("MatchStage")
                         .HasColumnType("integer");
 
                     b.Property<int>("RegistrationCategoryId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Result")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
                     b.Property<DateTime?>("ScheduledAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int?>("SetsBalance")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Tiebreaks")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Wins")
-                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

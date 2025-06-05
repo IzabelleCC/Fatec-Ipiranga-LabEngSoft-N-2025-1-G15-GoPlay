@@ -135,10 +135,7 @@ namespace GoPlay_Core.Business
                         CategoryId = category.Id,
                         GroupNumber = i + 1,
                         RegistrationCategoryId = p.Id,
-                        ScheduledAt = null, // Scheduled time can be set later
-                        Result = null,
                         AttendanceConfirmed = false,
-                        MatchStage = MatchStageEnum.GroupStage
                     };
 
                     await _matchRepository.AddAsync(registration);

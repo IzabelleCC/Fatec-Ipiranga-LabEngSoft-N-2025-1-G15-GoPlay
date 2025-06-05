@@ -3,6 +3,7 @@ using System;
 using GoPlay_Infra;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GoPlay_Infra.Migrations
 {
     [DbContext(typeof(GoPlayDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250605021402_GOP-142-Adiciona_campos-novos-na-tabela-MatchGroup")]
+    partial class GOP142Adiciona_camposnovosnatabelaMatchGroup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,22 +168,7 @@ namespace GoPlay_Infra.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("Game1")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Game2")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Game3")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Game4")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Game5")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("GamesBalance")
+                    b.Property<int?>("Games")
                         .HasColumnType("integer");
 
                     b.Property<int>("GroupNumber")
@@ -198,7 +186,7 @@ namespace GoPlay_Infra.Migrations
                     b.Property<DateTime?>("ScheduledAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("SetsBalance")
+                    b.Property<int?>("Sets")
                         .HasColumnType("integer");
 
                     b.Property<int?>("Tiebreaks")

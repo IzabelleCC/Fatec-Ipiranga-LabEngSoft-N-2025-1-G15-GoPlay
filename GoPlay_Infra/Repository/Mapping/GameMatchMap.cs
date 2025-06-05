@@ -20,15 +20,15 @@ namespace GoPlay_Infra.Repository.Mapping
 
             builder.Property(g => g.MatchStage).IsRequired();
 
-            builder.Property(g => g.MatchTime).IsRequired(false);
+            builder.Property(g => g.MatchTime);
 
-            builder.Property(g => g.CourtNumber).IsRequired(false);
+            builder.Property(g => g.CourtNumber);
 
-            builder.Property(g => g.QtdGames1).IsRequired();
+            builder.Property(g => g.QtdGames1);
 
-            builder.Property(g => g.QtdGames2).IsRequired();
+            builder.Property(g => g.QtdGames2);
 
-            builder.Property(g => g.Result).IsRequired();
+            builder.Property(g => g.Result);
 
             builder.HasOne(g => g.Competitor1)
                 .WithMany()

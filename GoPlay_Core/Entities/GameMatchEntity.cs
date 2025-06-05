@@ -17,10 +17,10 @@ namespace GoPlay_Core.Entities
         public DateTime? MatchTime { get; set; }
         public int? CourtNumber { get; set; }
 
-        public int QtdGames1 { get; set; }
+        public int? QtdGames1 { get; set; }
 
-        public int QtdGames2 { get; set; }
-        public int Result { get; set; }
+        public int? QtdGames2 { get; set; }
+        public int? Result { get; set; }
 
         public CategoryPlayerEntity Competitor1 { get; set; } = null!;
 
