@@ -3,6 +3,7 @@ using System;
 using GoPlay_Infra;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GoPlay_Infra.Migrations
 {
     [DbContext(typeof(GoPlayDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250604025954_GOP-142-Adiciona-MatchStage")]
+    partial class GOP142AdicionaMatchStage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,50 +108,6 @@ namespace GoPlay_Infra.Migrations
                     b.ToTable("CategoryPlayer", (string)null);
                 });
 
-            modelBuilder.Entity("GoPlay_Core.Entities.GameMatchEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Competitor1Id")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Competitor2Id")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("CourtNumber")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("GroupNumber")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MatchStage")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("MatchTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int?>("QtdGames1")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("QtdGames2")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Result")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Competitor1Id");
-
-                    b.HasIndex("Competitor2Id");
-
-                    b.ToTable("GameMatch", (string)null);
-                });
-
             modelBuilder.Entity("GoPlay_Core.Entities.MatchGroupEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -165,47 +124,21 @@ namespace GoPlay_Infra.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("Game1")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Game2")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Game3")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Game4")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Game5")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("GamesBalance")
-                        .HasColumnType("integer");
-
                     b.Property<int>("GroupNumber")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("Losses")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Position")
+                    b.Property<int>("MatchStage")
                         .HasColumnType("integer");
 
                     b.Property<int>("RegistrationCategoryId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Result")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
                     b.Property<DateTime?>("ScheduledAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int?>("SetsBalance")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Tiebreaks")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Wins")
-                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -558,25 +491,6 @@ namespace GoPlay_Infra.Migrations
                     b.Navigation("FirstUser");
 
                     b.Navigation("SecondUser");
-                });
-
-            modelBuilder.Entity("GoPlay_Core.Entities.GameMatchEntity", b =>
-                {
-                    b.HasOne("GoPlay_Core.Entities.CategoryPlayerEntity", "Competitor1")
-                        .WithMany()
-                        .HasForeignKey("Competitor1Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("GoPlay_Core.Entities.CategoryPlayerEntity", "Competitor2")
-                        .WithMany()
-                        .HasForeignKey("Competitor2Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Competitor1");
-
-                    b.Navigation("Competitor2");
                 });
 
             modelBuilder.Entity("GoPlay_Core.Entities.MatchGroupEntity", b =>

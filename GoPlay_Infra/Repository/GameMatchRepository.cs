@@ -1,0 +1,59 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using GoPlay_Core.Entities;
+using GoPlay_Core.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
+namespace GoPlay_Infra.Repository
+{
+    public class GameMatchRepository : IGameMatchRepository
+    {
+        private readonly GoPlayDbContext _context;
+
+        public GameMatchRepository(GoPlayDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<GameMatchEntity?> GetByIdAsync(int id)
+        {
+            return await _context.GameMatches
+                .Include(m => m.Competitor1)
+                .Include(m => m.Competitor2)
+                .FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+        public async Task<List<GameMatchEntity>> GetAllAsync()
+        {
+            return await _context.GameMatches
+                .Include(m => m.Competitor1)
+                .Include(m => m.Competitor2)
+                .ToListAsync();
+        }
+
+        public async Task AddAsync(GameMatchEntity match, CancellationToken cancellationToken)
+        {
+            await _context.GameMatches.AddAsync(match, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task UpdateAsync(GameMatchEntity match, CancellationToken cancellationToken)
+        {
+            _context.GameMatches.Update(match);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task DeleteAsync(int id, CancellationToken cancellationToken)
+        {
+            var match = await _context.GameMatches.FindAsync(id);
+            if (match != null)
+            {
+                _context.GameMatches.Remove(match);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+        }
+    }
+}
