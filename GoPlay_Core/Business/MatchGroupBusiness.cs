@@ -137,6 +137,7 @@ namespace GoPlay_Core.Business
                         GroupNumber = i + 1,
                         RegistrationCategoryId = p.Id,
                         AttendanceConfirmed = false,
+                        MatchStage = MatchStageEnum.Group
                     };
 
                     await _matchRepository.AddAsync(registration);
@@ -268,8 +269,14 @@ namespace GoPlay_Core.Business
                 DoublesOrSingles.Game3 = result.Game3;
                 DoublesOrSingles.Game4 = result.Game4;
                 DoublesOrSingles.Game5 = result.Game5;
-                DoublesOrSingles.SumOfGames = (result.Game1) + (result.Game2) + (result.Game3) + (result.Game4) + (result.Game5);
+                DoublesOrSingles.SumOfGames = new[] { result.Game1, result.Game2, result.Game3, result.Game4, result.Game5 }
+                                                                        .Where(x => x.HasValue)
+                                                                        .Select(x => x.Value)
+                                                                        .DefaultIfEmpty()
+                                                                        .Sum();
+
                 await _matchRepository.UpdateAsync(DoublesOrSingles);
+
                 var updatedDoublesOrSingles = await _matchRepository.GetbyRegistrationCategoryAsync(result.RegistrationCategoryId);
                 doublesOrSinglesGroup.Add(updatedDoublesOrSingles);
             }
