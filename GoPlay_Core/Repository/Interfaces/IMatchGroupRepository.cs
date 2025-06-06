@@ -9,5 +9,8 @@ namespace GoPlay_Core.Repository.Interfaces
         Task<MatchGroupEntity?> GetByIdAsync(int id);
         Task UpdateAsync(MatchGroupEntity match);
         Task DeleteAsync(MatchGroupEntity match);
+        Task<List<MatchGroupEntity>> GetByCategoryAndGroupAsync(int categoryId, int groupNumber);
+        Task<MatchGroupEntity> GetbyRegistrationCategoryAsync(int registrationCategory);
+
     }
 }

@@ -30,6 +30,7 @@ namespace GoPlay_Infra.Repository
         public async Task<MatchGroupEntity?> GetByIdAsync(int id)
         {
             return await _context.Matches
+                .Include(m => m.RegistrationCategory)
                 .Include(m => m.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
@@ -44,6 +45,24 @@ namespace GoPlay_Infra.Repository
         {
             _context.Matches.Remove(match);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<MatchGroupEntity>> GetByCategoryAndGroupAsync(int categoryId, int groupNumber)
+        {
+            return await _context.Matches
+                .Where(m => m.CategoryId == categoryId && m.GroupNumber == groupNumber)
+                .Include(m => m.Category)
+                .ToListAsync();
+        }
+
+        public async Task<MatchGroupEntity> GetbyRegistrationCategoryAsync(int registrationCategory)
+        {
+            return await _context.Matches
+                .Include(m => m.RegistrationCategory)
+                .Include(m => m.Category)
+                .FirstOrDefaultAsync(m => m.RegistrationCategoryId == registrationCategory)
+                ?? throw new KeyNotFoundException("Match group not found for the given registration category.");
+
         }
     }
 }

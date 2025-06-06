@@ -1,4 +1,5 @@
-﻿using GoPlay_Core.Business.Interfaces;
+﻿using System.Threading;
+using GoPlay_Core.Business.Interfaces;
 using GoPlay_Core.Entities;
 using GoPlay_Core.Enum;
 using GoPlay_Core.Models;
@@ -243,6 +244,119 @@ namespace GoPlay_Core.Business
             return true;
         }
 
+        public async Task<List<int>> InsertGroupResultsAndReturnWinners(List<MatchGroupEntity> results, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Inserting group results and determining winners...");
+            if (results == null || !results.Any())
+            {
+                _logger.LogWarning("No results provided for group matches.");
+                throw new InvalidOperationException("No results provided for group matches.");
+            }
 
+            var doublesOrSinglesGroup = new List<MatchGroupEntity>();
+
+            foreach (var result in results)
+            {
+                var DoublesOrSingles = await _matchRepository.GetbyRegistrationCategoryAsync(result.RegistrationCategoryId);
+                if (DoublesOrSingles == null)
+                {
+                    _logger.LogWarning("Player with RegistrationCategoryId {RegistrationCategoryId} not found.", result.RegistrationCategoryId);
+                    throw new KeyNotFoundException($"Player with RegistrationCategoryId {result.RegistrationCategoryId} not found.");
+                }
+                DoublesOrSingles.Game1 = result.Game1;
+                DoublesOrSingles.Game2 = result.Game2;
+                DoublesOrSingles.Game3 = result.Game3;
+                DoublesOrSingles.Game4 = result.Game4;
+                DoublesOrSingles.Game5 = result.Game5;
+                DoublesOrSingles.SumOfGames = (result.Game1 ?? 0) + (result.Game2 ?? 0) + (result.Game3 ?? 0) + (result.Game4 ?? 0) + (result.Game5 ?? 0);
+                await _matchRepository.UpdateAsync(DoublesOrSingles);
+                var updatedDoublesOrSingles = await _matchRepository.GetbyRegistrationCategoryAsync(result.RegistrationCategoryId);
+                doublesOrSinglesGroup.Add(updatedDoublesOrSingles);
+            }
+
+            await InsertSetsBalance(doublesOrSinglesGroup);
+
+            var groupedResults = doublesOrSinglesGroup
+                .GroupBy(r => new { r.CategoryId, r.GroupNumber })
+                .Select(g => new
+                {
+                    CategoryId = g.Key.CategoryId,
+                    GroupNumber = g.Key.GroupNumber,
+                    Winners = g.OrderByDescending(r => r.Wins)
+                               .ThenByDescending(r => r.SetsBalance)
+                               .ThenByDescending(r => r.GamesBalance)
+                               .ThenByDescending(r => r.Tiebreaks)
+                               .Select(r => r.RegistrationCategoryId)
+                               .ToList()
+                });
+
+            var groupPositions = groupedResults.SelectMany(g => g.Winners).ToList();
+
+            for (int i = 0; i < groupPositions.Count; i++)
+            {
+
+                var matchGroup = doublesOrSinglesGroup.FirstOrDefault(r => r.RegistrationCategoryId == groupPositions[i]);
+                if (matchGroup != null)
+                {
+                    matchGroup.Position = i + 1;
+                    await _matchRepository.UpdateAsync(matchGroup);
+                }
+            }
+
+            return groupedResults.SelectMany(g => g.Winners).Take(2).ToList();
+        }
+
+        private async Task InsertSetsBalance(List<MatchGroupEntity> doublesOrSinglesGroup)
+        {
+            var game1 = doublesOrSinglesGroup.Where(r => r.Game1 != null).ToList();
+            var game2 = doublesOrSinglesGroup.Where(r => r.Game2 != null).ToList();
+            var game3 = doublesOrSinglesGroup.Where(r => r.Game3 != null).ToList();
+            var game4 = doublesOrSinglesGroup.Where(r => r.Game4 != null).ToList();
+            var game5 = doublesOrSinglesGroup.Where(r => r.Game5 != null).ToList();
+
+            if (game1.Count == 2)
+            {
+                game1[0].Wins ++;
+                game1[1].Losses ++;
+                await _matchRepository.UpdateAsync(game1[0]);
+                await _matchRepository.UpdateAsync(game1[1]);
+            }
+            if (game2.Count == 2)
+            {
+                game2[0].Wins ++;
+                game2[1].Losses++;
+                await _matchRepository.UpdateAsync(game2[0]);
+                await _matchRepository.UpdateAsync(game2[1]);
+            }
+            if (game3.Count == 2)
+            {
+                game3[0].Wins ++;
+                game3[1].Losses ++;
+                await _matchRepository.UpdateAsync(game3[0]);
+                await _matchRepository.UpdateAsync(game3[1]);
+            }
+            if (game4.Count == 2)
+            {
+                game4[0].Wins++;
+                game4[1].Losses++;
+                await _matchRepository.UpdateAsync(game4[0]);
+                await _matchRepository.UpdateAsync(game4[1]);
+            }
+            if (game5.Count == 2)
+            {
+                game5[0].Wins++;
+                game5[1].Losses++;
+                await _matchRepository.UpdateAsync(game5[0]);
+                await _matchRepository.UpdateAsync(game5[1]);
+            }
+
+            foreach (var match in doublesOrSinglesGroup)
+            {
+                match.SetsBalance = (match.Wins) - (match.Losses);
+                await _matchRepository.UpdateAsync(match);
+            }
+
+        }
     }
 }
+
