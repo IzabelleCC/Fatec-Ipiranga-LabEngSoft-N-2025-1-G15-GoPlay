@@ -3,7 +3,7 @@
     public enum MatchStageEnum
     {
         Undefined = 0,
-        GroupStage = 1,
+        Group = 1,
         RoundOf32 = 2,
         RoundOf16 = 3,
         QuarterFinal = 4,

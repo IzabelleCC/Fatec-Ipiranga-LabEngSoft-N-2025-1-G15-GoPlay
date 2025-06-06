@@ -1,5 +1,6 @@
 ﻿using GoPlay_App.Api.Controllers.TournamentManager.Models;
 using GoPlay_Core.Business.Interfaces;
+using GoPlay_Core.Entities;
 using GoPlay_Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -282,6 +283,35 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
                 if (!result)
                     return NotFound(new { message = "Confirmação de presença não encontrada." });
                 return Ok(new { message = "Presença confirmada com sucesso." });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Insere os resultados dos grupos e retorna os vencedores
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPost("InsertGroupResults")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> InsertGroupResults([FromBody] List<GroupResultsRequest> request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (request == null)
+                    return BadRequest(new { message = "Dados enviados inválidos." });
+
+                var results = request.Select(r => r.ToMatchGroupEntity()).ToList();
+
+                await _matchGroupBusiness.InsertGroupResultsAndReturnWinners(results, cancellationToken);
+
+                return Ok(new { message = "Resultados dos grupos inseridos com sucesso." });
             }
             catch (Exception ex)
             {
