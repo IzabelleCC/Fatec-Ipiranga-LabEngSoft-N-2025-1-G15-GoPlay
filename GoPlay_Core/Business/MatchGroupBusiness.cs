@@ -268,7 +268,7 @@ namespace GoPlay_Core.Business
                 DoublesOrSingles.Game3 = result.Game3;
                 DoublesOrSingles.Game4 = result.Game4;
                 DoublesOrSingles.Game5 = result.Game5;
-                DoublesOrSingles.SumOfGames = (result.Game1 ?? 0) + (result.Game2 ?? 0) + (result.Game3 ?? 0) + (result.Game4 ?? 0) + (result.Game5 ?? 0);
+                DoublesOrSingles.SumOfGames = (result.Game1) + (result.Game2) + (result.Game3) + (result.Game4) + (result.Game5);
                 await _matchRepository.UpdateAsync(DoublesOrSingles);
                 var updatedDoublesOrSingles = await _matchRepository.GetbyRegistrationCategoryAsync(result.RegistrationCategoryId);
                 doublesOrSinglesGroup.Add(updatedDoublesOrSingles);

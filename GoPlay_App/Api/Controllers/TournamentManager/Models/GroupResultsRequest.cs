@@ -26,11 +26,11 @@ namespace GoPlay_App.Api.Controllers.TournamentManager.Models
             return new MatchGroupEntity
             {
                 RegistrationCategoryId = RegistrationCategoryId,
-                Game1 = Game1,
-                Game2 = Game2,
-                Game3 = Game3,
-                Game4 = Game4,
-                Game5 = Game5
+                Game1 = Game1 ?? 0,
+                Game2 = Game2 ?? 0,
+                Game3 = Game3 ?? 0,
+                Game4 = Game4 ?? 0,
+                Game5 = Game5 ??0
             };
         }
     }
