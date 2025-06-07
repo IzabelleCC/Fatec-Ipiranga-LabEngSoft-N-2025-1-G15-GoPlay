@@ -63,6 +63,12 @@ namespace GoPlay_Infra.Repository.Mapping
             builder.Property(m => m.Tiebreaks)
                 .IsRequired(false);
 
+            builder.Property(m => m.SumOfGamesWon)
+                .IsRequired(false);
+
+            builder.Property(m => m.SumOfGamesLost)
+                .IsRequired(false);
+
             // Relacionamento com Category (Category.MatchGroups)
             builder.HasOne(m => m.Category)
                 .WithMany(c => c.MatchGroups)

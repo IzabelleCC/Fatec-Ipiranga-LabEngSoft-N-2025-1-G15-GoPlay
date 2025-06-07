@@ -269,19 +269,13 @@ namespace GoPlay_Core.Business
                 DoublesOrSingles.Game3 = result.Game3;
                 DoublesOrSingles.Game4 = result.Game4;
                 DoublesOrSingles.Game5 = result.Game5;
-                DoublesOrSingles.SumOfGames = new[] { result.Game1, result.Game2, result.Game3, result.Game4, result.Game5 }
-                                                                        .Where(x => x.HasValue)
-                                                                        .Select(x => x.Value)
-                                                                        .DefaultIfEmpty()
-                                                                        .Sum();
-
                 await _matchRepository.UpdateAsync(DoublesOrSingles);
 
                 var updatedDoublesOrSingles = await _matchRepository.GetbyRegistrationCategoryAsync(result.RegistrationCategoryId);
                 doublesOrSinglesGroup.Add(updatedDoublesOrSingles);
             }
 
-            await InsertSetsBalance(doublesOrSinglesGroup);
+            await InsertSetsAndGamesBalance(doublesOrSinglesGroup);
 
             var groupedResults = doublesOrSinglesGroup
                 .GroupBy(r => new { r.CategoryId, r.GroupNumber })
@@ -313,7 +307,7 @@ namespace GoPlay_Core.Business
             return groupedResults.SelectMany(g => g.Winners).Take(2).ToList();
         }
 
-        private async Task InsertSetsBalance(List<MatchGroupEntity> doublesOrSinglesGroup)
+        private async Task InsertSetsAndGamesBalance(List<MatchGroupEntity> doublesOrSinglesGroup)
         {
             var game1 = doublesOrSinglesGroup.Where(r => r.Game1 != null).ToList();
             var game2 = doublesOrSinglesGroup.Where(r => r.Game2 != null).ToList();
@@ -323,42 +317,103 @@ namespace GoPlay_Core.Business
 
             if (game1.Count == 2)
             {
-                game1[0].Wins ++;
-                game1[1].Losses ++;
+                game1[0].SumOfGamesWon = (game1[0].SumOfGamesWon ?? 0) + (game1[0].Game1 ?? 0);
+                game1[0].SumOfGamesLost = (game1[0].SumOfGamesLost ?? 0) + (game1[1].Game1 ?? 0);
+                game1[1].SumOfGamesWon = (game1[1].SumOfGamesWon ?? 0) + (game1[1].Game1 ?? 0);
+                game1[1].SumOfGamesLost = (game1[1].SumOfGamesLost ?? 0) + (game1[0].Game1 ?? 0);
+                if ((game1[0].Game1 ?? 0) > (game1[1].Game1 ?? 0))
+                {
+                    game1[0].Wins++;
+                    game1[1].Losses++;
+                }
+                else
+                {
+                    game1[0].Losses++;
+                    game1[1].Wins++;
+                }
                 await _matchRepository.UpdateAsync(game1[0]);
                 await _matchRepository.UpdateAsync(game1[1]);
             }
             if (game2.Count == 2)
             {
-                game2[0].Wins ++;
-                game2[1].Losses++;
+                game2[0].SumOfGamesWon = (game2[0].SumOfGamesWon ?? 0) + (game2[0].Game2 ?? 0);
+                game2[0].SumOfGamesLost = (game2[0].SumOfGamesLost ?? 0) + (game2[1].Game2 ?? 0);
+                game2[1].SumOfGamesWon = (game2[1].SumOfGamesWon ?? 0) + (game2[1].Game2 ?? 0);
+                game2[1].SumOfGamesLost = (game2[1].SumOfGamesLost ?? 0) + (game2[0].Game2 ?? 0);
+                if ((game2[0].Game2 ?? 0) > (game2[1].Game2 ?? 0))
+                {
+                    game2[0].Wins++;
+                    game2[1].Losses++;
+                }
+                else
+                {
+                    game2[0].Losses++;
+                    game2[1].Wins++;
+                }
                 await _matchRepository.UpdateAsync(game2[0]);
                 await _matchRepository.UpdateAsync(game2[1]);
             }
             if (game3.Count == 2)
             {
-                game3[0].Wins ++;
-                game3[1].Losses ++;
+                game3[0].SumOfGamesWon = (game3[0].SumOfGamesWon ?? 0) + (game3[0].Game3 ?? 0);
+                game3[0].SumOfGamesLost = (game3[0].SumOfGamesLost ?? 0) + (game3[1].Game3 ?? 0);
+                game3[1].SumOfGamesWon = (game3[1].SumOfGamesWon ?? 0) + (game3[1].Game3 ?? 0);
+                game3[1].SumOfGamesLost = (game3[1].SumOfGamesLost ?? 0) + (game3[0].Game3 ?? 0);
+                if ((game3[0].Game3 ?? 0) > (game3[1].Game3 ?? 0))
+                {
+                    game3[0].Wins++;
+                    game3[1].Losses++;
+                }
+                else
+                {
+                    game3[0].Losses++;
+                    game3[1].Wins++;
+                }
                 await _matchRepository.UpdateAsync(game3[0]);
                 await _matchRepository.UpdateAsync(game3[1]);
             }
             if (game4.Count == 2)
             {
-                game4[0].Wins++;
-                game4[1].Losses++;
+                game4[0].SumOfGamesWon = (game4[0].SumOfGamesWon ?? 0) + (game4[0].Game4 ?? 0);
+                game4[0].SumOfGamesLost = (game4[0].SumOfGamesLost ?? 0) + (game4[1].Game4 ?? 0);
+                game4[1].SumOfGamesWon = (game4[1].SumOfGamesWon ?? 0) + (game4[1].Game4 ?? 0);
+                game4[1].SumOfGamesLost = (game4[1].SumOfGamesLost ?? 0) + (game4[0].Game4 ?? 0);
+                if ((game4[0].Game4 ?? 0) > (game4[1].Game4 ?? 0))
+                {
+                    game4[0].Wins++;
+                    game4[1].Losses++;
+                }
+                else
+                {
+                    game4[0].Losses++;
+                    game4[1].Wins++;
+                }
                 await _matchRepository.UpdateAsync(game4[0]);
                 await _matchRepository.UpdateAsync(game4[1]);
             }
             if (game5.Count == 2)
             {
-                game5[0].Wins++;
-                game5[1].Losses++;
+                game5[0].SumOfGamesWon = (game5[0].SumOfGamesWon ?? 0) + (game5[0].Game5 ?? 0);
+                game5[0].SumOfGamesLost = (game5[0].SumOfGamesLost ?? 0) + (game5[1].Game5 ?? 0);
+                game5[1].SumOfGamesWon = (game5[1].SumOfGamesWon ?? 0) + (game5[1].Game5 ?? 0);
+                game5[1].SumOfGamesLost = (game5[1].SumOfGamesLost ?? 0) + (game5[0].Game5 ?? 0);
+                if ((game5[0].Game5 ?? 0) > (game5[1].Game5 ?? 0))
+                {
+                    game5[0].Wins++;
+                    game5[1].Losses++;
+                }
+                else
+                {
+                    game5[0].Losses++;
+                    game5[1].Wins++;
+                }
                 await _matchRepository.UpdateAsync(game5[0]);
                 await _matchRepository.UpdateAsync(game5[1]);
             }
 
             foreach (var match in doublesOrSinglesGroup)
             {
+                match.GamesBalance = (match.SumOfGamesWon) - (match.SumOfGamesLost);
                 match.SetsBalance = (match.Wins) - (match.Losses);
                 await _matchRepository.UpdateAsync(match);
             }
