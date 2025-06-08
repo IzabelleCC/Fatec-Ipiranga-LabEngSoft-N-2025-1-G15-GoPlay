@@ -16,6 +16,7 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
     {
         private readonly ITournamentBusiness<TournamentEntity> _tournamentBusiness;
         private readonly IMatchGroupBusiness _matchGroupBusiness;
+        private readonly IGameMatchBusiness _gameMatchBusiness;
 
         /// <summary>
         /// Construtor do Controller
@@ -24,10 +25,11 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         /// <param name="configuration"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public TournamentManagerController(
-            ITournamentBusiness<TournamentEntity> business, IMatchGroupBusiness matchGroupBusiness)
+            ITournamentBusiness<TournamentEntity> business, IMatchGroupBusiness matchGroupBusiness, IGameMatchBusiness gameMatchBusiness)
         {
             _tournamentBusiness = business ?? throw new ArgumentNullException(nameof(business));
             _matchGroupBusiness = matchGroupBusiness;
+            _gameMatchBusiness = gameMatchBusiness;
         }
 
         /// <summary>
@@ -327,7 +329,7 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         {
             try
             {
-               await  _matchGroupBusiness.GenerateEliminationMatches(id, CancellationToken.None);
+               await  _gameMatchBusiness.GenerateEliminationMatches(id, CancellationToken.None);
                 return Ok(new { message = "Teste realizado com sucesso." });
             }
             catch (Exception ex)

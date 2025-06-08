@@ -31,6 +31,14 @@ namespace GoPlay_Infra.Repository.Mapping
             builder.Property(g => g.NumberGame)
                 .IsRequired()
                 .HasDefaultValue(0);
+            builder.Property(m => m.CategoryId)
+                .IsRequired();
+
+            // Relacionamento com Category (Category.MatchGroups)
+            builder.HasOne(m => m.Category)
+                .WithMany(c => c.GameMatches)
+                .HasForeignKey(m => m.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(g => g.Competitor1)
                 .WithMany()

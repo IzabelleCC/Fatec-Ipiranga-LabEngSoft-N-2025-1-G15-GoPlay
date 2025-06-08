@@ -23,6 +23,7 @@ namespace GoPlay_Infra.Repository
             return await _context.GameMatches
                 .Include(m => m.Competitor1)
                 .Include(m => m.Competitor2)
+                .Include(m => m.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
 
@@ -31,6 +32,7 @@ namespace GoPlay_Infra.Repository
             return await _context.GameMatches
                 .Include(m => m.Competitor1)
                 .Include(m => m.Competitor2)
+                .Include(m => m.Category)
                 .ToListAsync();
         }
 

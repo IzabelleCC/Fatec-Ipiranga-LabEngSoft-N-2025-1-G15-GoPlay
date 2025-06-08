@@ -15,7 +15,9 @@ namespace GoPlay_Core.Entities
         public int? QtdGames2 { get; set; }
         public int? Result { get; set; }
         public int? NumberGame { get; set; } = 0;
+        public int CategoryId { get; set; }
         public CategoryPlayerEntity Competitor1 { get; set; } = null!;
         public CategoryPlayerEntity Competitor2 { get; set; } = null!;
+        public CategoryEntity Category { get; set; } = null!;
     }
 }
