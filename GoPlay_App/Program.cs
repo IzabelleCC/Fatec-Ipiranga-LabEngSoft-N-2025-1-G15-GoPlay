@@ -131,6 +131,9 @@ builder.Services.AddScoped<ICategoryPlayerRepository, CategoryPlayerRepository>(
 builder.Services.AddScoped<IMatchGroupBusiness, MatchGroupBusiness>();
 builder.Services.AddScoped<IMatchGroupRepository, MatchGroupRepository>();
 
+// ---------- Domínio: Partidas de Eliminatórias ----------
+builder.Services.AddScoped<IGameMatchRepository, GameMatchRepository>();
+
 // ---------- Pagamento: Pix / Gerencianet ----------
 builder.Services.AddScoped<IPixBusiness, PixBusiness>();
 builder.Services.AddScoped<IPixService, PixService>();

@@ -3,6 +3,7 @@ using System;
 using GoPlay_Infra;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GoPlay_Infra.Migrations
 {
     [DbContext(typeof(GoPlayDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250607202039_GOP-142-Exclui-GroupNumber-em-GameMatch")]
+    partial class GOP142ExcluiGroupNumberemGameMatch
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,7 +119,7 @@ namespace GoPlay_Infra.Migrations
                     b.Property<int>("Competitor1Id")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("Competitor2Id")
+                    b.Property<int>("Competitor2Id")
                         .HasColumnType("integer");
 
                     b.Property<int?>("CourtNumber")
@@ -127,11 +130,6 @@ namespace GoPlay_Infra.Migrations
 
                     b.Property<DateTime?>("MatchTime")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("NumberGame")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
 
                     b.Property<int?>("QtdGames1")
                         .HasColumnType("integer");
@@ -582,7 +580,8 @@ namespace GoPlay_Infra.Migrations
                     b.HasOne("GoPlay_Core.Entities.CategoryPlayerEntity", "Competitor2")
                         .WithMany()
                         .HasForeignKey("Competitor2Id")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Competitor1");
 

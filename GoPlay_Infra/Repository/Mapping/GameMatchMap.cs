@@ -12,11 +12,9 @@ namespace GoPlay_Infra.Repository.Mapping
 
             builder.HasKey(g => g.Id);
 
-            builder.Property(g => g.GroupNumber).IsRequired();
-
             builder.Property(g => g.Competitor1Id).IsRequired();
 
-            builder.Property(g => g.Competitor2Id).IsRequired();
+            builder.Property(g => g.Competitor2Id);
 
             builder.Property(g => g.MatchStage).IsRequired();
 
@@ -29,6 +27,10 @@ namespace GoPlay_Infra.Repository.Mapping
             builder.Property(g => g.QtdGames2);
 
             builder.Property(g => g.Result);
+
+            builder.Property(g => g.NumberGame)
+                .IsRequired()
+                .HasDefaultValue(0);
 
             builder.HasOne(g => g.Competitor1)
                 .WithMany()

@@ -34,25 +34,25 @@ namespace GoPlay_Infra.Repository
                 .ToListAsync();
         }
 
-        public async Task AddAsync(GameMatchEntity match, CancellationToken cancellationToken)
+        public async Task AddAsync(GameMatchEntity match)
         {
-            await _context.GameMatches.AddAsync(match, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
+            await _context.GameMatches.AddAsync(match);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(GameMatchEntity match, CancellationToken cancellationToken)
+        public async Task UpdateAsync(GameMatchEntity match)
         {
             _context.GameMatches.Update(match);
-            await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id, CancellationToken cancellationToken)
+        public async Task DeleteAsync(int id)
         {
             var match = await _context.GameMatches.FindAsync(id);
             if (match != null)
             {
                 _context.GameMatches.Remove(match);
-                await _context.SaveChangesAsync(cancellationToken);
+                await _context.SaveChangesAsync();
             }
         }
     }

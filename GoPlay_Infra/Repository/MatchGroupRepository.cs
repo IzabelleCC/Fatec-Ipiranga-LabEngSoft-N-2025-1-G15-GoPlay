@@ -23,6 +23,7 @@ namespace GoPlay_Infra.Repository
         {
             return await _context.Matches
                 .Where(m => m.CategoryId == categoryId)
+                .Include(m => m.RegistrationCategory)
                 .Include(m => m.Category)
                 .ToListAsync();
         }

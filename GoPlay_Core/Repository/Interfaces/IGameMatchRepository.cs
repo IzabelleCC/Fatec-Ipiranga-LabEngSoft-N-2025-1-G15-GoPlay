@@ -6,8 +6,8 @@ namespace GoPlay_Core.Repository.Interfaces
     {
         Task<GameMatchEntity?> GetByIdAsync(int id);
         Task<List<GameMatchEntity>> GetAllAsync();
-        Task AddAsync(GameMatchEntity match, CancellationToken cancellationToken);
-        Task UpdateAsync(GameMatchEntity match, CancellationToken cancellationToken);
-        Task DeleteAsync(int id, CancellationToken cancellationToken);
+        Task AddAsync(GameMatchEntity match);
+        Task UpdateAsync(GameMatchEntity match);
+        Task DeleteAsync(int id);
     }
 }

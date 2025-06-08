@@ -1,4 +1,5 @@
-﻿using GoPlay_App.Api.Controllers.TournamentManager.Models;
+﻿using System.Threading.Tasks;
+using GoPlay_App.Api.Controllers.TournamentManager.Models;
 using GoPlay_Core.Business.Interfaces;
 using GoPlay_Core.Entities;
 using GoPlay_Core.Exceptions;
@@ -312,6 +313,22 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
                 await _matchGroupBusiness.InsertGroupResultsAndReturnWinners(results, cancellationToken);
 
                 return Ok(new { message = "Resultados dos grupos inseridos com sucesso." });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        [HttpGet("Teste/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Teste(int id)
+        {
+            try
+            {
+               await  _matchGroupBusiness.GenerateEliminationMatches(id, CancellationToken.None);
+                return Ok(new { message = "Teste realizado com sucesso." });
             }
             catch (Exception ex)
             {
