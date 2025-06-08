@@ -79,7 +79,7 @@ namespace GoPlay_Core.Business
                     .ToList();
             }
 
-            matchesToCreate = await GenerateFixedGroupCrossMatches(firstPlaceds, secondPlaceds, groupedBye, matchStage.matchStage, matchStage.qtdCompetitor/2, numberGame);
+            matchesToCreate = await GenerateFixedGroupCrossMatches(firstPlaceds, secondPlaceds, groupedBye, matchStage.matchStage, matchStage.qtdCompetitor / 2, numberGame);
 
             // Salvar confrontos
             foreach (var game in matchesToCreate)
@@ -135,47 +135,7 @@ namespace GoPlay_Core.Business
             var matchesToCreate = new List<GameMatchEntity>();
 
             // Mapeamentos fixos para cada quantidade de grupos
-            var fixedMatches = qtdCompetitor switch
-            {
-                4 => new List<(int pos1, int grupo1, int pos2, int grupo2)>
-                {
-                    (1, 1, 2, 3),
-                    (2, 2, 1, 4),
-                    (1, 3, 2, 1),
-                    (2, 4, 1, 2),
-                },
-                8 => new List<(int pos1, int grupo1, int pos2, int grupo2)>
-                {
-                    (1, 1, 2, 7),
-                    (2, 2, 1, 8),
-                    (1, 3, 2, 5),
-                    (2, 4, 1, 6),
-                    (1, 5, 2, 3),
-                    (2, 6, 1, 4),
-                    (1, 7, 2, 1),
-                    (2, 8, 1, 2),
-                },
-                16 => new List<(int pos1, int grupo1, int pos2, int grupo2)>
-                {
-                    (1, 1, 2, 9),
-                    (2, 2, 1, 10),
-                    (1, 3, 2, 11),
-                    (2, 4, 1, 12),
-                    (1, 5, 2, 13),
-                    (2, 6, 1, 14),
-                    (1, 7, 2, 15),
-                    (2, 8, 1, 16),
-                    (1, 9, 2, 1),
-                    (2, 10, 1, 2),
-                    (1, 11, 2, 3),
-                    (2, 12, 1, 4),
-                    (1, 13, 2, 5),
-                    (2, 14, 1, 6),
-                    (1, 15, 2, 7),
-                    (2, 16, 1, 8),
-                },
-                _ => throw new InvalidOperationException($"No fixed matches defined for {qtdCompetitor} groups.")
-            };
+            var fixedMatches = await GetFixedMatches(qtdCompetitor);
 
             foreach (var (pos1, grupo1, pos2, grupo2) in fixedMatches)
             {
@@ -201,6 +161,53 @@ namespace GoPlay_Core.Business
             return matchesToCreate;
         }
 
+        private async Task<List<(int pos1, int grupo1, int pos2, int grupo2)>> GetFixedMatches(int qtdCompetitor)
+        {
+            return qtdCompetitor switch
+            {
+                4 => new List<(int pos1, int grupo1, int pos2, int grupo2)>
+                {
+                    (1, 1, 2, 3),
+                    (2, 2, 1, 4),
+                    (1, 3, 2, 1),
+                    (2, 4, 1, 2),
+                },
+
+                8 => new List<(int pos1, int grupo1, int pos2, int grupo2)>
+                {
+                    (1, 1, 2, 7),
+                    (2, 2, 1, 8),
+                    (1, 3, 2, 5),
+                    (2, 4, 1, 6),
+                    (1, 5, 2, 3),
+                    (2, 6, 1, 4),
+                    (1, 7, 2, 1),
+                    (2, 8, 1, 2),
+                },
+
+                16 => new List<(int pos1, int grupo1, int pos2, int grupo2)>
+                {
+                    (1, 1, 2, 9),
+                    (2, 2, 1, 10),
+                    (1, 3, 2, 11),
+                    (2, 4, 1, 12),
+                    (1, 5, 2, 13),
+                    (2, 6, 1, 14),
+                    (1, 7, 2, 15),
+                    (2, 8, 1, 16),
+                    (1, 9, 2, 1),
+                    (2, 10, 1, 2),
+                    (1, 11, 2, 3),
+                    (2, 12, 1, 4),
+                    (1, 13, 2, 5),
+                    (2, 14, 1, 6),
+                    (1, 15, 2, 7),
+                    (2, 16, 1, 8),
+                },
+
+                _ => throw new InvalidOperationException($"No fixed matches defined for {qtdCompetitor} groups.")
+            };
+        }
 
     }
 }
