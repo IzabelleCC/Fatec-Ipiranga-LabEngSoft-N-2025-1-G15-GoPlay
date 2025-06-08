@@ -45,5 +45,7 @@ namespace GoPlay_Core.Business.Interfaces
         /// <returns></returns>
         Task<List<TUserResponse>> GetAllPlayers(CancellationToken cancellationToken);
 
+        Task<List<TUserResponse>> GetByName(string name, CancellationToken cancellationToken);
+
     }
 }
