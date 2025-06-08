@@ -11,7 +11,6 @@ namespace GoPlay_Infra.Repository.Mapping
             builder.ToTable("MatchGroup");
 
             builder.HasKey(m => m.Id);
-
             builder.Property(m => m.Id)
                 .ValueGeneratedOnAdd();
 
@@ -27,13 +26,48 @@ namespace GoPlay_Infra.Repository.Mapping
             builder.Property(m => m.ScheduledAt)
                 .IsRequired(false);
 
-            builder.Property(m => m.Result)
-                .HasMaxLength(255)
-                .IsRequired(false);
-
             builder.Property(m => m.AttendanceConfirmed)
                 .IsRequired()
                 .HasDefaultValue(false);
+
+            builder.Property(m => m.Position)
+                .IsRequired(false);
+
+            builder.Property(m => m.Wins)
+                .IsRequired(false);
+
+            builder.Property(m => m.Losses)
+                .IsRequired(false);
+
+            builder.Property(m => m.SetsBalance)
+                .IsRequired(false);
+
+            builder.Property(m => m.Game1)
+                .IsRequired(false);
+
+            builder.Property(m => m.Game2)
+                .IsRequired(false);
+
+            builder.Property(m => m.Game3)
+                .IsRequired(false);
+
+            builder.Property(m => m.Game4)
+                .IsRequired(false);
+
+            builder.Property(m => m.Game5)
+                .IsRequired(false);
+
+            builder.Property(m => m.GamesBalance)
+                .IsRequired(false);
+
+            builder.Property(m => m.Tiebreaks)
+                .IsRequired(false);
+
+            builder.Property(m => m.SumOfGamesWon)
+                .IsRequired(false);
+
+            builder.Property(m => m.SumOfGamesLost)
+                .IsRequired(false);
 
             // Relacionamento com Category (Category.MatchGroups)
             builder.HasOne(m => m.Category)

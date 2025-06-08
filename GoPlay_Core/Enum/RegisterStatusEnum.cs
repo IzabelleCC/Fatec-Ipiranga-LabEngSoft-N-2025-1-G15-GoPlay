@@ -1,6 +1,6 @@
 ﻿namespace GoPlay_Core.Enum
 {
-    public enum RegisterStatus
+    public enum RegisterStatusEnum
     {
         InscricaoRealizada = 0,
         PagamentoPendente = 1,
