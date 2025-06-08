@@ -31,6 +31,7 @@ namespace GoPlay_Infra.Repository.Mapping
             builder.Property(g => g.NumberGame)
                 .IsRequired()
                 .HasDefaultValue(0);
+
             builder.Property(m => m.CategoryId)
                 .IsRequired();
 

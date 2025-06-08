@@ -79,7 +79,7 @@ namespace GoPlay_Core.Business
                     .ToList();
             }
 
-            matchesToCreate = await GenerateFixedGroupCrossMatches(firstPlaceds, secondPlaceds, groupedBye, matchStage.matchStage, matchStage.qtdCompetitor, numberGame);
+            matchesToCreate = await GenerateFixedGroupCrossMatches(firstPlaceds, secondPlaceds, groupedBye, matchStage.matchStage, matchStage.qtdCompetitor/2, numberGame);
 
             // Salvar confrontos
             foreach (var game in matchesToCreate)
@@ -119,124 +119,82 @@ namespace GoPlay_Core.Business
                 NumberGame = numberGame,
                 Competitor1Id = competitor1.RegistrationCategoryId,
                 Competitor2Id = competitor2?.RegistrationCategoryId ?? null,
+                CategoryId = competitor1.CategoryId,
             };
         }
 
         private async Task<List<GameMatchEntity>> GenerateFixedGroupCrossMatches(
-     List<MatchGroupEntity> firstPlaceds,
-     List<MatchGroupEntity> secondPlaceds,
-     List<MatchGroupEntity> groupedBye,
-     MatchStageEnum matchStage,
-     int qtdCompetitor,
-     int numberGame)
+            List<MatchGroupEntity> firstPlaceds,
+            List<MatchGroupEntity> secondPlaceds,
+            List<MatchGroupEntity> groupedBye,
+            MatchStageEnum matchStage,
+            int qtdCompetitor,
+            int numberGame)
         {
+
             var matchesToCreate = new List<GameMatchEntity>();
 
-            // FIXED CONFIGURATION (4, 8, 16 grupos)
+            // Mapeamentos fixos para cada quantidade de grupos
             var fixedMatches = qtdCompetitor switch
             {
                 4 => new List<(int pos1, int grupo1, int pos2, int grupo2)>
-        {
-            (1, 1, 2, 3),
-            (2, 2, 1, 4),
-            (1, 3, 2, 1),
-            (2, 4, 1, 2),
-        },
+                {
+                    (1, 1, 2, 3),
+                    (2, 2, 1, 4),
+                    (1, 3, 2, 1),
+                    (2, 4, 1, 2),
+                },
                 8 => new List<(int pos1, int grupo1, int pos2, int grupo2)>
-        {
-            (1, 1, 2, 7),
-            (2, 2, 1, 8),
-            (1, 3, 2, 5),
-            (2, 4, 1, 6),
-            (1, 5, 2, 3),
-            (2, 6, 1, 4),
-            (1, 7, 2, 1),
-            (2, 8, 1, 2),
-        },
+                {
+                    (1, 1, 2, 7),
+                    (2, 2, 1, 8),
+                    (1, 3, 2, 5),
+                    (2, 4, 1, 6),
+                    (1, 5, 2, 3),
+                    (2, 6, 1, 4),
+                    (1, 7, 2, 1),
+                    (2, 8, 1, 2),
+                },
                 16 => new List<(int pos1, int grupo1, int pos2, int grupo2)>
-        {
-            (1, 1, 2, 9),
-            (2, 2, 1, 10),
-            (1, 3, 2, 11),
-            (2, 4, 1, 12),
-            (1, 5, 2, 13),
-            (2, 6, 1, 14),
-            (1, 7, 2, 15),
-            (2, 8, 1, 16),
-            (1, 9, 2, 1),
-            (2, 10, 1, 2),
-            (1, 11, 2, 3),
-            (2, 12, 1, 4),
-            (1, 13, 2, 5),
-            (2, 14, 1, 6),
-            (1, 15, 2, 7),
-            (2, 16, 1, 8),
-        },
-                _ => null
+                {
+                    (1, 1, 2, 9),
+                    (2, 2, 1, 10),
+                    (1, 3, 2, 11),
+                    (2, 4, 1, 12),
+                    (1, 5, 2, 13),
+                    (2, 6, 1, 14),
+                    (1, 7, 2, 15),
+                    (2, 8, 1, 16),
+                    (1, 9, 2, 1),
+                    (2, 10, 1, 2),
+                    (1, 11, 2, 3),
+                    (2, 12, 1, 4),
+                    (1, 13, 2, 5),
+                    (2, 14, 1, 6),
+                    (1, 15, 2, 7),
+                    (2, 16, 1, 8),
+                },
+                _ => throw new InvalidOperationException($"No fixed matches defined for {qtdCompetitor} groups.")
             };
 
-            //if (fixedMatches != null)
-            //{
-            //    // Executa lógica fixa
-            //    foreach (var (pos1, grupo1, pos2, grupo2) in fixedMatches)
-            //    {
-            //        numberGame++;
-
-            //        var jogador1 = pos1 == 1
-            //            ? firstPlaceds.FirstOrDefault(g => g.GroupNumber == grupo1)
-            //            : secondPlaceds.FirstOrDefault(g => g.GroupNumber == grupo1);
-
-            //        var jogador2 = pos2 == 1
-            //            ? firstPlaceds.FirstOrDefault(g => g.GroupNumber == grupo2)
-            //            : secondPlaceds.FirstOrDefault(g => g.GroupNumber == grupo2);
-
-            //        if (jogador1 == null || jogador2 == null)
-            //        {
-            //            throw new InvalidOperationException($"Missing player for group match: Grupo {grupo1} x Grupo {grupo2}");
-            //        }
-
-            //        var match = await CreateGameMatch(jogador1, jogador2, matchStage, numberGame);
-            //        matchesToCreate.Add(match);
-            //    }
-
-            //    return matchesToCreate;
-            //}
-
-            // =============================
-            // DINÂMICA: CRIAÇÃO COM BYES
-            // =============================
-
-            var allCompetitors = new List<MatchGroupEntity>();
-            allCompetitors.AddRange(firstPlaceds);
-            allCompetitors.AddRange(secondPlaceds);
-            allCompetitors.AddRange(groupedBye);
-
-            var totalPlayers = allCompetitors.Count;
-            var nextPowerOf2 = (int)Math.Pow(2, Math.Ceiling(Math.Log2(totalPlayers)));
-            var numberOfByes = nextPowerOf2 - totalPlayers;
-
-            // Ordem aleatória ou ordenada
-            var shuffled = allCompetitors.OrderBy(x => Guid.NewGuid()).ToList();
-
-            // Adiciona byes como confrontos com null
-            for (int i = 0; i < numberOfByes; i++)
+            foreach (var (pos1, grupo1, pos2, grupo2) in fixedMatches)
             {
-                var competitor = shuffled[i];
                 numberGame++;
 
-                var match = await CreateGameMatch(competitor, null, matchStage, numberGame);
-                matchesToCreate.Add(match);
-            }
+                var jogador1 = pos1 == 1
+                    ? firstPlaceds.FirstOrDefault(g => g.GroupNumber == grupo1)
+                    : secondPlaceds.FirstOrDefault(g => g.GroupNumber == grupo1);
 
-            // Cria confrontos restantes
-            for (int i = numberOfByes; i < shuffled.Count; i += 2)
-            {
-                var competitor1 = shuffled[i];
-                var competitor2 = (i + 1 < shuffled.Count) ? shuffled[i + 1] : null;
+                var jogador2 = pos2 == 1
+                    ? firstPlaceds.FirstOrDefault(g => g.GroupNumber == grupo2)
+                    : secondPlaceds.FirstOrDefault(g => g.GroupNumber == grupo2);
 
-                numberGame++;
+                if (jogador1 == null || jogador2 == null)
+                {
+                    throw new InvalidOperationException($"Missing player for group match: Grupo {grupo1} x Grupo {grupo2}");
+                }
 
-                var match = await CreateGameMatch(competitor1, competitor2, matchStage, numberGame);
+                var match = await CreateGameMatch(jogador1, jogador2, matchStage, numberGame);
                 matchesToCreate.Add(match);
             }
 
