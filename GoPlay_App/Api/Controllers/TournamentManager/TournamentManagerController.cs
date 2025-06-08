@@ -322,5 +322,45 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
             }
         }
 
+
+        [HttpPost("InsertEliminationResults")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> InsertEliminationResults([FromBody] EliminationResultsRequest request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (request == null)
+                    return BadRequest(new { message = "Dados enviados inválidos." });
+
+                var results = request.ToGameMatchEntity();
+
+                await _gameMatchBusiness.InsertEliminationResultsAndReturnWinners(results, cancellationToken);
+
+                return Ok(new { message = "Resultados  inseridos com sucesso." });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        [HttpGet("Teste/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Teste(int id)
+        {
+            try
+            {
+                await _gameMatchBusiness.GenerateEliminationMatches(id, CancellationToken.None);
+                return Ok(new { message = "Teste realizado com sucesso." });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
     }
 }

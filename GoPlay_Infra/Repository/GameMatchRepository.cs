@@ -57,5 +57,15 @@ namespace GoPlay_Infra.Repository
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<List<GameMatchEntity>> GetMatchesByCategoryIdAsync(int categoryId)
+        {
+            return await _context.GameMatches
+                .Where(m => m.CategoryId == categoryId)
+                .Include(m => m.Competitor1)
+                .Include(m => m.Competitor2)
+                .Include(m => m.Category)
+                .ToListAsync();
+        }
     }
 }

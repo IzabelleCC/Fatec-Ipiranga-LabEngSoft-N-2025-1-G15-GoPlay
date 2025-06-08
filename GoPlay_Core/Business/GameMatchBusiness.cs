@@ -136,6 +136,11 @@ namespace GoPlay_Core.Business
                 Competitor1Id = competitor1?.RegistrationCategoryId,
                 Competitor2Id = competitor2?.RegistrationCategoryId ?? null,
                 CategoryId = competitor1?.CategoryId ?? competitor2.CategoryId,
+                Result = competitor1 == null && competitor2 != null
+                                ? competitor2.RegistrationCategoryId
+                                : competitor2 == null && competitor1 != null
+                                    ? competitor1.RegistrationCategoryId
+                                    : null,
             };
         }
 
@@ -315,6 +320,80 @@ namespace GoPlay_Core.Business
             }
 
             return matches;
+        }
+
+        public async Task<List<GameMatchEntity>> InsertEliminationResultsAndReturnWinners(GameMatchEntity results, CancellationToken cancellationToken)
+        {
+            var gameMatchExists = await _gameMatchRepository.GetMatchesByCategoryIdAsync(results.CategoryId ?? 0);
+
+            if (gameMatchExists != null)
+            {
+                var matchToUpdate = gameMatchExists
+                    .FirstOrDefault(m => m.Competitor1Id == results.Competitor1Id && m.Competitor2Id == results.Competitor2Id);
+                if (matchToUpdate != null)
+                {
+                    matchToUpdate.QtdGames1 = results.QtdGames1;
+                    matchToUpdate.QtdGames2 = results.QtdGames2;
+                    if (results.QtdGames1 > results.QtdGames2)
+                    {
+                        matchToUpdate.Result = results.Competitor1Id;
+                    }
+                    matchToUpdate.Result = results.Competitor2Id;
+
+                    await _gameMatchRepository.UpdateAsync(matchToUpdate);
+
+                    var result= await _gameMatchRepository.GetMatchesByCategoryIdAsync(results.CategoryId ?? 0);
+                    var noResultZeroOrNull = result
+                        .Where(m => m.Result == 0 || m.Result == null)
+                        .ToList();
+
+                    if (noResultZeroOrNull.Count == 0)
+                    {
+                        await GenerateNewPhaseWithWinners(results.CategoryId ?? 0);
+                    }
+                    // Retornar os vencedores
+                    return new List<GameMatchEntity> { matchToUpdate };
+                }
+                else
+                {
+                    _logger.LogWarning("Match not found for Competitor1Id: {Competitor1Id}, Competitor2Id: {Competitor2Id}",
+                        results.Competitor1Id, results.Competitor2Id);
+                    throw new InvalidOperationException("Match not found.");
+                }
+            }
+            return new List<GameMatchEntity>();
+        }
+
+        private async Task GenerateNewPhaseWithWinners(int categoryId)
+        {
+
+            var winners = await _gameMatchRepository.GetMatchesByCategoryIdAsync(categoryId);
+            var maxMatchStage = winners.Max(m => m.MatchStage);
+            var winnersOrderByNuberGame = winners
+                .Where(m => m.MatchStage == maxMatchStage)
+                .OrderBy(m => m.NumberGame)
+                .ToList();
+
+            if (maxMatchStage == MatchStageEnum.Final) return;
+
+            int? lastNumberGame = winnersOrderByNuberGame.Count > 0
+                                                ? winnersOrderByNuberGame[^1].NumberGame
+                                                : null;
+
+            var matchStage = GetMatchStage(winnersOrderByNuberGame.Count);
+
+            for (int i = 0; i < winnersOrderByNuberGame.Count; i += 2)
+            {
+                lastNumberGame++;
+               await _gameMatchRepository.AddAsync(new GameMatchEntity
+                {
+                    Competitor1Id = winnersOrderByNuberGame[i].Result,
+                    Competitor2Id = winnersOrderByNuberGame[i + 1].Result,
+                    MatchStage = matchStage.matchStage,
+                    CategoryId = winnersOrderByNuberGame[i].CategoryId,
+                    NumberGame = lastNumberGame,
+                });
+            }
         }
     }
 }
