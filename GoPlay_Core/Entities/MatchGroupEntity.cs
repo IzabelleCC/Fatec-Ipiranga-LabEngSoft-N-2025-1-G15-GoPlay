@@ -19,7 +19,8 @@ namespace GoPlay_Core.Entities
         public int? Game3 { get; set; }
         public int? Game4 { get; set; }
         public int? Game5 { get; set; }
-        public int? SumOfGames { get; set; } = 0;
+        public int? SumOfGamesWon { get; set; } = 0;
+        public int? SumOfGamesLost { get; set; } = 0;
         public int? GamesBalance { get; set; } = 0;
         public int? Tiebreaks { get; set; } = 0;
         public MatchStageEnum MatchStage { get; set; } = MatchStageEnum.Group;

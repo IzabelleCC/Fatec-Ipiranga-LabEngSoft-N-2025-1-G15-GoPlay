@@ -23,6 +23,7 @@ namespace GoPlay_Infra.Repository
             return await _context.GameMatches
                 .Include(m => m.Competitor1)
                 .Include(m => m.Competitor2)
+                .Include(m => m.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
 
@@ -31,29 +32,40 @@ namespace GoPlay_Infra.Repository
             return await _context.GameMatches
                 .Include(m => m.Competitor1)
                 .Include(m => m.Competitor2)
+                .Include(m => m.Category)
                 .ToListAsync();
         }
 
-        public async Task AddAsync(GameMatchEntity match, CancellationToken cancellationToken)
+        public async Task AddAsync(GameMatchEntity match)
         {
-            await _context.GameMatches.AddAsync(match, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
+            await _context.GameMatches.AddAsync(match);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(GameMatchEntity match, CancellationToken cancellationToken)
+        public async Task UpdateAsync(GameMatchEntity match)
         {
             _context.GameMatches.Update(match);
-            await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id, CancellationToken cancellationToken)
+        public async Task DeleteAsync(int id)
         {
             var match = await _context.GameMatches.FindAsync(id);
             if (match != null)
             {
                 _context.GameMatches.Remove(match);
-                await _context.SaveChangesAsync(cancellationToken);
+                await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<List<GameMatchEntity>> GetMatchesByCategoryIdAsync(int categoryId)
+        {
+            return await _context.GameMatches
+                .Where(m => m.CategoryId == categoryId)
+                .Include(m => m.Competitor1)
+                .Include(m => m.Competitor2)
+                .Include(m => m.Category)
+                .ToListAsync();
         }
     }
 }

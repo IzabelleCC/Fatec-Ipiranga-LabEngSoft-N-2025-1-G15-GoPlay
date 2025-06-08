@@ -3,6 +3,7 @@ using System;
 using GoPlay_Infra;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GoPlay_Infra.Migrations
 {
     [DbContext(typeof(GoPlayDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250608025210_GOP-142-Adiciona-CategoryId-em-GameMatch")]
+    partial class GOP142AdicionaCategoryIdemGameMatch
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,7 +119,7 @@ namespace GoPlay_Infra.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("Competitor1Id")
+                    b.Property<int>("Competitor1Id")
                         .HasColumnType("integer");
 
                     b.Property<int?>("Competitor2Id")
@@ -587,7 +590,8 @@ namespace GoPlay_Infra.Migrations
                     b.HasOne("GoPlay_Core.Entities.CategoryPlayerEntity", "Competitor1")
                         .WithMany()
                         .HasForeignKey("Competitor1Id")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("GoPlay_Core.Entities.CategoryPlayerEntity", "Competitor2")
                         .WithMany()

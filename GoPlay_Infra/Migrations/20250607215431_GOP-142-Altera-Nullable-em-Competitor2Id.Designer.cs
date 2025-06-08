@@ -3,6 +3,7 @@ using System;
 using GoPlay_Infra;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GoPlay_Infra.Migrations
 {
     [DbContext(typeof(GoPlayDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250607215431_GOP-142-Altera-Nullable-em-Competitor2Id")]
+    partial class GOP142AlteraNullableemCompetitor2Id
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,10 +116,7 @@ namespace GoPlay_Infra.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Competitor1Id")
+                    b.Property<int>("Competitor1Id")
                         .HasColumnType("integer");
 
                     b.Property<int?>("Competitor2Id")
@@ -146,8 +146,6 @@ namespace GoPlay_Infra.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
 
                     b.HasIndex("Competitor1Id");
 
@@ -578,23 +576,16 @@ namespace GoPlay_Infra.Migrations
 
             modelBuilder.Entity("GoPlay_Core.Entities.GameMatchEntity", b =>
                 {
-                    b.HasOne("CategoryEntity", "Category")
-                        .WithMany("GameMatches")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("GoPlay_Core.Entities.CategoryPlayerEntity", "Competitor1")
                         .WithMany()
                         .HasForeignKey("Competitor1Id")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("GoPlay_Core.Entities.CategoryPlayerEntity", "Competitor2")
                         .WithMany()
                         .HasForeignKey("Competitor2Id")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Category");
 
                     b.Navigation("Competitor1");
 
@@ -685,8 +676,6 @@ namespace GoPlay_Infra.Migrations
             modelBuilder.Entity("CategoryEntity", b =>
                 {
                     b.Navigation("CategoryPlayers");
-
-                    b.Navigation("GameMatches");
 
                     b.Navigation("MatchGroups");
                 });

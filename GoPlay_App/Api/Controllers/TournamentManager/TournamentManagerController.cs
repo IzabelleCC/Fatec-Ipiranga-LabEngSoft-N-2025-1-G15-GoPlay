@@ -1,4 +1,5 @@
-﻿using GoPlay_App.Api.Controllers.TournamentManager.Models;
+﻿using System.Threading.Tasks;
+using GoPlay_App.Api.Controllers.TournamentManager.Models;
 using GoPlay_Core.Business.Interfaces;
 using GoPlay_Core.Entities;
 using GoPlay_Core.Exceptions;
@@ -15,6 +16,7 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
     {
         private readonly ITournamentBusiness<TournamentEntity> _tournamentBusiness;
         private readonly IMatchGroupBusiness _matchGroupBusiness;
+        private readonly IGameMatchBusiness _gameMatchBusiness;
 
         /// <summary>
         /// Construtor do Controller
@@ -23,10 +25,11 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         /// <param name="configuration"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public TournamentManagerController(
-            ITournamentBusiness<TournamentEntity> business, IMatchGroupBusiness matchGroupBusiness)
+            ITournamentBusiness<TournamentEntity> business, IMatchGroupBusiness matchGroupBusiness, IGameMatchBusiness gameMatchBusiness)
         {
             _tournamentBusiness = business ?? throw new ArgumentNullException(nameof(business));
             _matchGroupBusiness = matchGroupBusiness;
+            _gameMatchBusiness = gameMatchBusiness;
         }
 
         /// <summary>
@@ -318,5 +321,46 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
                 return HandleException(ex);
             }
         }
+
+
+        [HttpPost("InsertEliminationResults")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> InsertEliminationResults([FromBody] EliminationResultsRequest request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (request == null)
+                    return BadRequest(new { message = "Dados enviados inválidos." });
+
+                var results = request.ToGameMatchEntity();
+
+                await _gameMatchBusiness.InsertEliminationResultsAndReturnWinners(results, cancellationToken);
+
+                return Ok(new { message = "Resultados  inseridos com sucesso." });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        [HttpGet("Teste/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Teste(int id)
+        {
+            try
+            {
+                await _gameMatchBusiness.GenerateEliminationMatches(id, CancellationToken.None);
+                return Ok(new { message = "Teste realizado com sucesso." });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
     }
 }
