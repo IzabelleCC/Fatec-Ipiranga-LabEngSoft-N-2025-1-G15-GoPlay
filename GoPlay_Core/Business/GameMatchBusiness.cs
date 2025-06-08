@@ -66,7 +66,7 @@ namespace GoPlay_Core.Business
                 secondPlaceds.Add(group.Value.First(w => w.Position == 2));
             }
 
-            List<GameMatchEntity> matchesToCreate;
+            var matchesToCreate = new List<GameMatchEntity>();
 
             var groupedBye = new List<MatchGroupEntity>();
             if (winners.Count < matchStage.qtdCompetitor)
@@ -79,11 +79,17 @@ namespace GoPlay_Core.Business
                     .ToList();
             }
 
-            matchesToCreate = await GenerateFixedGroupCrossMatches(firstPlaceds, secondPlaceds, groupedBye, matchStage.matchStage, matchStage.qtdCompetitor / 2, numberGame);
+            if (matchStage.qtdCompetitor == winners.Count)
+            {
+                matchesToCreate = await GenerateFixedGroupCrossMatches(firstPlaceds, secondPlaceds, matchStage.matchStage, matchStage.qtdCompetitor / 2, numberGame);
+            }
+            else
+            {
+                matchesToCreate = await GenerateGroupCrossMatchesWithBye(firstPlaceds, secondPlaceds, groupedBye, matchStage.matchStage, matchStage.qtdCompetitor / 2, numberGame);
+            }
 
             // Salvar confrontos
             foreach (var game in matchesToCreate)
-
             {
                 await _gameMatchRepository.AddAsync(game);
             }
@@ -111,30 +117,28 @@ namespace GoPlay_Core.Business
                     return (MatchStageEnum.Undefined, 0);
             }
         }
+
         private async Task<GameMatchEntity> CreateGameMatch(MatchGroupEntity competitor1, MatchGroupEntity? competitor2, MatchStageEnum matchStage, int numberGame)
         {
             return new GameMatchEntity
             {
                 MatchStage = matchStage,
                 NumberGame = numberGame,
-                Competitor1Id = competitor1.RegistrationCategoryId,
+                Competitor1Id = competitor1?.RegistrationCategoryId,
                 Competitor2Id = competitor2?.RegistrationCategoryId ?? null,
-                CategoryId = competitor1.CategoryId,
+                CategoryId = competitor1?.CategoryId ?? competitor2.CategoryId,
             };
         }
 
         private async Task<List<GameMatchEntity>> GenerateFixedGroupCrossMatches(
             List<MatchGroupEntity> firstPlaceds,
             List<MatchGroupEntity> secondPlaceds,
-            List<MatchGroupEntity> groupedBye,
             MatchStageEnum matchStage,
             int qtdCompetitor,
             int numberGame)
         {
-
             var matchesToCreate = new List<GameMatchEntity>();
 
-            // Mapeamentos fixos para cada quantidade de grupos
             var fixedMatches = await GetFixedMatches(qtdCompetitor);
 
             foreach (var (pos1, grupo1, pos2, grupo2) in fixedMatches)
@@ -209,5 +213,99 @@ namespace GoPlay_Core.Business
             };
         }
 
+        private async Task<List<GameMatchEntity>> GenerateGroupCrossMatchesWithBye(
+            List<MatchGroupEntity> firstPlaceds,
+            List<MatchGroupEntity> secondPlaceds,
+            List<MatchGroupEntity> groupedBye,
+            MatchStageEnum matchStage,
+            int qtdGrupos,
+            int numberGame)
+        {
+            var matchesToCreate = new List<GameMatchEntity>();
+
+            var orderedFirstPlaceds = firstPlaceds
+                .OrderByDescending(g => g.Wins)
+                .ThenByDescending(g => g.SetsBalance)
+                .ThenByDescending(g => g.GamesBalance)
+                .ToList();
+
+            var orderedSecondPlaceds = secondPlaceds
+                .OrderByDescending(g => g.Wins)
+                .ThenByDescending(g => g.SetsBalance)
+                .ThenByDescending(g => g.GamesBalance)
+                .ToList();
+
+            _logger.LogInformation("---- FIRST PLACEDS RANKING ----");
+            for (int i = 0; i < orderedFirstPlaceds.Count; i++)
+            {
+                _logger.LogInformation($"{i + 1}ª melhor campanha: Grupo {orderedFirstPlaceds[i].GroupNumber}");
+            }
+
+            _logger.LogInformation("---- SECOND PLACEDS RANKING ----");
+            for (int i = 0; i < orderedSecondPlaceds.Count; i++)
+            {
+                _logger.LogInformation($"{i + 1}º do grupo da {i + 1}ª melhor campanha: Grupo {orderedSecondPlaceds[i].GroupNumber}");
+            }
+
+            // CORREÇÃO → mappedSecondPlaceds conforme a planilha
+            var mappedSecondPlaceds = orderedFirstPlaceds
+                .Select(first => orderedSecondPlaceds.FirstOrDefault(s => s.GroupNumber == first.GroupNumber))
+                .ToList();
+
+            var templateMatches = await GetTemplateMatchesForGroupCount(orderedFirstPlaceds, mappedSecondPlaceds);
+
+            foreach (var match in templateMatches)
+            {
+                numberGame++;
+                matchesToCreate.Add(await CreateGameMatch(match.Competitor1, match.Competitor2, matchStage, numberGame));
+
+                var comp1Name = match.Competitor1 != null ? $"Grupo {match.Competitor1.GroupNumber}" : "BYE";
+                var comp2Name = match.Competitor2 != null ? $"Grupo {match.Competitor2.GroupNumber}" : "BYE";
+                _logger.LogInformation($"Jogo {numberGame}: {comp1Name} X {comp2Name}");
+            }
+
+            return matchesToCreate;
+        }
+
+        private async Task<List<(MatchGroupEntity Competitor1, MatchGroupEntity? Competitor2)>> GetTemplateMatchesForGroupCount(
+            List<MatchGroupEntity> orderedFirstPlaceds,
+            List<MatchGroupEntity> mappedSecondPlaceds)
+        {
+            var matches = new List<(MatchGroupEntity? Competitor1, MatchGroupEntity? Competitor2)>();
+
+            int groupCount = orderedFirstPlaceds.Count;
+
+            switch (groupCount)
+            {
+                case 3:
+                    matches.Add((orderedFirstPlaceds[1], null));
+                    matches.Add((mappedSecondPlaceds[0], mappedSecondPlaceds[2]));
+                    matches.Add((orderedFirstPlaceds[2], mappedSecondPlaceds[1]));
+                    matches.Add((null, orderedFirstPlaceds[0]));
+                    break;
+
+                case 5:
+                    matches.Add((orderedFirstPlaceds[0], null));
+                    matches.Add((mappedSecondPlaceds[1], mappedSecondPlaceds[2]));
+                    matches.Add((orderedFirstPlaceds[3], null));
+                    matches.Add((null, orderedFirstPlaceds[4]));
+                    matches.Add((mappedSecondPlaceds[0], null));
+                    matches.Add((null, orderedFirstPlaceds[2]));
+                    matches.Add((mappedSecondPlaceds[3], mappedSecondPlaceds[4]));
+                    matches.Add((null, orderedFirstPlaceds[1]));
+                    break;
+
+                // PREPARADO para você colar:
+                case 6:
+                    throw new NotImplementedException("Template for 6 groups not implemented yet.");
+                case 7:
+                    throw new NotImplementedException("Template for 7 groups not implemented yet.");
+
+                default:
+                    throw new InvalidOperationException($"No template defined for {groupCount} groups.");
+            }
+
+            return matches;
+        }
     }
 }

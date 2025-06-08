@@ -12,7 +12,7 @@ namespace GoPlay_Infra.Repository.Mapping
 
             builder.HasKey(g => g.Id);
 
-            builder.Property(g => g.Competitor1Id).IsRequired();
+            builder.Property(g => g.Competitor1Id);
 
             builder.Property(g => g.Competitor2Id);
 
