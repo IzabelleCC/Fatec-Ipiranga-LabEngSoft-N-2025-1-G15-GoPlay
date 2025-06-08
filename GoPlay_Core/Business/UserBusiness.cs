@@ -74,6 +74,20 @@ namespace GoPlay_Core.Business
             return await _repository.GetByUserName(userName);
         }
 
+        public async Task<List<UserResponse>> GetByName(string name, CancellationToken cancellationToken)
+        {
+            var result = await _repository.GetByName(name);
+            if (result == null || !result.Any())
+            {
+                throw new InvalidOperationException("Nenhum usuário encontrado com o nome informado.");
+            }
+            var users = result
+                .Where(u => u != null && u.IsActive == true)
+                .Select(UserResponse.ConvertToUserResponse)
+                .ToList();
+            return users;
+        }
+
         public async Task<List<UserResponse>> GetAllPlayers(CancellationToken cancellationToken)
         {
             var result = await _repository.GetAllPlayers();

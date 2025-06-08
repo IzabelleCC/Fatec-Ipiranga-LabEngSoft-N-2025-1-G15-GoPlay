@@ -86,6 +86,29 @@ namespace GoPlay_App.Api.Controllers.UserController
         }
 
         /// <summary>
+        /// Busca um usuário pelo nome
+        /// </summary>
+        [HttpGet("GetByName/{name}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetByName(string name, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var entity = await _business.GetByName(name, cancellationToken);
+                if (entity == null)
+                    throw new NotFoundException("Usuário não encontrado.");
+
+                return Ok(entity);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        /// <summary>
         /// Busca todos os jogadores
         /// </summary>
         /// <param name="cancellationToken"></param>

@@ -65,6 +65,23 @@ namespace GoPlay_Infra.Repository
             }
         }
 
+        public async Task<List<UserEntity?>> GetByName(string name)
+        {
+            try
+            {
+                var users = await _userManager.Users
+                    .Where(u => u.Name.ToLower().Contains(name.ToLower()) && u.UserType == UserTypeEnum.Player)
+                    .ToListAsync();
+
+                return users.Cast<UserEntity?>().ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ocorreu um erro ao recuperar os usuários pelo nome.");
+                throw new InvalidOperationException("Ocorreu um erro ao recuperar os usuários.", ex);
+            }
+        }
+
         public async Task<UserEntity?> GetById(string id)
         {
             try
