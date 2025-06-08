@@ -1,7 +1,6 @@
-﻿using System.Threading.Tasks;
-using GoPlay_App.Api.Controllers.TournamentManager.Models;
+﻿using GoPlay_App.Api.Controllers.TournamentManager.Models;
+using GoPlay_Core.Business;
 using GoPlay_Core.Business.Interfaces;
-using GoPlay_Core.Entities;
 using GoPlay_Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +16,7 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         private readonly ITournamentBusiness<TournamentEntity> _tournamentBusiness;
         private readonly IMatchGroupBusiness _matchGroupBusiness;
         private readonly IGameMatchBusiness _gameMatchBusiness;
+        private readonly ICategoryBusiness<CategoryEntity> _categoryBusiness;
 
         /// <summary>
         /// Construtor do Controller
@@ -25,11 +25,12 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         /// <param name="configuration"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public TournamentManagerController(
-            ITournamentBusiness<TournamentEntity> business, IMatchGroupBusiness matchGroupBusiness, IGameMatchBusiness gameMatchBusiness)
+            ITournamentBusiness<TournamentEntity> business, IMatchGroupBusiness matchGroupBusiness, IGameMatchBusiness gameMatchBusiness, GoPlay_Core.Business.Interfaces.ICategoryBusiness<CategoryEntity> categoryBusiness)
         {
             _tournamentBusiness = business ?? throw new ArgumentNullException(nameof(business));
             _matchGroupBusiness = matchGroupBusiness;
             _gameMatchBusiness = gameMatchBusiness;
+            _categoryBusiness = categoryBusiness;
         }
 
         /// <summary>
@@ -172,6 +173,32 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
             {
                 return HandleException(ex);
             }
+        }
+
+        /// <summary>
+        /// Busca categorias por ID do torneio
+        /// </summary>
+        /// <param name="tournamentId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("GetCategoryByTournamentId/{tournamentId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetCategoryByTournamentId(int tournamentId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var categories = await _categoryBusiness.GetByTournamentId(tournamentId, cancellationToken);
+                if (categories == null || categories.Count == 0)
+                    return NotFound(new { message = "Nenhuma categoria encontrada para o torneio." });
+                return Ok(categories);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+
         }
 
         /// <summary>
