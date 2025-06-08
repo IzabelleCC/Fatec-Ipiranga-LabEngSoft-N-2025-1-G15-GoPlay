@@ -322,20 +322,5 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
             }
         }
 
-        [HttpGet("Teste/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Teste(int id)
-        {
-            try
-            {
-               await  _gameMatchBusiness.GenerateEliminationMatches(id, CancellationToken.None);
-                return Ok(new { message = "Teste realizado com sucesso." });
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
     }
 }

@@ -17,19 +17,22 @@ namespace GoPlay_Core.Business
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUserRepository _userRepository;
         private readonly IMatchGroupRepository _matchRepository;
+        private readonly IGameMatchBusiness _gameMatchBusiness;
 
         public MatchGroupBusiness(
             ITournamentRepository tournamentRepository,
             ICategoryRepository categoryRepository,
             ILogger<MatchGroupBusiness> logger,
             IUserRepository userRepository,
-            IMatchGroupRepository matchRepository)
+            IMatchGroupRepository matchRepository,
+            IGameMatchBusiness gameMatchBusiness)
         {
             _tournamentRepository = tournamentRepository;
             _categoryRepository = categoryRepository;
             _logger = logger;
             _userRepository = userRepository;
             _matchRepository = matchRepository;
+            _gameMatchBusiness = gameMatchBusiness;
         }
 
         public async Task<TournamentMatchesResultDto> GenerateMatchesForTournament(int tournamentId, CancellationToken cancellationToken)
@@ -245,7 +248,7 @@ namespace GoPlay_Core.Business
             return true;
         }
 
-        public async Task<List<int>> InsertGroupResultsAndReturnWinners(List<MatchGroupEntity> results, CancellationToken cancellationToken)
+        public async Task<List<GameMatchEntity>> InsertGroupResultsAndReturnWinners(List<MatchGroupEntity> results, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Inserting group results and determining winners...");
             if (results == null || !results.Any())
@@ -304,8 +307,7 @@ namespace GoPlay_Core.Business
                 }
             }
 
-
-            return groupedResults.SelectMany(g => g.Winners).Take(2).ToList();
+           return await _gameMatchBusiness.GenerateEliminationMatches(groupedResults.FirstOrDefault().CategoryId, CancellationToken.None);
         }
 
         private async Task InsertSetsAndGamesBalance(List<MatchGroupEntity> doublesOrSinglesGroup)

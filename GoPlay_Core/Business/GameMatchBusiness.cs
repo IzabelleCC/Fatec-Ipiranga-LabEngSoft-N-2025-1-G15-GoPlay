@@ -28,75 +28,84 @@ namespace GoPlay_Core.Business
 
             // Buscar os classificados
             var matches = await _matchRepository.GetByCategoryAsync(categoryId);
-            var numberGame = matches.Count;
-
-            if (matches == null || !matches.Any())
-            {
-                _logger.LogWarning("No matches found for category ID {CategoryId}.", categoryId);
-                throw new InvalidOperationException("No matches found for this category.");
-            }
-
-            var winners = matches
-                .Where(m => m.Position == 1 || m.Position == 2)
+            var noZeroPositionMatches = matches
+                .Where(m => m.Position == 0)
                 .ToList();
 
-            if (!winners.Any())
+            if (noZeroPositionMatches.Count == 0)
             {
-                _logger.LogWarning("No winners found for category ID {CategoryId}.", categoryId);
-                throw new InvalidOperationException("No winners found for this category.");
-            }
+                var numberGame = matches.Count;
 
-            // Definir MatchStage com base no número de classificados
-            var matchStage = GetMatchStage(winners.Count);
+                if (matches == null || !matches.Any())
+                {
+                    _logger.LogWarning("No matches found for category ID {CategoryId}.", categoryId);
+                    throw new InvalidOperationException("No matches found for this category.");
+                }
 
-            // Separar 1º e 2º de cada grupo
-            var groupedWinners = winners
-                .GroupBy(w => w.GroupNumber)
-                .ToDictionary(g => g.Key, g => g.OrderBy(w => w.Position).ToList());
-
-            var firstPlaceds = new List<MatchGroupEntity>();
-            var secondPlaceds = new List<MatchGroupEntity>();
-
-            foreach (var group in groupedWinners)
-            {
-                if (group.Value.Count < 2)
-                    throw new InvalidOperationException($"Group {group.Key} does not have at least 2 winners.");
-
-                firstPlaceds.Add(group.Value.First(w => w.Position == 1));
-                secondPlaceds.Add(group.Value.First(w => w.Position == 2));
-            }
-
-            var matchesToCreate = new List<GameMatchEntity>();
-
-            var groupedBye = new List<MatchGroupEntity>();
-            if (winners.Count < matchStage.qtdCompetitor)
-            {
-                groupedBye = firstPlaceds
-                    .OrderByDescending(g => g.Wins)
-                    .ThenByDescending(g => g.SetsBalance)
-                    .ThenByDescending(g => g.GamesBalance)
-                    .Take(matchStage.qtdCompetitor - winners.Count)
+                var winners = matches
+                    .Where(m => m.Position == 1 || m.Position == 2)
                     .ToList();
+
+                if (!winners.Any())
+                {
+                    _logger.LogWarning("No winners found for category ID {CategoryId}.", categoryId);
+                    throw new InvalidOperationException("No winners found for this category.");
+                }
+
+                // Definir MatchStage com base no número de classificados
+                var matchStage = GetMatchStage(winners.Count);
+
+                // Separar 1º e 2º de cada grupo
+                var groupedWinners = winners
+                    .GroupBy(w => w.GroupNumber)
+                    .ToDictionary(g => g.Key, g => g.OrderBy(w => w.Position).ToList());
+
+                var firstPlaceds = new List<MatchGroupEntity>();
+                var secondPlaceds = new List<MatchGroupEntity>();
+
+                foreach (var group in groupedWinners)
+                {
+                    if (group.Value.Count < 2)
+                        throw new InvalidOperationException($"Group {group.Key} does not have at least 2 winners.");
+
+                    firstPlaceds.Add(group.Value.First(w => w.Position == 1));
+                    secondPlaceds.Add(group.Value.First(w => w.Position == 2));
+                }
+
+                var matchesToCreate = new List<GameMatchEntity>();
+
+                var groupedBye = new List<MatchGroupEntity>();
+                if (winners.Count < matchStage.qtdCompetitor)
+                {
+                    groupedBye = firstPlaceds
+                        .OrderByDescending(g => g.Wins)
+                        .ThenByDescending(g => g.SetsBalance)
+                        .ThenByDescending(g => g.GamesBalance)
+                        .Take(matchStage.qtdCompetitor - winners.Count)
+                        .ToList();
+                }
+
+                if (matchStage.qtdCompetitor == winners.Count)
+                {
+                    matchesToCreate = await GenerateFixedGroupCrossMatches(firstPlaceds, secondPlaceds, matchStage.matchStage, matchStage.qtdCompetitor / 2, numberGame);
+                }
+                else
+                {
+                    matchesToCreate = await GenerateGroupCrossMatchesWithBye(firstPlaceds, secondPlaceds, groupedBye, matchStage.matchStage, matchStage.qtdCompetitor / 2, numberGame);
+                }
+
+                // Salvar confrontos
+                foreach (var game in matchesToCreate)
+                {
+                    await _gameMatchRepository.AddAsync(game);
+                }
+
+                _logger.LogInformation("Elimination matches created for category ID {CategoryId}: {Count} match(es) created.", categoryId, matchesToCreate.Count);
+
+                return matchesToCreate;
             }
 
-            if (matchStage.qtdCompetitor == winners.Count)
-            {
-                matchesToCreate = await GenerateFixedGroupCrossMatches(firstPlaceds, secondPlaceds, matchStage.matchStage, matchStage.qtdCompetitor / 2, numberGame);
-            }
-            else
-            {
-                matchesToCreate = await GenerateGroupCrossMatchesWithBye(firstPlaceds, secondPlaceds, groupedBye, matchStage.matchStage, matchStage.qtdCompetitor / 2, numberGame);
-            }
-
-            // Salvar confrontos
-            foreach (var game in matchesToCreate)
-            {
-                await _gameMatchRepository.AddAsync(game);
-            }
-
-            _logger.LogInformation("Elimination matches created for category ID {CategoryId}: {Count} match(es) created.", categoryId, matchesToCreate.Count);
-
-            return matchesToCreate;
+            return new List<GameMatchEntity>();
         }
 
         private (MatchStageEnum matchStage, int qtdCompetitor) GetMatchStage(int winnersCount)
