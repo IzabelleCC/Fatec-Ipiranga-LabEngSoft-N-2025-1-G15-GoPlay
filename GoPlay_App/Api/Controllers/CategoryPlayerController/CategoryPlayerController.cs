@@ -33,7 +33,6 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
             });
         }
 
-
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
             => Ok(await _business.GetAllAsync(cancellationToken));
@@ -52,6 +51,13 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
         [HttpGet("ByUser/{userId}")]
         public async Task<IActionResult> GetByUser(string userId, CancellationToken cancellationToken)
             => Ok(await _business.GetByUserIdAsync(userId, cancellationToken));
+
+        [HttpGet("ByUserIdReturnsFullInfo/{userId}")]
+        public async Task<IActionResult> GetByUserIdReturnsFullInfo(string userId, CancellationToken cancellationToken)
+        {
+            var result = await _business.GetByUserIdAndReturnsFullInfoAsync(userId, cancellationToken);
+            return Ok(result);
+        }
 
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] CategoryPlayerUpdateRequest request, CancellationToken cancellationToken)

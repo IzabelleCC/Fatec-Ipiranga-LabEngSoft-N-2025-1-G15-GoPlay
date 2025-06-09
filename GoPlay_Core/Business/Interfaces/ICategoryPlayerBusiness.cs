@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using GoPlay_Core.Entities;
+using GoPlay_Core.Models.Dto;
 
 namespace GoPlay_Core.Business.Interfaces
 {
@@ -12,6 +13,7 @@ namespace GoPlay_Core.Business.Interfaces
         Task<CategoryPlayerEntity> RegisterUserToCategory(int categoryId, string firstUserId, string? secondUserId, CancellationToken cancellationToken);
         Task DeleteAsync(int id, CancellationToken cancellationToken);
         Task UpdatePlayersAsync(CategoryPlayerEntity entity, CancellationToken cancellationToken);
+        Task<List<CategoryPlayerFullInfoDto>> GetByUserIdAndReturnsFullInfoAsync(string userId, CancellationToken cancellationToken);
 
     }
 }
