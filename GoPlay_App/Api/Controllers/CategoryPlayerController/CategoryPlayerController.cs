@@ -24,9 +24,15 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
             if (request == null || request.CategoryId <= 0 || string.IsNullOrEmpty(request.FirstUserId))
                 return BadRequest(new { message = "Dados enviados inválidos." });
 
-            await _business.RegisterUserToCategory(request.CategoryId, request.FirstUserId, request.SecondUserId, cancellationToken);
-            return Ok(new { message = "Usuário inscrito com sucesso na categoria." });
+            var result = await _business.RegisterUserToCategory(request.CategoryId, request.FirstUserId, request.SecondUserId, cancellationToken);
+
+            return Ok(new
+            {
+                message = "Usuário inscrito com sucesso na categoria.",
+                categoryPlayerId = result.Id
+            });
         }
+
 
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
