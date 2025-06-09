@@ -66,7 +66,7 @@ namespace GoPlay_Core.Business
             await _categoryPlayerRepository.UpdatePlayersAsync(entity);
         }
 
-        public async Task RegisterUserToCategory(int categoryId, string firstUserId, string? secondUserId, CancellationToken cancellationToken)
+        public async Task<CategoryPlayerEntity> RegisterUserToCategory(int categoryId, string firstUserId, string? secondUserId, CancellationToken cancellationToken)
         {
             var category = await _categoryRepository.GetById(categoryId);
             if (category == null)
@@ -104,6 +104,8 @@ namespace GoPlay_Core.Business
             };
 
             await _categoryPlayerRepository.AddAsync(newRegistration);
+
+            return newRegistration;
         }
 
     }
