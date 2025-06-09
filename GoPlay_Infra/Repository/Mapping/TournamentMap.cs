@@ -20,6 +20,10 @@ public class TournamentMap : IEntityTypeConfiguration<TournamentEntity>
         builder.Property(t => t.RegistrationFee).HasColumnName("RegistrationFee").IsRequired();
         builder.Property(t => t.IsActive).HasColumnName("IsActive").IsRequired();
         builder.Property(t => t.CourtQuantity).HasColumnName("CourtQuantity").IsRequired();
+        builder.Property(t => t.Status)
+                   .HasColumnName("Status")
+                   .IsRequired()
+                   .HasConversion<int>();
 
         builder.Property(t => t.AdmUserId)
        .HasColumnName("AdmUserId")

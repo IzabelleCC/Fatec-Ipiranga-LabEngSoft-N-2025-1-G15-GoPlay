@@ -52,7 +52,7 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
         public async Task<IActionResult> GetByUser(string userId, CancellationToken cancellationToken)
             => Ok(await _business.GetByUserIdAsync(userId, cancellationToken));
 
-        [HttpGet("ByUserIdReturnsFullInfo/{userId}")]
+        [HttpGet("GetByUserIdReturnsFullInfo/{userId}")]
         public async Task<IActionResult> GetByUserIdReturnsFullInfo(string userId, CancellationToken cancellationToken)
         {
             var result = await _business.GetByUserIdAndReturnsFullInfoAsync(userId, cancellationToken);
