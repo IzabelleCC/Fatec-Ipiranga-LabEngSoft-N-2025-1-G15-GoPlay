@@ -202,6 +202,31 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         }
 
         /// <summary>
+        /// Busca uma categoria por ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("GetCategoryById/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetCategoryById(int id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var category = await _categoryBusiness.GetById(id, cancellationToken);
+                if (category == null)
+                    return NotFound(new { message = "Categoria não encontrada." });
+                return Ok(category);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        /// <summary>
         /// Edita um torneio
         /// </summary>
         /// <param name="request"></param>
