@@ -1,6 +1,7 @@
 ﻿using GoPlay_Core.Business.Interfaces;
 using GoPlay_Core.Entities;
 using GoPlay_Core.Enum;
+using GoPlay_Core.Models.Dto;
 using GoPlay_Core.Repository.Interfaces;
 
 namespace GoPlay_Core.Business
@@ -44,6 +45,32 @@ namespace GoPlay_Core.Business
             return await _categoryPlayerRepository.GetByUserIdAsync(userId);
         }
 
+        public async Task<List<CategoryPlayerFullInfoDto>> GetByUserIdAndReturnsFullInfoAsync(string userId, CancellationToken cancellationToken)
+        {
+            var categoryPlayer = await _categoryPlayerRepository.GetByUserIdAsync(userId);
+
+            var categoryPlayerFullInfo = new List<CategoryPlayerFullInfoDto>();
+
+            foreach (var player in categoryPlayer)
+            {
+                var dto = new CategoryPlayerFullInfoDto
+                {
+                    Id = player.Id,
+                    CategoryId = player.CategoryId,
+                    UserId = player.FirstUserId ?? player.SecondUserId,
+                    RegisterStatus = player.RegisterStatus,
+                };
+                var category = await _categoryRepository.GetById(categoryPlayer.FirstOrDefault()?.CategoryId ?? 0);
+                var tournament = await _tournamentRepository.GetById(category?.TournamentId ?? 0);
+                dto.CategoryType = category?.CategoryType ?? string.Empty;
+                dto.IsDoubles = category?.IsDoubles ?? false;
+                dto.Tournament_Id = tournament?.Id ?? 0;
+                dto.TournamentName = tournament?.Name ?? string.Empty;
+                categoryPlayerFullInfo.Add(dto);
+            }
+
+            return categoryPlayerFullInfo;
+        }
         public async Task DeleteAsync(int id, CancellationToken cancellationToken)
         {
             await _categoryPlayerRepository.DeleteAsync(id);
