@@ -12,17 +12,20 @@ namespace GoPlay_Core.Business
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMatchGroupRepository _matchRepository;
         private readonly ITournamentRepository _tournamentRepository;
+        private readonly IUserRepository _userRepository;
 
         public CategoryPlayerBusiness(
             ICategoryPlayerRepository categoryPlayerRepository,
             ICategoryRepository categoryRepository,
             IMatchGroupRepository matchRepository,
-            ITournamentRepository tournamentRepository)
+            ITournamentRepository tournamentRepository,
+            IUserRepository userRepository)
         {
             _categoryPlayerRepository = categoryPlayerRepository ?? throw new ArgumentNullException(nameof(categoryPlayerRepository));
             _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
             _matchRepository = matchRepository ?? throw new ArgumentNullException(nameof(matchRepository));
             _tournamentRepository = tournamentRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<List<CategoryPlayerEntity>> GetAllAsync(CancellationToken cancellationToken)
@@ -55,17 +58,40 @@ namespace GoPlay_Core.Business
             {
                 var dto = new CategoryPlayerFullInfoDto
                 {
-                    Id = player.Id,
-                    CategoryId = player.CategoryId,
-                    UserId = player.FirstUserId ?? player.SecondUserId,
-                    RegisterStatus = player.RegisterStatus,
+                    CategoryPlayer = new CategoryPlayerEntity
+                    {
+                        Id = player.Id,
+                        CategoryId = player.CategoryId,
+                        FirstUserId = player.FirstUserId,
+                        SecondUserId = player.SecondUserId,
+                        FirstUserPaymentConfirmed = player.FirstUserPaymentConfirmed,
+                        SecondUserPaymentConfirmed = player.SecondUserPaymentConfirmed,
+                        RegisterStatus = player.RegisterStatus
+                    },
                 };
+                var firstUser = await _userRepository.GetById(player.FirstUserId);
+                var secondUser = await _userRepository.GetById(player.SecondUserId);
+                dto.FirstUserName = firstUser.Name ?? string.Empty;
+                dto.SecondUserName = secondUser.Name ?? string.Empty;
                 var category = await _categoryRepository.GetById(categoryPlayer.FirstOrDefault()?.CategoryId ?? 0);
                 var tournament = await _tournamentRepository.GetById(category?.TournamentId ?? 0);
-                dto.CategoryType = category?.CategoryType ?? string.Empty;
-                dto.IsDoubles = category?.IsDoubles ?? false;
-                dto.Tournament_Id = tournament?.Id ?? 0;
-                dto.TournamentName = tournament?.Name ?? string.Empty;
+                dto.Category = new CategoryEntity
+                {
+                    Id = category?.Id ?? 0,
+                    CategoryType = category?.CategoryType ?? string.Empty,
+                    IsDoubles = category?.IsDoubles ?? false,
+                };
+                dto.RegisterCount = category?.CategoryPlayers.Count ?? 0;
+                dto.Tournament = new TournamentEntity
+                {
+                    Id = tournament?.Id ?? 0,
+                    Name = tournament?.Name ?? string.Empty,
+                    Status = tournament.Status,
+                    GamesStartDate = tournament?.GamesStartDate ?? DateTime.MinValue,
+                    GamesEndDate = tournament?.GamesEndDate ?? DateTime.MinValue,
+                    RegistrationDeadline = tournament?.RegistrationDeadline ?? DateTime.MinValue,
+                };
+
                 categoryPlayerFullInfo.Add(dto);
             }
 

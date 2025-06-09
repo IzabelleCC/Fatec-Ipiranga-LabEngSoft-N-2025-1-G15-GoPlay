@@ -1,21 +1,19 @@
-﻿using GoPlay_Core.Enum;
+﻿using GoPlay_Core.Entities;
+using GoPlay_Core.Enum;
 
 namespace GoPlay_Core.Models.Dto
 {
     public class CategoryPlayerFullInfoDto
     {
         // CategoryPlayer fields
-        public int Id { get; set; }
-        public int CategoryId { get; set; }
-        public string UserId { get; set; }
-        public RegisterStatusEnum RegisterStatus { get; set; }
-
+        public CategoryPlayerEntity CategoryPlayer { get; set; } = new CategoryPlayerEntity();
+        public string? FirstUserName { get; set; } = string.Empty;
+        public string? SecondUserName { get; set; } = string.Empty;
         // Category fields
-        public string CategoryType { get; set; } = string.Empty;
-        public bool IsDoubles { get; set; }
+        public CategoryEntity Category { get; set; } = new CategoryEntity();
+        public int? RegisterCount { get; set; } = 0;
 
         // Tournament fields
-        public int Tournament_Id { get; set; }
-        public string TournamentName { get; set; } = string.Empty;
+        public TournamentEntity Tournament { get; set; } = new TournamentEntity();
     }
 }
