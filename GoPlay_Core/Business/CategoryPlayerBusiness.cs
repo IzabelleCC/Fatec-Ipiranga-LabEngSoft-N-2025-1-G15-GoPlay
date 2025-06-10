@@ -73,15 +73,18 @@ namespace GoPlay_Core.Business
                 var secondUser = await _userRepository.GetById(player.SecondUserId);
                 dto.FirstUserName = firstUser.Name ?? string.Empty;
                 dto.SecondUserName = secondUser.Name ?? string.Empty;
-                var category = await _categoryRepository.GetById(categoryPlayer.FirstOrDefault()?.CategoryId ?? 0);
-                var tournament = await _tournamentRepository.GetById(category?.TournamentId ?? 0);
+
+                var category = await _categoryRepository.GetById(dto.CategoryPlayer.CategoryId);
                 dto.Category = new CategoryEntity
                 {
                     Id = category?.Id ?? 0,
                     CategoryType = category?.CategoryType ?? string.Empty,
                     IsDoubles = category?.IsDoubles ?? false,
+                    TournamentId = category?.TournamentId ?? 0,
                 };
                 dto.RegisterCount = category?.CategoryPlayers.Count ?? 0;
+
+                var tournament = await _tournamentRepository.GetById(dto.Category.TournamentId);
                 dto.Tournament = new TournamentEntity
                 {
                     Id = tournament?.Id ?? 0,
