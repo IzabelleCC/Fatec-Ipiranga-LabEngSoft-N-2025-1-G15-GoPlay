@@ -60,7 +60,8 @@ namespace GoPlay_Core.Business
                 _logger.LogWarning("No groups could be generated for tournament {TournamentId}.", tournamentId);
                 throw new InvalidOperationException("No groups could be generated from the provided data.");
             }
-
+            tournament.Status = TournamentStatusEnum.ChavesPublicadas;
+            await _tournamentRepository.Update(tournament);
             _logger.LogInformation("Match group generation completed for tournament {TournamentId}.", tournamentId);
             return result;
         }
