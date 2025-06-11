@@ -307,7 +307,7 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
                 return Ok(new
                 {
                     message = "Partidas geradas com sucesso.",
-                    data = matchGroup // Tipo: TournamentMatchesResultDto
+                    data = matchGroup
                 });
             }
             catch (Exception ex)
