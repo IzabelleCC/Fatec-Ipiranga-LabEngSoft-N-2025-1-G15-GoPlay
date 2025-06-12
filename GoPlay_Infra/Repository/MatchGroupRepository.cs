@@ -104,30 +104,33 @@ namespace GoPlay_Infra.Repository
                 TournamentId = tournament.Id,
                 TournamentName = tournament.Name,
                 Groups = new List<CategoryGroupsDto>
-        {
-            new CategoryGroupsDto
-            {
-                CategoryId = categoryId,
-                Groups = matchGroups
-                    .GroupBy(m => m.GroupNumber)
-                    .Select(group => new GroupDto
+                {
+                    new CategoryGroupsDto
                     {
-                        GroupNumber = group.Key,
-                        Players = group.Select(m => new GroupPlayerDto
-                        {
-                            Id = m.Id,
-                            FirstUserId = m.RegistrationCategory.FirstUserId.ToString(),
-                            FirstUserName = m.RegistrationCategory.FirstUser.Name,
-                            SecondUserId = m.RegistrationCategory.SecondUserId?.ToString(),
-                            SecondUserName = m.RegistrationCategory.SecondUser != null
-                                ? m.RegistrationCategory.SecondUser.Name
-                                : null
-                        }).ToList()
-                    }).ToList()
-            }
-        }
+                        CategoryId = categoryId,
+                        CategoryName = matchGroups.First().Category.CategoryType,
+                        Groups = matchGroups
+                            .GroupBy(m => m.GroupNumber)
+                            .Select(group => new GroupDto
+                            {
+                                GroupNumber = group.Key,
+                                Players = group.Select(m => new GroupPlayerDto
+                                {
+                                    Id = m.Id,
+                                    FirstUserId = m.RegistrationCategory.FirstUserId.ToString(),
+                                    FirstUserName = m.RegistrationCategory.FirstUser.Name,
+                                    SecondUserId = m.RegistrationCategory.SecondUserId?.ToString(),
+                                    SecondUserName = m.RegistrationCategory.SecondUser != null
+                                        ? m.RegistrationCategory.SecondUser.Name
+                                        : null
+                                }).ToList()
+                            }).ToList()
+                    }
+                }
             };
+
             return tournamentMatchesResultDto;
         }
+
     }
 }
