@@ -423,10 +423,12 @@ namespace GoPlay_Core.Business
             }
         }
 
-        public async Task<CategoryGroupsDto> GetMatchGroupByCategoryId(int categoryId, CancellationToken cancellationToken)
+        public async Task<TournamentMatchesResultDto> GetTournamentMatchesByCategory(int categoryId, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Fetching match groups for category ID {CategoryId}...", categoryId);
-            var matchGroups = await _matchRepository.GetCategoryGroups(categoryId);
+
+            var matchGroups = await _matchRepository.GetTournamentMatchesByCategory(categoryId);
+
             if (matchGroups == null)
             {
                 _logger.LogWarning("No match groups found for category ID {CategoryId}.", categoryId);

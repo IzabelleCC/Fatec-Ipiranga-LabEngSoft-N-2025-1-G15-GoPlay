@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using GoPlay_Core.Models.Dto;
 
 namespace GoPlay_App.Api.Controllers.TournamentManager
 {
@@ -28,6 +29,8 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         /// <returns></returns>
         Task Delete(T1 entity, CancellationToken cancellationToken);
 
+        Task <T1>GetTournamentById(int tournamentId, CancellationToken cancellationToken);
+
         /// <summary>
         /// Busca Torneio por Nome
         /// </summary>
@@ -49,7 +52,7 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         /// <param name="tournamentId"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<T1> GetTournamentById(int tournamentId, CancellationToken cancellationToken);
+        Task<TournamentDetailsDto> GetByIdReturnDto(int tournamentId, CancellationToken cancellationToken);
 
         /// <summary>
         /// Busca um torneio pelo ID do administrador

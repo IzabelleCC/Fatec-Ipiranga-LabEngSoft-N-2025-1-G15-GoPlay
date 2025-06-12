@@ -15,6 +15,7 @@ namespace GoPlay_Core.Entities
         public string? FirstUserTxId { get; set; }
         public string? SecondUserTxId { get; set; }
 
+        [JsonIgnore]
         public CategoryEntity Category { get; set; } = null!;
         public UserEntity FirstUser { get; set; } = null!;
         public UserEntity? SecondUser { get; set; }
