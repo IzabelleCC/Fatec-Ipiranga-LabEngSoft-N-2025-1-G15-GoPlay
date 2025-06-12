@@ -15,15 +15,9 @@ namespace GoPlay_Core.Entities
         public string? FirstUserTxId { get; set; }
         public string? SecondUserTxId { get; set; }
 
-        [JsonIgnore]
         public CategoryEntity Category { get; set; } = null!;
-
-        [JsonIgnore]
         public UserEntity FirstUser { get; set; } = null!;
-
-        [JsonIgnore]
         public UserEntity? SecondUser { get; set; }
-
         public ICollection<MatchGroupEntity> MatchGroups { get; set; } = new List<MatchGroupEntity>();
 
     }
