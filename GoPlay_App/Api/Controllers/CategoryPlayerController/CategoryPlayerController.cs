@@ -11,11 +11,13 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
     {
         private readonly ICategoryPlayerBusiness _business;
         private readonly IPixBusiness _pixBusiness;
+        private readonly IMatchGroupBusiness _matchGroupBusiness;
 
-        public CategoryPlayerController(ICategoryPlayerBusiness business, IPixBusiness pixBusiness)
+        public CategoryPlayerController(ICategoryPlayerBusiness business, IPixBusiness pixBusiness, IMatchGroupBusiness matchGroupBusiness)
         {
             _business = business;
             _pixBusiness = pixBusiness;
+            _matchGroupBusiness = matchGroupBusiness;
         }
 
         [HttpPost("Register")]
@@ -124,12 +126,21 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
         }
 
         [HttpGet("Webhook")]
-        [HttpGet("Webhook/{*extra}")]
         public IActionResult WebhookValidation()
         {
             Console.WriteLine("Webhook de validação recebido.");
             return Ok("Webhook de validação respondido com sucesso.");
         }
+
+        [HttpGet("GetMatchGroupByCategoryId/{categoryId}")]
+        public async Task<IActionResult> GetMatchGroupByCategoryId(int categoryId, CancellationToken cancellationToken)
+        {
+            var result = await _matchGroupBusiness.GetMatchGroupByCategoryId(categoryId, cancellationToken);
+            if (result == null)
+                return NotFound(new { message = "Nenhum grupo de partidas encontrado para esta categoria." });
+            return Ok(result);
+        }
+
 
     }
 }

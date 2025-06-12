@@ -1,4 +1,6 @@
-﻿using GoPlay_Core.Entities;
+﻿using System.Threading;
+using GoPlay_Core.Entities;
+using GoPlay_Core.Models.Dto;
 
 namespace GoPlay_Core.Repository.Interfaces
 {
@@ -11,6 +13,6 @@ namespace GoPlay_Core.Repository.Interfaces
         Task DeleteAsync(MatchGroupEntity match);
         Task<List<MatchGroupEntity>> GetByCategoryAndGroupAsync(int categoryId, int groupNumber);
         Task<MatchGroupEntity> GetbyRegistrationCategoryAsync(int registrationCategory);
-
+        Task<CategoryGroupsDto> GetCategoryGroups(int categoryId);
     }
 }
