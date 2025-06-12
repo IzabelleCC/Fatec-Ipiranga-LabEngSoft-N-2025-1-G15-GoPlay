@@ -3,6 +3,7 @@ using FluentValidation;
 using GoPlay_App.Api.Controllers.TournamentManager;
 using GoPlay_App.Api.Controllers.TournamentManager.Models;
 using GoPlay_Core.Entities;
+using GoPlay_Core.Models.Dto;
 using GoPlay_Core.Repository.Interfaces;
 
 namespace GoPlay_Core.Business
@@ -31,6 +32,15 @@ namespace GoPlay_Core.Business
         {
             await _repository.Delete(entity);
         }
+        public async Task<TournamentEntity> GetTournamentById(int tournamentId, CancellationToken cancellationToken)
+        {
+            var result = await _repository.GetById(tournamentId);
+            if (result == null)
+            {
+                throw new InvalidOperationException("Torneio não encontrado.");
+            }
+            return result;
+        }        
         public async Task<List<TournamentEntity>> GetAllTournaments(CancellationToken cancellationToken)
         {
             var result = await _repository.GetAllTournaments();
@@ -60,7 +70,7 @@ namespace GoPlay_Core.Business
 
             return tournaments;
         }
-        public async Task<TournamentEntity> GetTournamentById(int tournamentId, CancellationToken cancellationToken)
+        public async Task<TournamentDetailsDto> GetByIdReturnDto(int tournamentId, CancellationToken cancellationToken)
         {
             var result = await _repository.GetById(tournamentId);
 
@@ -69,7 +79,24 @@ namespace GoPlay_Core.Business
                 throw new InvalidOperationException("Nenhum torneio encontrado.");
             }
 
-            return result;
+            var dto = new TournamentDetailsDto
+            {
+                Id = result.Id,
+                Name = result.Name,
+                Status = (int)result.Status,
+                GamesStartDate = result.GamesStartDate,
+                GamesEndDate = result.GamesEndDate,
+                RegistrationDeadline = result.RegistrationDeadline,
+                Categories = result.Categories.Select(category => new CategorySummaryDto
+                {
+                    Id = category.Id,
+                    CategoryType = category.CategoryType,
+                    IsDoubles = category.IsDoubles,
+                    RegisterCount = category.CategoryPlayers?.Count ?? 0
+                }).ToList()
+            };
+
+            return dto;
         }
         public async Task<List<TournamentEntity>> GetTournamentByAdmUserId(string id, CancellationToken cancellationToken)
         {

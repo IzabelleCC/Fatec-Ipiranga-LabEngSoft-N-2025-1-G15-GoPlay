@@ -13,6 +13,6 @@ namespace GoPlay_Core.Repository.Interfaces
         Task DeleteAsync(MatchGroupEntity match);
         Task<List<MatchGroupEntity>> GetByCategoryAndGroupAsync(int categoryId, int groupNumber);
         Task<MatchGroupEntity> GetbyRegistrationCategoryAsync(int registrationCategory);
-        Task<CategoryGroupsDto> GetCategoryGroups(int categoryId);
+        Task<TournamentMatchesResultDto> GetTournamentMatchesByCategory(int categoryId);
     }
 }
