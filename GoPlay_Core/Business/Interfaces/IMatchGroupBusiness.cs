@@ -20,5 +20,7 @@ namespace GoPlay_Core.Business.Interfaces
         Task<bool> ConfirmAttendance(int registrationCategoryId, double latitude, double longitude, CancellationToken cancellationToken);
 
         Task<List<GameMatchEntity>> InsertGroupResultsAndReturnWinners(List<MatchGroupEntity> results, CancellationToken cancellationToken);
+
+        Task<CategoryGroupsDto> GetMatchGroupByCategoryId(int categoryId, CancellationToken cancellationToken);
     }
 }

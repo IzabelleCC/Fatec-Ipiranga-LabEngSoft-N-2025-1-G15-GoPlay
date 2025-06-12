@@ -308,7 +308,7 @@ namespace GoPlay_Core.Business
                 }
             }
 
-           return await _gameMatchBusiness.GenerateEliminationMatches(groupedResults.FirstOrDefault().CategoryId, CancellationToken.None);
+            return await _gameMatchBusiness.GenerateEliminationMatches(groupedResults.FirstOrDefault().CategoryId, CancellationToken.None);
         }
 
         private async Task InsertSetsAndGamesBalance(List<MatchGroupEntity> doublesOrSinglesGroup)
@@ -423,6 +423,17 @@ namespace GoPlay_Core.Business
             }
         }
 
+        public async Task<CategoryGroupsDto> GetMatchGroupByCategoryId(int categoryId, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Fetching match groups for category ID {CategoryId}...", categoryId);
+            var matchGroups = await _matchRepository.GetCategoryGroups(categoryId);
+            if (matchGroups == null)
+            {
+                _logger.LogWarning("No match groups found for category ID {CategoryId}.", categoryId);
+                throw new KeyNotFoundException("No match groups found for the specified category.");
+            }
+            return matchGroups;
+        }
     }
 }
 
