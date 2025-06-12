@@ -135,7 +135,7 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
         [HttpGet("GetMatchGroupByCategoryId/{categoryId}")]
         public async Task<IActionResult> GetMatchGroupByCategoryId(int categoryId, CancellationToken cancellationToken)
         {
-            var result = await _matchGroupBusiness.GetMatchGroupByCategoryId(categoryId, cancellationToken);
+            var result = await _matchGroupBusiness.GetTournamentMatchesByCategory(categoryId, cancellationToken);
             if (result == null)
                 return NotFound(new { message = "Nenhum grupo de partidas encontrado para esta categoria." });
             return Ok(result);

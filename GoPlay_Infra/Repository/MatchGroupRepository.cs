@@ -67,26 +67,53 @@ namespace GoPlay_Infra.Repository
 
         }
 
-        public async Task<CategoryGroupsDto> GetCategoryGroups(int categoryId)
+        public async Task<TournamentMatchesResultDto> GetTournamentMatchesByCategory(int categoryId)
         {
             var matchGroups = await _context.Matches
                 .Where(m => m.CategoryId == categoryId)
+                .Include(m => m.Category)
                 .Include(m => m.RegistrationCategory)
                     .ThenInclude(rc => rc.FirstUser)
                 .Include(m => m.RegistrationCategory)
                     .ThenInclude(rc => rc.SecondUser)
                 .ToListAsync();
 
+            if (!matchGroups.Any())
+            {
+                throw new Exception($"No matches found for CategoryId {categoryId}.");
+            }
 
-            var categoryGroupsDto = new CategoryGroupsDto
+            var tournamentId = matchGroups.First().Category.TournamentId;
+
+            var tournament = await _context.Tournaments
+                .Where(t => t.Id == tournamentId)
+                .Select(t => new
+                {
+                    t.Id,
+                    t.Name
+                })
+                .FirstOrDefaultAsync();
+
+            if (tournament == null)
+            {
+                throw new Exception($"Tournament with Id {tournamentId} not found.");
+            }
+
+            var tournamentMatchesResultDto = new TournamentMatchesResultDto
+            {
+                TournamentId = tournament.Id,
+                TournamentName = tournament.Name,
+                Groups = new List<CategoryGroupsDto>
+        {
+            new CategoryGroupsDto
             {
                 CategoryId = categoryId,
                 Groups = matchGroups
                     .GroupBy(m => m.GroupNumber)
-                    .Select(g => new GroupDto
+                    .Select(group => new GroupDto
                     {
-                        GroupNumber = g.Key,
-                        Players = g.Select(m => new GroupPlayerDto
+                        GroupNumber = group.Key,
+                        Players = group.Select(m => new GroupPlayerDto
                         {
                             Id = m.Id,
                             FirstUserId = m.RegistrationCategory.FirstUserId.ToString(),
@@ -97,9 +124,10 @@ namespace GoPlay_Infra.Repository
                                 : null
                         }).ToList()
                     }).ToList()
-            };
-            return categoryGroupsDto;
+            }
         }
-
+            };
+            return tournamentMatchesResultDto;
+        }
     }
 }

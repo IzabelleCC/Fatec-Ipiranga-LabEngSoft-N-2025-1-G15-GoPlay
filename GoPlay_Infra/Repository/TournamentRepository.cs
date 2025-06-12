@@ -140,7 +140,7 @@ namespace GoPlay_Infra.Repository
             {
                 var tournament = await _context.Tournaments
                     .Include(t => t.Categories)
-                        .ThenInclude(c => c.CategoryPlayers)
+                    .ThenInclude(c => c.CategoryPlayers)
                     .FirstOrDefaultAsync(t => t.Id == id);
 
                 if (tournament == null)
@@ -148,6 +148,7 @@ namespace GoPlay_Infra.Repository
                     _logger.LogWarning("Torneio não encontrado com ID: {Id}", id);
                     throw new InvalidOperationException($"Torneio não encontrado para o ID {id}.");
                 }
+
 
                 return tournament;
             }

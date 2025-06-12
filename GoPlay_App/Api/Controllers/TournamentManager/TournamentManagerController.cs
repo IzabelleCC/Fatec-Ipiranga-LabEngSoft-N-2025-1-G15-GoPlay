@@ -139,7 +139,7 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         {
             try
             {
-                var tournament = await _tournamentBusiness.GetTournamentById(id, cancellationToken);
+                var tournament = await _tournamentBusiness.GetByIdReturnDto(id, cancellationToken);
                 if (tournament == null)
                     return NotFound(new { message = "Torneio não encontrado." });
                 return Ok(tournament);
