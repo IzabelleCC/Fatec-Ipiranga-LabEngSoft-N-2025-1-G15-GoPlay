@@ -116,7 +116,7 @@ namespace GoPlay_Infra.Repository
                                 GroupNumber = group.Key,
                                 Players = group.Select(m => new GroupPlayerDto
                                 {
-                                    Id = m.Id,
+                                    Id = m.RegistrationCategoryId,
                                     FirstUserId = m.RegistrationCategory.FirstUserId.ToString(),
                                     FirstUserName = m.RegistrationCategory.FirstUser.Name,
                                     SecondUserId = m.RegistrationCategory.SecondUserId?.ToString(),
