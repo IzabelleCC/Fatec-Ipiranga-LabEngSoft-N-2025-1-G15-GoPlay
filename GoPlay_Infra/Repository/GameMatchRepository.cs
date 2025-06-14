@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GoPlay_Core.Entities;
+﻿using GoPlay_Core.Entities;
+using GoPlay_Core.Models.Dto;
 using GoPlay_Core.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -67,5 +63,43 @@ namespace GoPlay_Infra.Repository
                 .Include(m => m.Category)
                 .ToListAsync();
         }
+
+        public async Task<List<EliminationGameDto>> GetEliminationGamesByCategory(int categoryId, int matchStage)
+        {
+            var matches = await _context.GameMatches
+                                        .Where(m => m.CategoryId == categoryId && (int)m.MatchStage == matchStage)
+                                        .Include(m => m.Competitor1)
+                                        .Include(m => m.Competitor2)
+                                        .ToListAsync();
+ 
+            var result = matches.Select(m => new EliminationGameDto
+            {
+                Competitor1Id = m.Competitor1Id,
+                Competitor2Id = m.Competitor2Id,
+                MatchStage = m.MatchStage,
+                MatchTime = m.MatchTime,
+                CourtNumber = m.CourtNumber,
+                QtdGames1 = m.QtdGames1,
+                QtdGames2 = m.QtdGames2,
+                Result = m.Result,
+                NumberGame = m.NumberGame,
+                CategoryId = m.CategoryId,
+                Competitor1 = m.Competitor1 == null ? new GroupPlayerDto() : new GroupPlayerDto
+                {
+                    Id = m.Competitor1.Id,
+                    FirstUserId = m.Competitor1.FirstUserId,
+                    SecondUserId = m.Competitor1.SecondUserId
+                },
+                Competitor2 = m.Competitor2 == null ? new GroupPlayerDto() : new GroupPlayerDto
+                {
+                    Id = m.Competitor2.Id,
+                    FirstUserId = m.Competitor2.FirstUserId,
+                    SecondUserId = m.Competitor2.SecondUserId
+                }
+            }).ToList();
+
+            return result;
+        }
+
     }
 }
