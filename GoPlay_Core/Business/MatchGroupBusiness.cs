@@ -436,6 +436,21 @@ namespace GoPlay_Core.Business
             }
             return matchGroups;
         }
+
+        public async Task<List<MatchDto>> GetGroupResultByCategoryId(int categoryId, int groupNumber, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Fetching group result for category ID {CategoryId} and group number {GroupNumber}...", categoryId, groupNumber);
+
+            var matchGroup = await _matchRepository.GetGroupResultByCategoryId(categoryId,  groupNumber);
+
+            if (matchGroup == null)
+            {
+                _logger.LogWarning("No match group found for category ID {CategoryId} and group number {GroupNumber}.", categoryId, groupNumber);
+                throw new KeyNotFoundException("No match group found for the specified category and group number.");
+            }
+
+            return matchGroup;
+        }
     }
 }
 
