@@ -1,4 +1,5 @@
 ﻿using GoPlay_Core.Entities;
+using GoPlay_Core.Models.Dto;
 
 namespace GoPlay_Core.Repository.Interfaces
 {
@@ -10,5 +11,6 @@ namespace GoPlay_Core.Repository.Interfaces
         Task UpdateAsync(GameMatchEntity match);
         Task DeleteAsync(int id);
         Task<List<GameMatchEntity>> GetMatchesByCategoryIdAsync(int categoryId);
+        Task<List<EliminationGameDto>> GetEliminationGamesByCategory(int categoryId, int matchStage);
     }
 }

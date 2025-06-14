@@ -398,21 +398,24 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
             }
         }
 
-        [HttpGet("Teste/{id}")]
+        [HttpGet("GetEliminationGamesByCategory/{categoryId}/{matchStage}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Teste(int id)
+        public async Task<IActionResult> GetEliminationGamesByCategory(int categoryId, int matchStage, CancellationToken cancellationToken)
         {
             try
             {
-                await _gameMatchBusiness.GenerateEliminationMatches(id, CancellationToken.None);
-                return Ok(new { message = "Teste realizado com sucesso." });
+                var games = await _gameMatchBusiness.GetEliminationGamesByCategory(categoryId, matchStage, cancellationToken);
+
+                if (games == null)
+                    return NotFound(new { message = "Nenhum jogo de eliminação encontrado para a categoria." });
+                return Ok(games);
             }
             catch (Exception ex)
             {
                 return HandleException(ex);
             }
         }
-
     }
 }

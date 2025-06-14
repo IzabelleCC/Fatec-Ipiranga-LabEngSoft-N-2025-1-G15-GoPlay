@@ -1,6 +1,8 @@
-﻿using GoPlay_Core.Business.Interfaces;
+﻿using System.Threading;
+using GoPlay_Core.Business.Interfaces;
 using GoPlay_Core.Entities;
 using GoPlay_Core.Enum;
+using GoPlay_Core.Models.Dto;
 using GoPlay_Core.Repository.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -11,15 +13,18 @@ namespace GoPlay_Core.Business
         private readonly ILogger<MatchGroupBusiness> _logger;
         private readonly IMatchGroupRepository _matchRepository;
         private readonly IGameMatchRepository _gameMatchRepository;
+        private readonly IUserRepository _userRepository;
 
         public GameMatchBusiness(
             ILogger<MatchGroupBusiness> logger,
             IMatchGroupRepository matchRepository,
-            IGameMatchRepository gameMatchRepository)
+            IGameMatchRepository gameMatchRepository,
+            IUserRepository userRepository)
         {
             _logger = logger;
             _matchRepository = matchRepository;
             _gameMatchRepository = gameMatchRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<List<GameMatchEntity>> GenerateEliminationMatches(int categoryId, CancellationToken cancellationToken)
@@ -362,6 +367,72 @@ namespace GoPlay_Core.Business
                 }
             }
             return new List<GameMatchEntity>();
+        }
+
+        public async Task<List<EliminationGameDto>> GetEliminationGamesByCategory(int categoryId, int matchStage, CancellationToken cancellationToken)
+        {
+            var matches = await _gameMatchRepository.GetEliminationGamesByCategory(categoryId, matchStage);
+
+            if (matches == null || !matches.Any())
+            {
+                _logger.LogWarning("No elimination matches found for category ID {CategoryId}.", categoryId);
+                throw new InvalidOperationException("No elimination matches found for this category.");
+            }
+
+            var result = new List<EliminationGameDto>();
+
+            foreach (var match in matches)
+            {
+                var dto = new EliminationGameDto
+                {
+                    Competitor1Id = match.Competitor1Id,
+                    Competitor2Id = match.Competitor2Id,
+                    MatchStage = match.MatchStage,
+                    MatchTime = match.MatchTime,
+                    CourtNumber = match.CourtNumber,
+                    QtdGames1 = match.QtdGames1,
+                    QtdGames2 = match.QtdGames2,
+                    Result = match.Result,
+                    NumberGame = match.NumberGame,
+                    CategoryId = match.CategoryId,
+                    Competitor1 = new GroupPlayerDto(),
+                    Competitor2 = new GroupPlayerDto()
+                };
+
+                if (match.Competitor1 != null)
+                {
+                    dto.Competitor1.Id = match.Competitor1.Id;
+                    dto.Competitor1.FirstUserId = match.Competitor1.FirstUserId;
+                    dto.Competitor1.SecondUserId = match.Competitor1.SecondUserId;
+
+                    var user1 = await _userRepository.GetById(match.Competitor1.FirstUserId);
+                    var user2 = match.Competitor1.SecondUserId != null
+                        ? await _userRepository.GetById(match.Competitor1.SecondUserId)
+                        : null;
+
+                    dto.Competitor1.FirstUserName = user1?.Name ?? string.Empty;
+                    dto.Competitor1.SecondUserName = user2?.Name ?? string.Empty;
+                }
+
+                if (match.Competitor2 != null)
+                {
+                    dto.Competitor2.Id = match.Competitor2.Id;
+                    dto.Competitor2.FirstUserId = match.Competitor2.FirstUserId;
+                    dto.Competitor2.SecondUserId = match.Competitor2.SecondUserId;
+
+                    var user1 = await _userRepository.GetById(match.Competitor2.FirstUserId);
+                    var user2 = match.Competitor2.SecondUserId != null
+                        ? await _userRepository.GetById(match.Competitor2.SecondUserId)
+                        : null;
+
+                    dto.Competitor2.FirstUserName = user1?.Name ?? string.Empty;
+                    dto.Competitor2.SecondUserName = user2?.Name ?? string.Empty;
+                }
+
+                result.Add(dto);
+            }
+
+            return result;
         }
 
         private async Task GenerateNewPhaseWithWinners(int categoryId)
