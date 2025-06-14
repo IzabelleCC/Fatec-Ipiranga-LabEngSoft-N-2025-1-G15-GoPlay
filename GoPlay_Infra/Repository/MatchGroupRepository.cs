@@ -132,5 +132,41 @@ namespace GoPlay_Infra.Repository
             return tournamentMatchesResultDto;
         }
 
+        public async Task<List<MatchDto>> GetGroupResultByCategoryId(int categoryId, int groupNumber)
+        {
+            var matches = await _context.Matches
+                .Where(m => m.CategoryId == categoryId && m.GroupNumber == groupNumber)
+                .Select(m => new MatchDto
+                {
+                    CategoryId = m.CategoryId,
+                    GroupNumber = m.GroupNumber,
+                    RegistrationCategoryId = m.RegistrationCategoryId,
+                    ScheduledAt = m.ScheduledAt,
+                    AttendanceConfirmed = m.AttendanceConfirmed,
+                    Position = m.Position,
+                    Wins = m.Wins,
+                    Losses = m.Losses,
+                    SetsBalance = m.SetsBalance,
+                    Game1 = m.Game1,
+                    Game2 = m.Game2,
+                    Game3 = m.Game3,
+                    Game4 = m.Game4,
+                    Game5 = m.Game5,
+                    SumOfGamesWon = m.SumOfGamesWon,
+                    SumOfGamesLost = m.SumOfGamesLost,
+                    GamesBalance = m.GamesBalance,
+                    Tiebreaks = m.Tiebreaks,
+                    MatchStage = m.MatchStage
+                })
+                .ToListAsync();
+
+            if (!matches.Any())
+                throw new KeyNotFoundException($"Nenhuma partida encontrada para Categoria {categoryId} e Grupo {groupNumber}.");
+
+            return matches;
+        }
+
+
+
     }
 }

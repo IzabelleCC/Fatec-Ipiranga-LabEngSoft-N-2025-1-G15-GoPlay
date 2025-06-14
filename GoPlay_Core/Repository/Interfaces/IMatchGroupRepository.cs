@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using GoPlay_Core.Entities;
+﻿using GoPlay_Core.Entities;
 using GoPlay_Core.Models.Dto;
 
 namespace GoPlay_Core.Repository.Interfaces
@@ -14,5 +13,6 @@ namespace GoPlay_Core.Repository.Interfaces
         Task<List<MatchGroupEntity>> GetByCategoryAndGroupAsync(int categoryId, int groupNumber);
         Task<MatchGroupEntity> GetbyRegistrationCategoryAsync(int registrationCategory);
         Task<TournamentMatchesResultDto> GetTournamentMatchesByCategory(int categoryId);
+        Task<List<MatchDto>> GetGroupResultByCategoryId(int categoryId, int groupNumber);
     }
 }

@@ -22,5 +22,7 @@ namespace GoPlay_Core.Business.Interfaces
         Task<List<GameMatchEntity>> InsertGroupResultsAndReturnWinners(List<MatchGroupEntity> results, CancellationToken cancellationToken);
 
         Task<TournamentMatchesResultDto> GetTournamentMatchesByCategory(int categoryId, CancellationToken cancellationToken);
+
+        Task<List<MatchDto>> GetGroupResultByCategoryId(int categoryId, int groupNumber, CancellationToken cancellationToken);
     }
 }
