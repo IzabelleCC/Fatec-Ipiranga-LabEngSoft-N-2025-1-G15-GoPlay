@@ -141,6 +141,14 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
             return Ok(result);
         }
 
+        [HttpGet("GetGroupResultByCategoryId/{categoryId}/{groupNumber}")]
+        public async Task<IActionResult> GetGroupResultByCategoryId(int categoryId, int groupNumber, CancellationToken cancellationToken)
+        {
+            var result = await _matchGroupBusiness.GetGroupResultByCategoryId(categoryId, groupNumber, cancellationToken);
+            if (result == null)
+                return NotFound(new { message = "Nenhum grupo de partidas encontrado para esta categoria." });
+            return Ok(result);
+        }
 
     }
 }
