@@ -92,7 +92,7 @@ namespace GoPlay_Core.Business
 
                 if (matchStage.qtdCompetitor == winners.Count)
                 {
-                    matchesToCreate = await GenerateFixedGroupCrossMatches(firstPlaceds, secondPlaceds, matchStage.matchStage, matchStage.qtdCompetitor / 2, numberGame);
+                    matchesToCreate = await GenerateFixedGroupCrossMatches(firstPlaceds, secondPlaceds, matchStage.matchStage, matchStage.qtdCompetitor, numberGame);
                 }
                 else
                 {
@@ -190,13 +190,19 @@ namespace GoPlay_Core.Business
             {
                 4 => new List<(int pos1, int grupo1, int pos2, int grupo2)>
                 {
+                    (1, 1, 2, 2),
+                    (2, 1, 1, 2),
+                },
+
+                8 => new List<(int pos1, int grupo1, int pos2, int grupo2)>
+                {
                     (1, 1, 2, 3),
                     (2, 2, 1, 4),
                     (1, 3, 2, 1),
                     (2, 4, 1, 2),
                 },
 
-                8 => new List<(int pos1, int grupo1, int pos2, int grupo2)>
+                16 => new List<(int pos1, int grupo1, int pos2, int grupo2)>
                 {
                     (1, 1, 2, 7),
                     (2, 2, 1, 8),
@@ -208,7 +214,7 @@ namespace GoPlay_Core.Business
                     (2, 8, 1, 2),
                 },
 
-                16 => new List<(int pos1, int grupo1, int pos2, int grupo2)>
+                32 => new List<(int pos1, int grupo1, int pos2, int grupo2)>
                 {
                     (1, 1, 2, 9),
                     (2, 2, 1, 10),
