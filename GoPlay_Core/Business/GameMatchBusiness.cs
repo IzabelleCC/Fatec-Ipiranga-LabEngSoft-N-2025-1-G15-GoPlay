@@ -385,6 +385,7 @@ namespace GoPlay_Core.Business
             {
                 var dto = new EliminationGameDto
                 {
+                    GameEliminationId = match.GameEliminationId,
                     Competitor1Id = match.Competitor1Id,
                     Competitor2Id = match.Competitor2Id,
                     MatchStage = match.MatchStage,

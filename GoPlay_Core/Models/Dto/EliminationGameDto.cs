@@ -4,6 +4,7 @@ namespace GoPlay_Core.Models.Dto
 {
     public class EliminationGameDto
     {
+        public int GameEliminationId { get; set; }
         public int? Competitor1Id { get; set; }
         public int? Competitor2Id { get; set; }
         public MatchStageEnum MatchStage { get; set; }

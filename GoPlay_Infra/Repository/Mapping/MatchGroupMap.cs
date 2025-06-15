@@ -57,6 +57,21 @@ namespace GoPlay_Infra.Repository.Mapping
             builder.Property(m => m.Game5)
                 .IsRequired(false);
 
+            builder.Property(m => m.Game6)
+                .IsRequired(false);
+
+            builder.Property(m => m.Game7)
+                .IsRequired(false);
+
+            builder.Property(m => m.Game8)
+                .IsRequired(false);
+
+            builder.Property(m => m.Game9)
+                .IsRequired(false);
+
+            builder.Property(m => m.Game10)
+                .IsRequired(false);
+
             builder.Property(m => m.GamesBalance)
                 .IsRequired(false);
 
