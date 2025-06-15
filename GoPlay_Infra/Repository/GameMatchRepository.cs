@@ -74,6 +74,7 @@ namespace GoPlay_Infra.Repository
  
             var result = matches.Select(m => new EliminationGameDto
             {
+                GameEliminationId = m.Id,
                 Competitor1Id = m.Competitor1Id,
                 Competitor2Id = m.Competitor2Id,
                 MatchStage = m.MatchStage,
