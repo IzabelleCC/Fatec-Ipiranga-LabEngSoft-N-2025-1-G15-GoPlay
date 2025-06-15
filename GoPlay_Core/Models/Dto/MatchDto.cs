@@ -18,6 +18,11 @@ namespace GoPlay_Core.Models.Dto
         public int? Game3 { get; set; }
         public int? Game4 { get; set; }
         public int? Game5 { get; set; }
+        public int? Game6 { get; set; }
+        public int? Game7 { get; set; }
+        public int? Game8 { get; set; }
+        public int? Game9 { get; set; }
+        public int? Game10 { get; set; }
         public int? SumOfGamesWon { get; set; } = 0;
         public int? SumOfGamesLost { get; set; } = 0;
         public int? GamesBalance { get; set; } = 0;
