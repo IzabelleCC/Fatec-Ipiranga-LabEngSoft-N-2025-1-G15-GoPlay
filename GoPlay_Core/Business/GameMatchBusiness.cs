@@ -376,7 +376,7 @@ namespace GoPlay_Core.Business
             if (matches == null || !matches.Any())
             {
                 _logger.LogWarning("No elimination matches found for category ID {CategoryId}.", categoryId);
-                throw new InvalidOperationException("No elimination matches found for this category.");
+                return new List<EliminationGameDto>();
             }
 
             var result = new List<EliminationGameDto>();
