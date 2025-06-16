@@ -72,7 +72,8 @@ namespace GoPlay_App.Api.Controllers.TournamentManager.Models
                     tournament.Categories.Add(new CategoryEntity
                     {
                         CategoryType = category.CategoryType,
-                        PlayerLimit = category.PlayerLimit
+                        PlayerLimit = category.PlayerLimit,
+                        IsDoubles = category.IsDoubles,
                     });
                 }
             }

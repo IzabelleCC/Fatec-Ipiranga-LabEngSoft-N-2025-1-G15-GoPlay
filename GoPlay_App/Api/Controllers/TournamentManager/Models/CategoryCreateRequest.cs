@@ -4,5 +4,6 @@
     {
         public string CategoryType { get; set; }
         public int PlayerLimit { get; set; }
+        public bool IsDoubles { get; set; }
     }
 }
