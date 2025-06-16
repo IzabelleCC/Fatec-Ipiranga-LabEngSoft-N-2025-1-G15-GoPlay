@@ -205,7 +205,7 @@ namespace GoPlay_Core.Business
         {
             _logger.LogInformation("Confirming attendance for registration ID {RegistrationCategoryId}...", registrationCategoryId);
 
-            var registration = await _matchRepository.GetByIdAsync(registrationCategoryId);
+            var registration = await _matchRepository.GetbyRegistrationCategoryAsync(registrationCategoryId);
             if (registration == null)
             {
                 _logger.LogWarning("Registration with ID {RegistrationCategoryId} not found.", registrationCategoryId);
