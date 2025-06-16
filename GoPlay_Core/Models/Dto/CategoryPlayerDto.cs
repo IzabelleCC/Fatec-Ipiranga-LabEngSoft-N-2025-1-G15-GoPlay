@@ -7,6 +7,7 @@ namespace GoPlay_Core.Models.Dto
         public int Id { get; set; }
         public int TournamentId { get; set; }
         public string TournamentName { get; set; }
+        public decimal RegistrationFee { get; set; } = 0;
         public int CategoryId { get; set; }
         public string CategoryName { get; set; } = string.Empty;
         public string? FirstUserId { get; set; } = string.Empty;
