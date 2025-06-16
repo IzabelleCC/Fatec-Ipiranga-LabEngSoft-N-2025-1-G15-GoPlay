@@ -201,7 +201,7 @@ namespace GoPlay_Core.Business
             return groups;
         }
 
-        public async Task<bool> ConfirmAttendance(int registrationCategoryId, double latitude, double longitude, CancellationToken cancellationToken)
+        public async Task<bool> ConfirmAttendance(int registrationCategoryId, double latitude, double longitude, string userId, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Confirming attendance for registration ID {RegistrationCategoryId}...", registrationCategoryId);
 
@@ -222,6 +222,8 @@ namespace GoPlay_Core.Business
                 throw new InvalidOperationException("Proximity validation failed. Attendance cannot be confirmed.");
             }
             registration.AttendanceConfirmed = true;
+            registration.AttendanceTime = DateTime.UtcNow;
+            registration.AttendanceConfirmedUserId = userId;
             await _matchRepository.UpdateAsync(registration);
 
             _logger.LogInformation("Attendance confirmed for registration ID {RegistrationCategoryId}.", registrationCategoryId);

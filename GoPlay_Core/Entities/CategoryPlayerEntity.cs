@@ -14,6 +14,8 @@ namespace GoPlay_Core.Entities
         public bool SecondUserPaymentConfirmed { get; set; }
         public string? FirstUserTxId { get; set; }
         public string? SecondUserTxId { get; set; }
+        public DateTime AttendanceTime { get; set; } = DateTime.UtcNow;
+        public string? AttendanceConfirmedUserId { get; set; } = null;
 
         [JsonIgnore]
         public CategoryEntity Category { get; set; } = null!;
