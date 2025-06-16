@@ -18,5 +18,9 @@ namespace GoPlay_Core.Models.Dto
         public bool FirstUserPaymentConfirmed { get; set; }
         public bool SecondUserPaymentConfirmed { get; set; }
         public int RegisterStatus { get; set; }
+        public bool AttendanceConfirmed { get; set; } = false;
+        public DateTime AttendanceTime { get; set; } = DateTime.UtcNow;
+        public string? AttendanceConfirmedUserId { get; set; } = null;
+
     }
 }

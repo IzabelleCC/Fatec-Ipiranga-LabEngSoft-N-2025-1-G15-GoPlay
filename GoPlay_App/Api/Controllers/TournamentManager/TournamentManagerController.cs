@@ -358,7 +358,7 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
                 if (request == null)
                     return BadRequest(new { message = "Dados enviados inválidos." });
 
-                var result = await _matchGroupBusiness.ConfirmAttendance(request.RegistrationCategoryId, request.Latitude, request.Longitude, cancellationToken);
+                var result = await _matchGroupBusiness.ConfirmAttendance(request.RegistrationCategoryId, request.Latitude, request.Longitude, request.UserId, cancellationToken);
 
                 if (!result)
                     return NotFound(new { message = "Confirmação de presença não encontrada." });
