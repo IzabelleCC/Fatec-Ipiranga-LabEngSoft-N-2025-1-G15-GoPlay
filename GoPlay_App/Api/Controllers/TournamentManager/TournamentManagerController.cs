@@ -151,6 +151,31 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         }
 
         /// <summary>
+        /// Busca um torneio pelo ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("GetFullInformationById/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetFullInformationById(int id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var tournament = await _tournamentBusiness.GetTournamentById(id, cancellationToken);
+                if (tournament == null)
+                    return NotFound(new { message = "Torneio não encontrado." });
+                return Ok(tournament);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        /// <summary>
         /// Busca um torneio pelo ID do administrador
         /// </summary>
         /// <param name="id"></param>
