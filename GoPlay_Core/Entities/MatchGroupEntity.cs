@@ -10,6 +10,8 @@ namespace GoPlay_Core.Entities
         public int RegistrationCategoryId { get; set; }
         public DateTime? ScheduledAt { get; set; }
         public bool AttendanceConfirmed { get; set; } = false;
+        public DateTime AttendanceTime { get; set; } = DateTime.UtcNow;
+        public string? AttendanceConfirmedUserId { get; set; } = null;
         public int? Position { get; set; } = 0;
         public int? Wins { get; set; } = 0;
         public int? Losses { get; set; } = 0;

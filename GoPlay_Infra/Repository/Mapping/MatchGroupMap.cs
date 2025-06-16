@@ -30,6 +30,12 @@ namespace GoPlay_Infra.Repository.Mapping
                 .IsRequired()
                 .HasDefaultValue(false);
 
+            builder.Property(m => m.AttendanceTime)
+                .IsRequired();
+
+            builder.Property(m => m.AttendanceConfirmedUserId)
+                .IsRequired(false);
+
             builder.Property(m => m.Position)
                 .IsRequired(false);
 

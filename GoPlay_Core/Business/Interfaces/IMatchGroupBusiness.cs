@@ -17,7 +17,7 @@ namespace GoPlay_Core.Business.Interfaces
 
         List<List<CategoryPlayerEntity>> DistributeIntoGroups(List<CategoryPlayerEntity> confirmed);
 
-        Task<bool> ConfirmAttendance(int registrationCategoryId, double latitude, double longitude, CancellationToken cancellationToken);
+        Task<bool> ConfirmAttendance(int registrationCategoryId, double latitude, double longitude, string userId, CancellationToken cancellationToken);
 
         Task<List<GameMatchEntity>> InsertGroupResultsAndReturnWinners(List<MatchGroupEntity> results, CancellationToken cancellationToken);
 
