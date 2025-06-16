@@ -55,6 +55,7 @@ namespace GoPlay_Core.Business
                 TournamentId = tournament.Id,
                 TournamentName = tournament.Name ?? string.Empty,
                 RegistrationFee = tournament.RegistrationFee,
+                PaymentDeadline = tournament.PaymentDeadline,
                 CategoryId = category.Id,
                 CategoryName = category.CategoryType ?? string.Empty,
                 FirstUserId = categoryPlayer.FirstUserId,
