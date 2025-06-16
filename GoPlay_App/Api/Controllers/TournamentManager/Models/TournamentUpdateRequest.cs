@@ -15,6 +15,8 @@ namespace GoPlay_App.Api.Controllers.TournamentManager.Models
         public decimal RegistrationFee { get; set; }
         public int CourtQuantity { get; set; }
         public string AdmUserId { get; set; } = string.Empty;
+        public double Latitude { get; set; } = 0.0;
+        public double Longitude { get; set; } = 0.0;
         public IEnumerable<CategoryCreateRequest> Categories { get; set; }
 
         public TournamentUpdateRequest(int id,
