@@ -48,6 +48,8 @@ namespace GoPlay_Core.Business
             var secondUser = await _userRepository.GetById(categoryPlayer.SecondUserId) ?? new UserEntity();
             var category = await _categoryRepository.GetById(categoryPlayer.CategoryId) ?? new CategoryEntity();
             var tournament = await _tournamentRepository.GetById(category.TournamentId) ?? new TournamentEntity();
+            var matchGroups = await _matchRepository.GetbyRegistrationCategoryAsync(categoryPlayer.Id) ;
+
 
             return new CategoryPlayerDto
             {
@@ -64,7 +66,10 @@ namespace GoPlay_Core.Business
                 SecondUserName = secondUser.Name ?? string.Empty,
                 FirstUserPaymentConfirmed = categoryPlayer.FirstUserPaymentConfirmed,
                 SecondUserPaymentConfirmed = categoryPlayer.SecondUserPaymentConfirmed,
-                RegisterStatus = (int)categoryPlayer.RegisterStatus
+                RegisterStatus = (int)categoryPlayer.RegisterStatus,
+                AttendanceConfirmed = matchGroups.AttendanceConfirmed,
+                AttendanceTime = matchGroups.AttendanceTime,
+                AttendanceConfirmedUserId = matchGroups.AttendanceConfirmedUserId,
             };
         }
 
