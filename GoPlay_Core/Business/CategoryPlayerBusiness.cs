@@ -37,11 +37,40 @@ namespace GoPlay_Core.Business
         {
             return await _categoryPlayerRepository.GetByIdAsync(id);
         }
+        public async Task<CategoryPlayerDto> GetRegistrationDetails(int id, CancellationToken cancellationToken)
+        {
+            var categoryPlayer = await _categoryPlayerRepository.GetByIdAsync(id);
+
+            if (categoryPlayer == null)
+                return new CategoryPlayerDto();
+
+            var firstUser = await _userRepository.GetById(categoryPlayer.FirstUserId) ?? new UserEntity();
+            var secondUser = await _userRepository.GetById(categoryPlayer.SecondUserId) ?? new UserEntity();
+            var category = await _categoryRepository.GetById(categoryPlayer.CategoryId) ?? new CategoryEntity();
+            var tournament = await _tournamentRepository.GetById(category.TournamentId) ?? new TournamentEntity();
+
+            return new CategoryPlayerDto
+            {
+                Id = categoryPlayer.Id,
+                TournamentId = tournament.Id,
+                TournamentName = tournament.Name ?? string.Empty,
+                CategoryId = category.Id,
+                CategoryName = category.CategoryType ?? string.Empty,
+                FirstUserId = categoryPlayer.FirstUserId,
+                SecondUserId = categoryPlayer.SecondUserId,
+                FirstUserName = firstUser.Name ?? string.Empty,
+                SecondUserName = secondUser.Name ?? string.Empty,
+                FirstUserPaymentConfirmed = categoryPlayer.FirstUserPaymentConfirmed,
+                SecondUserPaymentConfirmed = categoryPlayer.SecondUserPaymentConfirmed,
+                RegisterStatus = (int)categoryPlayer.RegisterStatus
+            };
+        }
 
         public async Task<List<CategoryPlayerEntity>> GetByCategoryIdAsync(int categoryId, CancellationToken cancellationToken)
         {
             return await _categoryPlayerRepository.GetByCategoryIdAsync(categoryId);
         }
+
 
         public async Task<List<CategoryPlayerEntity>> GetByUserIdAsync(string userId, CancellationToken cancellationToken)
         {
