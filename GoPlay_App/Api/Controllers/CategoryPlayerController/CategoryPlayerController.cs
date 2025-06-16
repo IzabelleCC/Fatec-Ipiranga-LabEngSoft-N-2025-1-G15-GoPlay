@@ -46,6 +46,13 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
             return result == null ? NotFound(new { message = "Inscrição não encontrada." }) : Ok(result);
         }
 
+        [HttpGet("GetRegistrationDetails/{id}")]
+        public async Task<IActionResult> GetRegistrationDetails(int id, CancellationToken cancellationToken)
+        {
+            var result = await _business.GetRegistrationDetails(id, cancellationToken);
+            return result == null ? NotFound(new { message = "Inscrição não encontrada." }) : Ok(result);
+        }
+
         [HttpGet("ByCategory/{categoryId}")]
         public async Task<IActionResult> GetByCategory(int categoryId, CancellationToken cancellationToken)
             => Ok(await _business.GetByCategoryIdAsync(categoryId, cancellationToken));
