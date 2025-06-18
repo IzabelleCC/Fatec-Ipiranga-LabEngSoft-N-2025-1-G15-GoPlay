@@ -1,4 +1,5 @@
 ﻿using GoPlay_Core.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace GoPlay_Core.Business.Interfaces
 {
@@ -46,6 +47,8 @@ namespace GoPlay_Core.Business.Interfaces
         Task<List<TUserResponse>> GetAllPlayers(CancellationToken cancellationToken);
 
         Task<List<TUserResponse>> GetByName(string name, CancellationToken cancellationToken);
+
+        Task<string?> UploadProfilePictureAsync(string userId, IFormFile file);
 
     }
 }

@@ -140,6 +140,9 @@ builder.Services.AddScoped<IPixBusiness, PixBusiness>();
 builder.Services.AddScoped<IPixService, PixService>();
 builder.Services.AddScoped<GerencianetAuthenticator>();
 
+builder.Services.AddSingleton<CloudinaryService>();
+
+
 #endregion
 
 #region Pipeline da Aplicação

@@ -4,6 +4,7 @@
     {
         public int TournamentId { get; set; }
         public string TournamentName { get; set; } = string.Empty;
+        public string? TournamentPictureUrl { get; set; }
         public List<CategoryGroupsDto> Groups { get; set; } = new();
     }
 

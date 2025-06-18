@@ -1,10 +1,11 @@
-﻿using GoPlay_Core.Business.Interfaces;
+﻿using FluentValidation;
+using GoPlay_App.Api.Controllers.UserController.Models;
+using GoPlay_Core.Business.Interfaces;
 using GoPlay_Core.Entities;
 using GoPlay_Core.Repository.Interfaces;
-using FluentValidation;
 using GoPlay_Core.Services;
 using GoPlay_Core.Services.Interfaces;
-using GoPlay_App.Api.Controllers.UserController.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace GoPlay_Core.Business
 {
@@ -17,12 +18,14 @@ namespace GoPlay_Core.Business
         private readonly IUserRepository _repository;
         private readonly IValidator<UserEntity> _validator;
         private readonly IEmailService _emailService;
+        private readonly CloudinaryService _cloudinaryService;
 
-        public UserBusiness(IUserRepository repository, IValidator<UserEntity> validator, IEmailService emailService)
+        public UserBusiness(IUserRepository repository, IValidator<UserEntity> validator, IEmailService emailService, CloudinaryService cloudinaryService)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
             _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
+            _cloudinaryService = cloudinaryService;
         }
 
         public async Task Add(UserEntity entity, CancellationToken cancellationToken)
@@ -102,6 +105,24 @@ namespace GoPlay_Core.Business
                 .ToList();
 
             return players;
+        }
+
+        public async Task<string?> UploadProfilePictureAsync(string userId, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return null;
+
+            var user = await _repository.GetById(userId);
+            if (user == null)
+                return null;
+
+            var imageUrl = await _cloudinaryService.UploadImageAsync(file);
+
+            user.ProfilePictureUrl = imageUrl;
+
+            await _repository.Update(user);
+
+            return imageUrl;
         }
     }
 }
