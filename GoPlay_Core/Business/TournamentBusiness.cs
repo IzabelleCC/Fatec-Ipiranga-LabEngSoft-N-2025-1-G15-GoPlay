@@ -1,10 +1,9 @@
-﻿using System.Threading;
-using FluentValidation;
+﻿using FluentValidation;
 using GoPlay_App.Api.Controllers.TournamentManager;
-using GoPlay_App.Api.Controllers.TournamentManager.Models;
-using GoPlay_Core.Entities;
 using GoPlay_Core.Models.Dto;
 using GoPlay_Core.Repository.Interfaces;
+using GoPlay_Core.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace GoPlay_Core.Business
 {
@@ -12,11 +11,13 @@ namespace GoPlay_Core.Business
     {
         private readonly ITournamentRepository _repository;
         private readonly IValidator<TournamentEntity> _validator;
+        private readonly CloudinaryService _cloudinaryService;
 
-        public TournamentBusiness(ITournamentRepository repository, IValidator<TournamentEntity> validator)
+        public TournamentBusiness(ITournamentRepository repository, IValidator<TournamentEntity> validator, CloudinaryService cloudinaryService)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator)); ;
+            _cloudinaryService = cloudinaryService;
         }
         public async Task Add(TournamentEntity entity, CancellationToken cancellationToken)
         {
@@ -40,7 +41,7 @@ namespace GoPlay_Core.Business
                 throw new InvalidOperationException("Torneio não encontrado.");
             }
             return result;
-        }        
+        }
         public async Task<List<TournamentEntity>> GetAllTournaments(CancellationToken cancellationToken)
         {
             var result = await _repository.GetAllTournaments();
@@ -121,6 +122,24 @@ namespace GoPlay_Core.Business
             }
 
             await _repository.Update(entity);
+        }
+
+        public async Task<string?> UploadTournamentPictureAsync(int tournamentId, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return null;
+
+            var user = await _repository.GetById(tournamentId);
+            if (user == null)
+                return null;
+
+            var imageUrl = await _cloudinaryService.UploadImageAsync(file);
+
+            user.ProfilePictureUrl = imageUrl;
+
+            await _repository.Update(user);
+
+            return imageUrl;
         }
     }
 }

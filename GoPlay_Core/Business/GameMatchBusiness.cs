@@ -418,7 +418,10 @@ namespace GoPlay_Core.Business
                         : null;
 
                     dto.Competitor1.FirstUserName = user1?.Name ?? string.Empty;
+                    dto.Competitor1.FirstUserPictureUrl = user1?.ProfilePictureUrl ?? string.Empty;
                     dto.Competitor1.SecondUserName = user2?.Name ?? string.Empty;
+                    dto.Competitor1.SecondUserPictureUrl = user2?.ProfilePictureUrl ?? string.Empty;
+
                 }
 
                 if (match.Competitor2 != null)
@@ -433,7 +436,9 @@ namespace GoPlay_Core.Business
                         : null;
 
                     dto.Competitor2.FirstUserName = user1?.Name ?? string.Empty;
+                    dto.Competitor2.FirstUserPictureUrl = user1?.ProfilePictureUrl ?? string.Empty;
                     dto.Competitor2.SecondUserName = user2?.Name ?? string.Empty;
+                    dto.Competitor2.SecondUserPictureUrl = user2?.ProfilePictureUrl ?? string.Empty;
                 }
 
                 result.Add(dto);

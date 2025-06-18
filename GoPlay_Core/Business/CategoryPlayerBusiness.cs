@@ -56,15 +56,18 @@ namespace GoPlay_Core.Business
                 Id = categoryPlayer.Id,
                 TournamentId = tournament.Id,
                 TournamentName = tournament.Name ?? string.Empty,
+                TournamentPictureUrl = tournament.ProfilePictureUrl ?? string.Empty,
                 RegistrationFee = tournament.RegistrationFee,
                 PaymentDeadline = tournament.PaymentDeadline,
                 CategoryId = category.Id,
                 CategoryName = category.CategoryType ?? string.Empty,
                 FirstUserId = categoryPlayer.FirstUserId,
-                SecondUserId = categoryPlayer.SecondUserId,
                 FirstUserName = firstUser.Name ?? string.Empty,
-                SecondUserName = secondUser.Name ?? string.Empty,
+                FirstUserPictureUrl = firstUser.ProfilePictureUrl ?? string.Empty,
                 FirstUserPaymentConfirmed = categoryPlayer.FirstUserPaymentConfirmed,
+                SecondUserId = categoryPlayer.SecondUserId,
+                SecondUserName = secondUser.Name ?? string.Empty,
+                SecondUserPictureUrl = secondUser.ProfilePictureUrl ?? string.Empty,
                 SecondUserPaymentConfirmed = categoryPlayer.SecondUserPaymentConfirmed,
                 RegisterStatus = (int)categoryPlayer.RegisterStatus,
                 AttendanceConfirmed = matchGroups.AttendanceConfirmed,
@@ -108,7 +111,9 @@ namespace GoPlay_Core.Business
                 var firstUser = await _userRepository.GetById(player.FirstUserId);
                 var secondUser = await _userRepository.GetById(player.SecondUserId);
                 dto.FirstUserName = firstUser.Name ?? string.Empty;
+                dto.FirstUserPictureUrl = firstUser.ProfilePictureUrl ?? string.Empty;
                 dto.SecondUserName = secondUser.Name ?? string.Empty;
+                dto.SecondUserPictureUrl = secondUser.ProfilePictureUrl ?? string.Empty;
 
                 var category = await _categoryRepository.GetById(dto.CategoryPlayer.CategoryId);
                 dto.Category = new CategoryEntity
@@ -125,6 +130,7 @@ namespace GoPlay_Core.Business
                 {
                     Id = tournament?.Id ?? 0,
                     Name = tournament?.Name ?? string.Empty,
+                    ProfilePictureUrl = tournament?.ProfilePictureUrl ?? string.Empty,
                     Status = tournament.Status,
                     GamesStartDate = tournament?.GamesStartDate ?? DateTime.MinValue,
                     GamesEndDate = tournament?.GamesEndDate ?? DateTime.MinValue,

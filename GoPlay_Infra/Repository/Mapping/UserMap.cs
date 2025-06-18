@@ -45,6 +45,10 @@ namespace GoPlay_UserManagementService_Infra.Repository.Mapping
             builder.Property(p => p.IsActive)
                 .HasColumnName("IsActive")
                 .IsRequired();
+
+            builder.Property(p => p.ProfilePictureUrl)
+                .HasColumnName("ProfilePictureUrl")
+                .IsRequired(false);
         }
     }
 }

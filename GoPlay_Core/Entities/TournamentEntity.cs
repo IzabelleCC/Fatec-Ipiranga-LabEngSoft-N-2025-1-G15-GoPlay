@@ -18,6 +18,7 @@ public class TournamentEntity
     public string AdmUserId { get; set; } = string.Empty;
     public double Latitude { get; set; } = 0.0;
     public double Longitude { get; set; } = 0.0;
+    public string? ProfilePictureUrl { get; set; }
     public TournamentStatusEnum Status { get; set; } = TournamentStatusEnum.Criado;
     public UserEntity AdmUser { get; set; } = null!;
     public List<CategoryEntity> Categories { get; set; } = new List<CategoryEntity>();

@@ -18,14 +18,11 @@ namespace GoPlay_Core.Entities
         public DateTime? BirthDate { get; set; }
         public string? TShirtSize { get; set; }
         public bool IsActive { get; set; } = true;
+        public string? ProfilePictureUrl { get; set; }
 
         public List<CategoryEntity> Categories { get; set; } = new List<CategoryEntity>();
 
         public List<TournamentEntity> Tournaments { get; set; } = new();
 
-        public UserEntity()
-        {
-
-        }
     }
 }

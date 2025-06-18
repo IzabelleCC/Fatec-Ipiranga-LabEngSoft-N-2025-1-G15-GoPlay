@@ -36,6 +36,10 @@ public class TournamentMap : IEntityTypeConfiguration<TournamentEntity>
                 .HasColumnName("Longitude")
                 .IsRequired();
 
+        builder.Property(t => t.ProfilePictureUrl)
+                .HasColumnName("ProfilePictureUrl")
+                .IsRequired(false);
+
         builder.HasOne(t => t.AdmUser)
                .WithMany(u => u.Tournaments) 
                .HasForeignKey(t => t.AdmUserId)

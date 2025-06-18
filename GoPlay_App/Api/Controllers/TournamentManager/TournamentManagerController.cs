@@ -442,5 +442,25 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
                 return HandleException(ex);
             }
         }
+
+        /// <summary>
+        /// Faz o upload da imagem de perfil do torneio
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="tournamentId"></param>
+        /// <returns></returns>
+        [HttpPost("uploadTournamentPicture/{tournamentId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UploadProfilePicture(IFormFile file, int tournamentId)
+        {
+            var imageUrl = await _tournamentBusiness.UploadTournamentPictureAsync(tournamentId, file);
+
+            if (string.IsNullOrEmpty(imageUrl))
+                return BadRequest("Não foi possível atualizar a imagem do torneio.");
+
+            return Ok(new { imageUrl });
+        }
     }
 }

@@ -1,8 +1,12 @@
-﻿using GoPlay_App.Api.Controllers.UserController.Models;
+﻿using System.Security.Claims;
+using GoPlay_App.Api.Controllers.UserController.Models;
+using GoPlay_Core.Business;
 using GoPlay_Core.Business.Interfaces;
 using GoPlay_Core.Entities;
 using GoPlay_Core.Exceptions;
+using GoPlay_Core.Services;
 using GoPlay_Core.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -206,6 +210,26 @@ namespace GoPlay_App.Api.Controllers.UserController
             {
                 return HandleException(ex);
             }
+        }
+
+        /// <summary>
+        /// Faz o upload da imagem de perfil do usuário
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpPost("uploadProfilePicture/{userId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UploadProfilePicture(IFormFile file, string userId)
+        {
+            var imageUrl = await _business.UploadProfilePictureAsync(userId, file);
+
+            if (string.IsNullOrEmpty(imageUrl))
+                return BadRequest("Não foi possível atualizar a imagem de perfil.");
+
+            return Ok(new { imageUrl });
         }
     }
 }
