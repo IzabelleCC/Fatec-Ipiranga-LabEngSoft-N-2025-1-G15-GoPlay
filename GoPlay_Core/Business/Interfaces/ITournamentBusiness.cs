@@ -1,5 +1,5 @@
-﻿using System.Threading;
-using GoPlay_Core.Models.Dto;
+﻿using GoPlay_Core.Models.Dto;
+using Microsoft.AspNetCore.Http;
 
 namespace GoPlay_App.Api.Controllers.TournamentManager
 {
@@ -61,6 +61,8 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task<List<TournamentEntity?>> GetTournamentByAdmUserId(string id, CancellationToken cancellationToken);
+
+        Task<string?> UploadTournamentPictureAsync(int tournamentId, IFormFile file);
 
     }
 }

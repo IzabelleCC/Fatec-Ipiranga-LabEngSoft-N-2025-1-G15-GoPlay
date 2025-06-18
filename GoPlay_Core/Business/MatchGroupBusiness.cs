@@ -131,8 +131,10 @@ namespace GoPlay_Core.Business
                         Id = p.Id,
                         FirstUserId = p.FirstUserId,
                         FirstUserName = firstUser?.UserName ?? "Unknown",
+                        FirstUserPictureUrl = firstUser?.ProfilePictureUrl,
                         SecondUserId = p.SecondUserId,
-                        SecondUserName = secondUser?.UserName
+                        SecondUserName = secondUser?.UserName,
+                        SecondUserPictureUrl = secondUser?.ProfilePictureUrl
                     });
 
                     var registration = new MatchGroupEntity

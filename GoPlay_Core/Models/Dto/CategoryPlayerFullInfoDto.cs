@@ -9,6 +9,8 @@ namespace GoPlay_Core.Models.Dto
         public CategoryPlayerEntity CategoryPlayer { get; set; } = new CategoryPlayerEntity();
         public string? FirstUserName { get; set; } = string.Empty;
         public string? SecondUserName { get; set; } = string.Empty;
+        public string? FirstUserPictureUrl { get; set; }
+        public string? SecondUserPictureUrl { get; set; }
         // Category fields
         public CategoryEntity Category { get; set; } = new CategoryEntity();
         public int? RegisterCount { get; set; } = 0;
