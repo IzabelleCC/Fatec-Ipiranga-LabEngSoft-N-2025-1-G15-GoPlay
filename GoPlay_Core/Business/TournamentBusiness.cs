@@ -88,6 +88,7 @@ namespace GoPlay_Core.Business
                 GamesStartDate = result.GamesStartDate,
                 GamesEndDate = result.GamesEndDate,
                 RegistrationDeadline = result.RegistrationDeadline,
+                TournamentPictureUrl = result.ProfilePictureUrl,
                 Categories = result.Categories.Select(category => new CategorySummaryDto
                 {
                     Id = category.Id,
