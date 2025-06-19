@@ -560,6 +560,24 @@ namespace GoPlay_Core.Business
 
             return matchGroup;
         }
+
+        public async Task InsertCourtNumberMatchGroup(int categoryId, int groupNumber, int courtNumber, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Inserting court number for category ID {CategoryId} and group number {GroupNumber}...", categoryId, groupNumber);
+
+            var matchGroups = await _matchRepository.GetByCategoryAndGroupAsync(categoryId, groupNumber);
+            if (matchGroups == null || !matchGroups.Any())
+            {
+                _logger.LogWarning("No match groups found for category ID {CategoryId} and group number {GroupNumber}.", categoryId, groupNumber);
+                throw new KeyNotFoundException("No match groups found for the specified category and group number.");
+            }
+            foreach (var match in matchGroups)
+            {
+                match.CourtNumber = courtNumber; 
+                await _matchRepository.UpdateAsync(match);
+            }
+            _logger.LogInformation("Court numbers inserted successfully for category ID {CategoryId} and group number {GroupNumber}.", categoryId, groupNumber);
+        }
     }
 }
 

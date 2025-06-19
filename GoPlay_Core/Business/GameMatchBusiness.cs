@@ -320,7 +320,6 @@ namespace GoPlay_Core.Business
                     matches.Add((null, orderedFirstPlaceds[1]));
                     break;
 
-                // PREPARADO para você colar:
                 case 6:
                     throw new NotImplementedException("Template for 6 groups not implemented yet.");
                 case 7:
@@ -476,6 +475,30 @@ namespace GoPlay_Core.Business
                     NumberGame = lastNumberGame,
                 });
             }
+        }
+
+        public async Task InsertCourtNumberElimination(int categoryId, int numberGame, int courtNumber, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Inserting court number for category ID {CategoryId}...", categoryId);
+
+            var matches = await _gameMatchRepository.GetMatchesByCategoryIdAsync(categoryId);
+
+            if (matches == null || !matches.Any())
+            {
+                _logger.LogWarning("No elimination matches found for category ID {CategoryId}.", categoryId);
+                throw new KeyNotFoundException("No elimination matches found for the specified category and game number.");
+            }
+
+            var matchByNumberGame = matches
+                .Where(m => m.NumberGame == numberGame)
+                .ToList();
+
+            foreach (var match in matchByNumberGame)
+            {
+                match.CourtNumber = courtNumber;
+                await _gameMatchRepository.UpdateAsync(match);
+            }
+            _logger.LogInformation("Court numbers inserted successfully for category ID {CategoryId} and game number {NumberGamer}.", categoryId, numberGame);
         }
     }
 }

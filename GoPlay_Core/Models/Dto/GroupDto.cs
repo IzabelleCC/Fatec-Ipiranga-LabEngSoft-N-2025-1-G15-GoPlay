@@ -3,6 +3,7 @@
     public class GroupDto
     {
         public int GroupNumber { get; set; }
+        public int CourtNumber { get; set; }
         public List<GroupPlayerDto> Players { get; set; } = new();
     }
 

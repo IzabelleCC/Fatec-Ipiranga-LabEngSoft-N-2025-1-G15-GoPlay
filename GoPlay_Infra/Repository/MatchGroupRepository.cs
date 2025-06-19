@@ -116,6 +116,7 @@ namespace GoPlay_Infra.Repository
                             .Select(group => new GroupDto
                             {
                                 GroupNumber = group.Key,
+                                CourtNumber = group.First().CourtNumber ?? 0,
                                 Players = group.Select(m => new GroupPlayerDto
                                 {
                                     Id = m.RegistrationCategoryId,
