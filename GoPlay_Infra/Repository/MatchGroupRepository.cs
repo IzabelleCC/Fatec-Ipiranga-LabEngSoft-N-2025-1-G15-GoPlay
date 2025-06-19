@@ -90,7 +90,8 @@ namespace GoPlay_Infra.Repository
                 .Select(t => new
                 {
                     t.Id,
-                    t.Name
+                    t.Name,
+                    t.ProfilePictureUrl
                 })
                 .FirstOrDefaultAsync();
 
@@ -103,6 +104,7 @@ namespace GoPlay_Infra.Repository
             {
                 TournamentId = tournament.Id,
                 TournamentName = tournament.Name,
+                TournamentPictureUrl = tournament.ProfilePictureUrl,
                 Groups = new List<CategoryGroupsDto>
                 {
                     new CategoryGroupsDto
