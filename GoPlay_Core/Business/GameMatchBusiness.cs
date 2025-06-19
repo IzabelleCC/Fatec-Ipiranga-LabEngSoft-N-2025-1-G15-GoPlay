@@ -345,11 +345,10 @@ namespace GoPlay_Core.Business
                 {
                     matchToUpdate.QtdGames1 = results.QtdGames1;
                     matchToUpdate.QtdGames2 = results.QtdGames2;
-                    if (results.QtdGames1 > results.QtdGames2)
-                    {
-                        matchToUpdate.Result = results.Competitor1Id;
-                    }
-                    matchToUpdate.Result = results.Competitor2Id;
+
+                    matchToUpdate.Result = results.QtdGames1 > results.QtdGames2
+                                                            ? results.Competitor1Id
+                                                            : results.Competitor2Id;
 
                     await _gameMatchRepository.UpdateAsync(matchToUpdate);
 
