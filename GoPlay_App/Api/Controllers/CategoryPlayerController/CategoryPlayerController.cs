@@ -12,12 +12,14 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
         private readonly ICategoryPlayerBusiness _business;
         private readonly IPixBusiness _pixBusiness;
         private readonly IMatchGroupBusiness _matchGroupBusiness;
+        private readonly IGameMatchBusiness _gameMatchBusiness;
 
-        public CategoryPlayerController(ICategoryPlayerBusiness business, IPixBusiness pixBusiness, IMatchGroupBusiness matchGroupBusiness)
+        public CategoryPlayerController(ICategoryPlayerBusiness business, IPixBusiness pixBusiness, IMatchGroupBusiness matchGroupBusiness, IGameMatchBusiness gameMatchBusiness)
         {
             _business = business;
             _pixBusiness = pixBusiness;
             _matchGroupBusiness = matchGroupBusiness;
+            _gameMatchBusiness = gameMatchBusiness;
         }
 
         [HttpPost("Register")]
@@ -155,6 +157,22 @@ namespace GoPlay_App.Api.Controllers.CategoryPlayerController
             if (result == null)
                 return NotFound(new { message = "Nenhum grupo de partidas encontrado para esta categoria." });
             return Ok(result);
+        }
+
+        [HttpPost("InsertCourtNumberMatchGroup/{categoryId}/{groupNumber}/{courtNumber}")]
+        public async Task<IActionResult> InsertCourtNumbeMatchGroupr(int categoryId, int groupNumber, int courtNumber, CancellationToken cancellationToken)
+        {
+            await _matchGroupBusiness.InsertCourtNumberMatchGroup(categoryId, groupNumber, courtNumber, cancellationToken);
+
+            return Ok(new { message = "Número de quadra inserido com sucesso." });
+        }
+
+        [HttpPost("InsertCourtNumberElimination/{categoryId}/{numberGame}/{courtNumber}")]
+        public async Task<IActionResult> InsertCourtNumberElimination(int categoryId, int numberGame, int courtNumber, CancellationToken cancellationToken)
+        {
+            await _gameMatchBusiness.InsertCourtNumberElimination(categoryId, numberGame, courtNumber, cancellationToken);
+
+            return Ok(new { message = "Número de quadra inserido com sucesso." });
         }
 
     }

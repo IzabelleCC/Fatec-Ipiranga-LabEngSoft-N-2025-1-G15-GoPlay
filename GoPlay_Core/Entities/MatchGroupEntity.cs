@@ -10,7 +10,7 @@ namespace GoPlay_Core.Entities
         public int RegistrationCategoryId { get; set; }
         public DateTime? ScheduledAt { get; set; }
         public bool AttendanceConfirmed { get; set; } = false;
-        public DateTime AttendanceTime { get; set; } = DateTime.UtcNow;
+        public DateTime AttendanceTime { get; set; }
         public string? AttendanceConfirmedUserId { get; set; } = null;
         public int? Position { get; set; } = 0;
         public int? Wins { get; set; } = 0;
@@ -26,11 +26,11 @@ namespace GoPlay_Core.Entities
         public int? Game8 { get; set; }
         public int? Game9 { get; set; }
         public int? Game10 { get; set; }
-
         public int? SumOfGamesWon { get; set; } = 0;
         public int? SumOfGamesLost { get; set; } = 0;
         public int? GamesBalance { get; set; } = 0;
         public int? Tiebreaks { get; set; } = 0;
+        public int? CourtNumber { get; set; }
         public MatchStageEnum MatchStage { get; set; } = MatchStageEnum.Group;
         public CategoryPlayerEntity RegistrationCategory { get; set; } = null!;
         public CategoryEntity Category { get; set; } = null!;

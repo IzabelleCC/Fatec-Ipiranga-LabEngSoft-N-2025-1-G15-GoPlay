@@ -1,6 +1,7 @@
 ﻿using GoPlay_Core.Entities;
 using GoPlay_Core.Models;
 using GoPlay_Core.Models.Dto;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace GoPlay_Core.Business.Interfaces
@@ -24,5 +25,8 @@ namespace GoPlay_Core.Business.Interfaces
         Task<TournamentMatchesResultDto> GetTournamentMatchesByCategory(int categoryId, CancellationToken cancellationToken);
 
         Task<List<MatchDto>> GetGroupResultByCategoryId(int categoryId, int groupNumber, CancellationToken cancellationToken);
+
+        Task InsertCourtNumberMatchGroup(int categoryId, int groupNumber, int courtNumber, CancellationToken cancellationToken);
+
     }
 }

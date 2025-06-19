@@ -8,5 +8,6 @@ namespace GoPlay_Core.Business.Interfaces
         Task<List<GameMatchEntity>> GenerateEliminationMatches(int categoryId, CancellationToken cancellationToken);
         Task<List<GameMatchEntity>> InsertEliminationResultsAndReturnWinners(GameMatchEntity results, CancellationToken cancellationToken);
         Task<List<EliminationGameDto>> GetEliminationGamesByCategory(int categoryId, int matchStage, CancellationToken cancellationToken);
+        Task InsertCourtNumberElimination(int categoryId, int numberGame, int courtNumber, CancellationToken cancellationToken);
     }
 }
