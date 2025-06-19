@@ -8,6 +8,7 @@
         public DateTime GamesStartDate { get; set; }
         public DateTime GamesEndDate { get; set; }
         public DateTime RegistrationDeadline { get; set; }
+        public string? TournamentPictureUrl { get; set; }
 
         public List<CategorySummaryDto> Categories { get; set; } = new();
     }
