@@ -119,10 +119,12 @@ namespace GoPlay_Infra.Repository
                                     Id = m.RegistrationCategoryId,
                                     FirstUserId = m.RegistrationCategory.FirstUserId.ToString(),
                                     FirstUserName = m.RegistrationCategory.FirstUser.Name,
+                                    FirstUserPictureUrl = m.RegistrationCategory.FirstUser.ProfilePictureUrl,
                                     SecondUserId = m.RegistrationCategory.SecondUserId?.ToString(),
                                     SecondUserName = m.RegistrationCategory.SecondUser != null
                                         ? m.RegistrationCategory.SecondUser.Name
-                                        : null
+                                        : null,
+                                    SecondUserPictureUrl = m.RegistrationCategory.SecondUser.ProfilePictureUrl
                                 }).ToList()
                             }).ToList()
                     }
