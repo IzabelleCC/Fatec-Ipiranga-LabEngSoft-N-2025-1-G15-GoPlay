@@ -62,9 +62,7 @@ namespace GoPlay_Infra.Repository
             return await _context.Matches
                 .Include(m => m.RegistrationCategory)
                 .Include(m => m.Category)
-                .FirstOrDefaultAsync(m => m.RegistrationCategoryId == registrationCategory)
-                ?? throw new KeyNotFoundException("Match group not found for the given registration category.");
-
+                .FirstOrDefaultAsync(m => m.RegistrationCategoryId == registrationCategory);
         }
 
         public async Task<TournamentMatchesResultDto> GetTournamentMatchesByCategory(int categoryId)

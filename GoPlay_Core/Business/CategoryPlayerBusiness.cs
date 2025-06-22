@@ -48,7 +48,7 @@ namespace GoPlay_Core.Business
             var secondUser = await _userRepository.GetById(categoryPlayer.SecondUserId) ?? new UserEntity();
             var category = await _categoryRepository.GetById(categoryPlayer.CategoryId) ?? new CategoryEntity();
             var tournament = await _tournamentRepository.GetById(category.TournamentId) ?? new TournamentEntity();
-            var matchGroups = await _matchRepository.GetbyRegistrationCategoryAsync(categoryPlayer.Id) ;
+            var matchGroups = await _matchRepository.GetbyRegistrationCategoryAsync(categoryPlayer.Id) ?? new MatchGroupEntity() ;
 
 
             return new CategoryPlayerDto
