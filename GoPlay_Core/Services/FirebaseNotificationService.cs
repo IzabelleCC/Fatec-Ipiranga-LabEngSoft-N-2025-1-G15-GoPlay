@@ -49,6 +49,8 @@ namespace GoPlay_Core.Services
                 Message = message
             };
 
+            Console.WriteLine($"Enviando notificação para o token: {fcmToken}");
+
             var response = await _fcmService.Projects.Messages.Send(request, $"projects/{_projectId}").ExecuteAsync();
             Console.WriteLine($"Notificação enviada: {response.Name}");
         }
