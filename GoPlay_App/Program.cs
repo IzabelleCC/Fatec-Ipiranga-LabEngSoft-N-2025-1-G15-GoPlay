@@ -100,6 +100,9 @@ builder.Services.AddAuthorization();
 
 #endregion
 
+builder.Services.AddSingleton<FirebaseNotificationService>();
+
+
 #region Injeção de Dependência (DI)
 
 // ---------- Autenticação / Segurança ----------
