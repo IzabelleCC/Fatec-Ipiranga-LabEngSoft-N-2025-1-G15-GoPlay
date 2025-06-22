@@ -31,6 +31,7 @@ public class NotificationsController : ControllerBase
     [HttpPost("register")]
     public IActionResult RegisterToken([FromBody] RegisterTokenRequest request)
     {
+        _logger.LogInformation("Token registrado para o usuário {UserId}: {Token}", request.UserId, request.Token);
         if (string.IsNullOrWhiteSpace(request.Token) || string.IsNullOrWhiteSpace(request.UserId))
         {
             _logger.LogWarning("Tentativa de registrar token inválido. Token: {Token}, UserId: {UserId}", request.Token, request.UserId);

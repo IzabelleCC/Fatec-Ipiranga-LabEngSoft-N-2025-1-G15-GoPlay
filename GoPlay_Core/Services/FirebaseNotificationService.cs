@@ -12,11 +12,13 @@ namespace GoPlay_Core.Services
 
         public FirebaseNotificationService(IConfiguration configuration)
         {
-            var jsonString = configuration["FIREBASE_SERVICE_ACCOUNT_JSON"];
-            if (string.IsNullOrWhiteSpace(jsonString))
+            var base64String = configuration["FIREBASE_SERVICE_ACCOUNT_BASE64"];
+            if (string.IsNullOrWhiteSpace(base64String))
             {
-                throw new InvalidOperationException("Firebase Service Account JSON não encontrado na configuração.");
+                throw new InvalidOperationException("Firebase Service Account Base64 não encontrado na configuração.");
             }
+
+            var jsonString = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(base64String));
 
             var credential = GoogleCredential
                 .FromJson(jsonString)
