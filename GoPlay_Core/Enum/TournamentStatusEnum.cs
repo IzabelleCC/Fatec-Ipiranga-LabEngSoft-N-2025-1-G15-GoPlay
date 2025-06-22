@@ -2,7 +2,6 @@
 {
     public enum TournamentStatusEnum
     {
-        Criado = 0,
         InscricaoAberta = 1,
         InscricaoEncerrada = 2,
         EmAndamento = 3,
