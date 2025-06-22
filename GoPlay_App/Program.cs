@@ -101,6 +101,9 @@ builder.Services.AddAuthorization();
 #endregion
 
 builder.Services.AddSingleton<FirebaseNotificationService>();
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(LogLevel.Information);
 
 
 #region Injeção de Dependência (DI)
@@ -161,6 +164,9 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 });
 
 var app = builder.Build();
+
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+logger.LogInformation("Aplicação iniciada e log funcionando!");
 
 app.UseForwardedHeaders();
 
