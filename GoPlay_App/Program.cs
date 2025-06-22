@@ -141,12 +141,12 @@ builder.Services.AddScoped<IPixService, PixService>();
 builder.Services.AddScoped<GerencianetAuthenticator>();
 
 builder.Services.AddSingleton<CloudinaryService>();
-
+builder.Services.AddScoped<TournamentStatusHandler>();
+builder.Services.AddHostedService<TournamentStatusBackgroundService>();
 
 #endregion
 
 #region Pipeline da Aplicação
-
 
 #region Configuração para Railway / Proxy Reverso
 
