@@ -17,6 +17,7 @@ public class NotificationsController : ControllerBase
     public async Task<IActionResult> Send(string token, string title, string body)
     {
         await _firebaseService.SendNotificationAsync(token, title, body);
+        Console.WriteLine("Notificação enviada com sucesso para o token: " + token);
         return Ok("Notificação enviada com sucesso");
     }
 
