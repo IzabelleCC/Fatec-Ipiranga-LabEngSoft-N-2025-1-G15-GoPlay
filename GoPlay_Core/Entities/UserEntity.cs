@@ -19,6 +19,7 @@ namespace GoPlay_Core.Entities
         public string? TShirtSize { get; set; }
         public bool IsActive { get; set; } = true;
         public string? ProfilePictureUrl { get; set; }
+        public string? FCMToken { get; set; } = string.Empty;
 
         public List<CategoryEntity> Categories { get; set; } = new List<CategoryEntity>();
 

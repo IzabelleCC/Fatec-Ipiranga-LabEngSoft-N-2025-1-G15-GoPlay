@@ -49,6 +49,10 @@ namespace GoPlay_UserManagementService_Infra.Repository.Mapping
             builder.Property(p => p.ProfilePictureUrl)
                 .HasColumnName("ProfilePictureUrl")
                 .IsRequired(false);
+
+            builder.Property(p => p.FCMToken)
+                .HasColumnName("FCMToken")
+                .IsRequired(false);
         }
     }
 }
