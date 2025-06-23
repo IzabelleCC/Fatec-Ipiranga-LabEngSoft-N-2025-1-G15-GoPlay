@@ -1,6 +1,7 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Google.Apis.FirebaseCloudMessaging.v1;
 using Google.Apis.Services;
+using GoPlay_Core.Repository.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -11,8 +12,9 @@ namespace GoPlay_Core.Services
         private readonly FirebaseCloudMessagingService _fcmService;
         private readonly string _projectId;
         private readonly ILogger<FirebaseNotificationService> _logger;
+        private readonly IUserRepository _userRepository;
 
-        public FirebaseNotificationService(IConfiguration configuration, ILogger<FirebaseNotificationService> logger)
+        public FirebaseNotificationService(IConfiguration configuration, ILogger<FirebaseNotificationService> logger, IUserRepository userRepository)
         {
             _logger = logger;
             _logger.LogInformation("Inicializando FirebaseNotificationService...");
@@ -45,6 +47,26 @@ namespace GoPlay_Core.Services
                 HttpClientInitializer = credential,
                 ApplicationName = "GoPlayApp"
             });
+            _userRepository = userRepository;
+        }
+
+        public async Task RegisterToken(string token, string userId) 
+        {
+            _logger.LogInformation("Registrando token {Token} para o usuário {UserId}", token, userId);
+            if (string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(userId))
+            {
+                _logger.LogWarning("Token ou UserId inválidos. Token: {Token}, UserId: {UserId}", token, userId);
+                throw new ArgumentException("Token e UserId são obrigatórios.");
+            }
+            var user = await _userRepository.GetById(userId);
+            if (user == null)
+            {
+                _logger.LogError("Usuário com ID {UserId} não encontrado.", userId);
+                throw new InvalidOperationException($"Usuário com ID {userId} não encontrado.");
+            }
+            user.FCMToken = token;
+            await _userRepository.Update(user);
+            _logger.LogInformation("Token {Token} registrado com sucesso para o usuário {UserId}", token, userId);
         }
 
         public async Task SendNotificationAsync(string fcmToken, string title, string body)
