@@ -5,6 +5,7 @@ using GoPlay_Core.Enum;
 using GoPlay_Core.Models;
 using GoPlay_Core.Models.Dto;
 using GoPlay_Core.Repository.Interfaces;
+using GoPlay_Core.Services;
 using GoPlay_Core.Utils;
 using Microsoft.Extensions.Logging;
 
@@ -18,6 +19,8 @@ namespace GoPlay_Core.Business
         private readonly IUserRepository _userRepository;
         private readonly IMatchGroupRepository _matchRepository;
         private readonly IGameMatchBusiness _gameMatchBusiness;
+        private readonly FirebaseNotificationService _firebaseService;
+        private readonly ICategoryPlayerRepository _categoryPlayerRepository;
 
         public MatchGroupBusiness(
             ITournamentRepository tournamentRepository,
@@ -25,7 +28,9 @@ namespace GoPlay_Core.Business
             ILogger<MatchGroupBusiness> logger,
             IUserRepository userRepository,
             IMatchGroupRepository matchRepository,
-            IGameMatchBusiness gameMatchBusiness)
+            IGameMatchBusiness gameMatchBusiness,
+            FirebaseNotificationService firebaseService,
+            ICategoryPlayerRepository categoryPlayerRepository)
         {
             _tournamentRepository = tournamentRepository;
             _categoryRepository = categoryRepository;
@@ -33,6 +38,8 @@ namespace GoPlay_Core.Business
             _userRepository = userRepository;
             _matchRepository = matchRepository;
             _gameMatchBusiness = gameMatchBusiness;
+            _firebaseService = firebaseService;
+            _categoryPlayerRepository = categoryPlayerRepository;
         }
 
         public async Task<TournamentMatchesResultDto> GenerateMatchesForTournament(int tournamentId, CancellationToken cancellationToken)
@@ -550,7 +557,7 @@ namespace GoPlay_Core.Business
         {
             _logger.LogInformation("Fetching group result for category ID {CategoryId} and group number {GroupNumber}...", categoryId, groupNumber);
 
-            var matchGroup = await _matchRepository.GetGroupResultByCategoryId(categoryId,  groupNumber);
+            var matchGroup = await _matchRepository.GetGroupResultByCategoryId(categoryId, groupNumber);
 
             if (matchGroup == null)
             {
@@ -573,10 +580,35 @@ namespace GoPlay_Core.Business
             }
             foreach (var match in matchGroups)
             {
-                match.CourtNumber = courtNumber; 
+                match.CourtNumber = courtNumber;
                 await _matchRepository.UpdateAsync(match);
+
+                var users = await _categoryPlayerRepository.GetByIdAsync(match.RegistrationCategoryId);
+
+                var firstUser = await _userRepository.GetById(users.FirstUserId);
+                if (firstUser.FCMToken != null)
+                {
+                    await _firebaseService.SendNotificationAsync(
+                        firstUser.FCMToken,
+                        "Court Number Assigned",
+                        $"Seu próximo jogo será na quadra nº {courtNumber}. \nLembre-se !! Você e seu parceiro terão 10min de aquecimento. \nApós o aquecimento o jogo deve ser iniciado imediatamente!"
+                    );
+
+                    if (users.SecondUser != null)
+                    {
+                        var secondUser = await _userRepository.GetById(users.SecondUserId);
+                        if (secondUser.FCMToken != null)
+                        {
+                            await _firebaseService.SendNotificationAsync(
+                                secondUser.FCMToken,
+                                "Court Number Assigned",
+                                $"Seu próximo jogo será na quadra nº {courtNumber}. \nLembre-se !! Você e seu parceiro terão 10min de aquecimento. \nApós o aquecimento o jogo deve ser iniciado imediatamente!"
+                            );
+                        }
+                    }
+                }
+                _logger.LogInformation("Court numbers inserted successfully for category ID {CategoryId} and group number {GroupNumber}.", categoryId, groupNumber);
             }
-            _logger.LogInformation("Court numbers inserted successfully for category ID {CategoryId} and group number {GroupNumber}.", categoryId, groupNumber);
         }
     }
 }

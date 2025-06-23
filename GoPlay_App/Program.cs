@@ -101,7 +101,6 @@ builder.Services.AddAuthorization();
 #endregion
 
 builder.Services.AddSingleton<FirebaseNotificationService>();
-builder.Services.AddHttpClient<ExpoNotificationService>();
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();

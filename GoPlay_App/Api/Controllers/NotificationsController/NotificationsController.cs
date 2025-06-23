@@ -1,4 +1,5 @@
-﻿using GoPlay_App.Api.Controllers.NotificationsController.Models;
+﻿using System.Threading.Tasks;
+using GoPlay_App.Api.Controllers.NotificationsController.Models;
 using GoPlay_Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -29,7 +30,7 @@ public class NotificationsController : ControllerBase
     }
 
     [HttpPost("register")]
-    public IActionResult RegisterToken([FromBody] RegisterTokenRequest request)
+    public async Task<IActionResult> RegisterToken([FromBody] RegisterTokenRequest request)
     {
         _logger.LogInformation("Token registrado para o usuário {UserId}: {Token}", request.UserId, request.Token);
         if (string.IsNullOrWhiteSpace(request.Token) || string.IsNullOrWhiteSpace(request.UserId))
@@ -38,9 +39,7 @@ public class NotificationsController : ControllerBase
             return BadRequest("Token e UserId são obrigatórios.");
         }
 
-        _logger.LogInformation("Token registrado para o usuário {UserId}: {Token}", request.UserId, request.Token);
-
-        // TODO: Salvar no repositório (banco)
+        await _firebaseService.RegisterToken(request.Token, request.UserId);
 
         return Ok("Token registrado com sucesso.");
     }
