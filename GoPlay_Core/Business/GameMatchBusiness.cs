@@ -373,6 +373,7 @@ namespace GoPlay_Core.Business
                     var user2Duble2 = duble2.SecondUserId != null
                         ? await _userRepository.GetById(duble2.SecondUserId)
                         : null;
+
                     if (user1Duble1.FCMToken != null)
                     {
                         await _firebaseService.SendNotificationAsync(
@@ -543,6 +544,31 @@ namespace GoPlay_Core.Business
             {
                 match.CourtNumber = courtNumber;
                 await _gameMatchRepository.UpdateAsync(match);
+
+                var users = await _categoryPlayerRepository.GetByIdAsync(match.Competitor1Id ?? 0);
+
+                var firstUser = await _userRepository.GetById(users.FirstUserId);
+                if (firstUser.FCMToken != null)
+                {
+                    await _firebaseService.SendNotificationAsync(
+                        firstUser.FCMToken,
+                        "Chamada de Quadra",
+                        $"Seu próximo jogo será na quadra nº {courtNumber}. \nLembre-se !! Você e seu parceiro terão 10min de aquecimento. \nApós o aquecimento o jogo deve ser iniciado imediatamente!"
+                    );
+
+                    if (users.SecondUser != null)
+                    {
+                        var secondUser = await _userRepository.GetById(users.SecondUserId);
+                        if (secondUser.FCMToken != null)
+                        {
+                            await _firebaseService.SendNotificationAsync(
+                                secondUser.FCMToken,
+                                "Court Number Assigned",
+                                $"Seu próximo jogo será na quadra nº {courtNumber}. \nLembre-se !! Você e seu parceiro terão 10min de aquecimento. \nApós o aquecimento o jogo deve ser iniciado imediatamente!"
+                            );
+                        }
+                    }
+                }
             }
             _logger.LogInformation("Court numbers inserted successfully for category ID {CategoryId} and game number {NumberGamer}.", categoryId, numberGame);
         }
