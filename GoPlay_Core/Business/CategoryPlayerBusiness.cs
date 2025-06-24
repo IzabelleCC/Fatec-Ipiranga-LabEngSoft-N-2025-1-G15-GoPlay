@@ -80,9 +80,40 @@ namespace GoPlay_Core.Business
             };
         }
 
-        public async Task<List<CategoryPlayerEntity>> GetByCategoryIdAsync(int categoryId, CancellationToken cancellationToken)
+        public async Task<List<CategoryPlayerDto>> GetByCategoryIdAsync(int categoryId, CancellationToken cancellationToken)
         {
-            return await _categoryPlayerRepository.GetByCategoryIdAsync(categoryId);
+            var categoryPlayerList =  await _categoryPlayerRepository.GetByCategoryIdAsync(categoryId);
+
+            var categoryPlayerDtoList = new List<CategoryPlayerDto>();
+            foreach (var player in categoryPlayerList)
+            {
+                var firstUser = await _userRepository.GetById(player.FirstUserId);
+                var secondUser = await _userRepository.GetById(player.SecondUserId);
+                var category = await _categoryRepository.GetById(player.CategoryId);
+                var tournament = await _tournamentRepository.GetById(category?.TournamentId ?? 0);
+                var dto = new CategoryPlayerDto
+                {
+                    Id = player.Id,
+                    TournamentId = tournament?.Id ?? 0,
+                    TournamentName = tournament?.Name ?? string.Empty,
+                    TournamentPictureUrl = tournament?.ProfilePictureUrl ?? string.Empty,
+                    RegistrationFee = tournament?.RegistrationFee ?? 0,
+                    PaymentDeadline = tournament?.PaymentDeadline ?? DateTime.MinValue,
+                    CategoryId = category?.Id ?? 0,
+                    CategoryName = category?.CategoryType ?? string.Empty,
+                    FirstUserId = player.FirstUserId,
+                    FirstUserName = firstUser?.Name ?? string.Empty,
+                    FirstUserPictureUrl = firstUser?.ProfilePictureUrl ?? string.Empty,
+                    FirstUserPaymentConfirmed = player.FirstUserPaymentConfirmed,
+                    SecondUserId = player.SecondUserId,
+                    SecondUserName = secondUser?.Name ?? string.Empty,
+                    SecondUserPictureUrl = secondUser?.ProfilePictureUrl ?? string.Empty,
+                    SecondUserPaymentConfirmed = player.SecondUserPaymentConfirmed,
+                    RegisterStatus = (int)player.RegisterStatus
+                };
+                categoryPlayerDtoList.Add(dto);
+            }
+            return categoryPlayerDtoList;
         }
 
         public async Task<List<CategoryPlayerEntity>> GetByUserIdAsync(string userId, CancellationToken cancellationToken)
