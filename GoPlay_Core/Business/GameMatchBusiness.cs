@@ -4,6 +4,7 @@ using GoPlay_Core.Entities;
 using GoPlay_Core.Enum;
 using GoPlay_Core.Models.Dto;
 using GoPlay_Core.Repository.Interfaces;
+using GoPlay_Core.Services;
 using Microsoft.Extensions.Logging;
 
 namespace GoPlay_Core.Business
@@ -14,17 +15,23 @@ namespace GoPlay_Core.Business
         private readonly IMatchGroupRepository _matchRepository;
         private readonly IGameMatchRepository _gameMatchRepository;
         private readonly IUserRepository _userRepository;
+        private readonly ICategoryPlayerRepository _categoryPlayerRepository;
+        private readonly FirebaseNotificationService _firebaseService;
 
         public GameMatchBusiness(
             ILogger<MatchGroupBusiness> logger,
             IMatchGroupRepository matchRepository,
             IGameMatchRepository gameMatchRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            ICategoryPlayerRepository categoryPlayerRepository,
+            FirebaseNotificationService firebaseService)
         {
             _logger = logger;
             _matchRepository = matchRepository;
             _gameMatchRepository = gameMatchRepository;
             _userRepository = userRepository;
+            _categoryPlayerRepository = categoryPlayerRepository;
+            _firebaseService = firebaseService;
         }
 
         public async Task<List<GameMatchEntity>> GenerateEliminationMatches(int categoryId, CancellationToken cancellationToken)
@@ -351,10 +358,49 @@ namespace GoPlay_Core.Business
 
                     await _gameMatchRepository.UpdateAsync(matchToUpdate);
 
-                    var result= await _gameMatchRepository.GetMatchesByCategoryIdAsync(results.CategoryId ?? 0);
+                    var result = await _gameMatchRepository.GetMatchesByCategoryIdAsync(results.CategoryId ?? 0);
                     var noResultZeroOrNull = result
                         .Where(m => m.Result == 0 || m.Result == null)
                         .ToList();
+
+                    var duble1 = await _categoryPlayerRepository.GetByIdAsync(results.Competitor1Id ?? 0);
+                    var duble2 = await _categoryPlayerRepository.GetByIdAsync(results.Competitor2Id ?? 0);
+                    var user1Duble1 = await _userRepository.GetById(duble1.FirstUserId);
+                    var user1Duble2 = duble1.SecondUserId != null
+                        ? await _userRepository.GetById(duble1.SecondUserId)
+                        : null;
+                    var user2Duble1 = await _userRepository.GetById(duble2.FirstUserId);
+                    var user2Duble2 = duble2.SecondUserId != null
+                        ? await _userRepository.GetById(duble2.SecondUserId)
+                        : null;
+                    if (user1Duble1.FCMToken != null)
+                    {
+                        await _firebaseService.SendNotificationAsync(
+                                user1Duble1.FCMToken,
+                                "Resultado do Jogo",
+                                $"O jogo entre {user1Duble1.Name} e {user2Duble1.Name} terminou com o resultado {results.QtdGames1} X {results.QtdGames2}.");
+                    }
+                    if (user1Duble2?.FCMToken != null)
+                    {
+                        await _firebaseService.SendNotificationAsync(
+                                user1Duble2.FCMToken,
+                                "Resultado do Jogo",
+                                $"O jogo entre {user1Duble1.Name} e {user2Duble1.Name} terminou com o resultado {results.QtdGames1} X {results.QtdGames2}.");
+                    }
+                    if (user2Duble1.FCMToken != null)
+                    {
+                        await _firebaseService.SendNotificationAsync(
+                                user2Duble1.FCMToken,
+                                "Resultado do Jogo",
+                                $"O jogo entre {user1Duble1.Name} e {user2Duble1.Name} terminou com o resultado {results.QtdGames1} X {results.QtdGames2}.");
+                    }
+                    if (user2Duble2?.FCMToken != null)
+                    {
+                        await _firebaseService.SendNotificationAsync(
+                                user2Duble2.FCMToken,
+                                "Resultado do Jogo",
+                                $"O jogo entre {user1Duble1.Name} e {user2Duble1.Name} terminou com o resultado {results.QtdGames1} X {results.QtdGames2}.");
+                    }
 
                     if (noResultZeroOrNull.Count == 0)
                     {
@@ -466,7 +512,7 @@ namespace GoPlay_Core.Business
             for (int i = 0; i < winnersOrderByNuberGame.Count; i += 2)
             {
                 lastNumberGame++;
-               await _gameMatchRepository.AddAsync(new GameMatchEntity
+                await _gameMatchRepository.AddAsync(new GameMatchEntity
                 {
                     Competitor1Id = winnersOrderByNuberGame[i].Result,
                     Competitor2Id = winnersOrderByNuberGame[i + 1].Result,
