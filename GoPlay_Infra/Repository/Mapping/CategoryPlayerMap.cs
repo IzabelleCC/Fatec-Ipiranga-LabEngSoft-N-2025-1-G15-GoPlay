@@ -52,13 +52,6 @@ namespace GoPlay_Infra.Repository.Mapping
             builder.Property(cp => cp.SecondUserTxId)
                         .HasMaxLength(100)
                         .IsRequired(false);
-
-            builder.Property(cp => cp.AttendanceTime)
-                        .IsRequired();
-
-            builder.Property(cp => cp.AttendanceConfirmedUserId)
-                        .HasMaxLength(50)
-                        .IsRequired(false);
         }
     }
 }
