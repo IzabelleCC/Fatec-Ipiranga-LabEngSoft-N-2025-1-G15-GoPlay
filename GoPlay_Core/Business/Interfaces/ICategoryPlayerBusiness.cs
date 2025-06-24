@@ -7,7 +7,7 @@ namespace GoPlay_Core.Business.Interfaces
     {
         Task<List<CategoryPlayerEntity>> GetAllAsync(CancellationToken cancellationToken);
         Task<CategoryPlayerEntity?> GetByIdAsync(int id, CancellationToken cancellationToken);
-        Task<List<CategoryPlayerEntity>> GetByCategoryIdAsync(int categoryId, CancellationToken cancellationToken);
+        Task<List<CategoryPlayerDto>> GetByCategoryIdAsync(int categoryId, CancellationToken cancellationToken);
         Task<List<CategoryPlayerEntity>> GetByUserIdAsync(string userId, CancellationToken cancellationToken);
         Task<CategoryPlayerEntity> RegisterUserToCategory(int categoryId, string firstUserId, string? secondUserId, CancellationToken cancellationToken);
         Task DeleteAsync(int id, CancellationToken cancellationToken);
