@@ -290,6 +290,8 @@ namespace GoPlay_Core.Business
             }
 
             var doublesOrSinglesGroup = new List<MatchGroupEntity>();
+            var category = await _categoryRepository.GetById(results.First().CategoryId);
+            var tournament = await _tournamentRepository.GetById(category.TournamentId);
 
             foreach (var result in results)
             {
@@ -320,8 +322,8 @@ namespace GoPlay_Core.Business
                 {
                     await _firebaseService.SendNotificationAsync(
                         firstUser.FCMToken,
-                        "Resultados do Jogo",
-                        $"O resultado do seu jogo foi registrado. Boa sorte nos próximos desafios!"
+                        $"Resultados do Jogo - {tournament.Name}",
+                        $"O resultado dos jogos da fase de grupo da categoria {category.CategoryType} foi registrado. \nBoa sorte nos próximos desafios!"
                     );
                     if (users.SecondUser != null)
                     {
@@ -330,8 +332,8 @@ namespace GoPlay_Core.Business
                         {
                             await _firebaseService.SendNotificationAsync(
                                 secondUser.FCMToken,
-                                "Resultados do Jogo",
-                                $"O resultado do seu jogo foi registrado. Boa sorte nos próximos desafios!"
+                        $"Resultados do Jogo - {tournament.Name}",
+                        $"O resultado dos jogos da fase de grupo da categoria {category.CategoryType} foi registrado. \nBoa sorte nos próximos desafios!"
                             );
                         }
                     }
