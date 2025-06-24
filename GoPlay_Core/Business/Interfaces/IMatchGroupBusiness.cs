@@ -14,7 +14,7 @@ namespace GoPlay_Core.Business.Interfaces
 
         Task<List<CategoryEntity>> GetCategoriesByTournament(int tournamentId);
 
-        Task<CategoryGroupsDto?> ProcessCategory(CategoryEntity category);
+        Task<CategoryGroupsDto?> ProcessCategory(CategoryEntity category, string tournamentName);
 
         List<List<CategoryPlayerEntity>> DistributeIntoGroups(List<CategoryPlayerEntity> confirmed);
 

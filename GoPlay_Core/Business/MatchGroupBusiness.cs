@@ -57,7 +57,7 @@ namespace GoPlay_Core.Business
 
             foreach (var category in categories)
             {
-                var categoryDto = await ProcessCategory(category);
+                var categoryDto = await ProcessCategory(category, tournament.Name);
                 if (categoryDto != null)
                     result.Groups.Add(categoryDto);
             }
@@ -95,7 +95,7 @@ namespace GoPlay_Core.Business
             return categories;
         }
 
-        public async Task<CategoryGroupsDto?> ProcessCategory(CategoryEntity category)
+        public async Task<CategoryGroupsDto?> ProcessCategory(CategoryEntity category, string tournamentName)
         {
             _logger.LogInformation("Processing category ID {CategoryId}...", category.Id);
 
@@ -132,6 +132,26 @@ namespace GoPlay_Core.Business
                 {
                     var firstUser = await _userRepository.GetById(p.FirstUserId);
                     var secondUser = !string.IsNullOrEmpty(p.SecondUserId) ? await _userRepository.GetById(p.SecondUserId) : null;
+
+                    if (firstUser.FCMToken != null)
+                    {
+                        await _firebaseService.SendNotificationAsync(
+                            firstUser.FCMToken,
+                            $"Chave de Grupo Geradas - {tournamentName}",
+                            $"Você está no grupo {i + 1} da categoria {category.CategoryType}. Boa sorte!"
+                        );
+                    }
+                    if (secondUser != null)
+                    {
+                        if (secondUser?.FCMToken != null)
+                        {
+                            await _firebaseService.SendNotificationAsync(
+                                secondUser.FCMToken,
+                                $"Chave de Grupo Geradas - {tournamentName}",
+                                $"Você está no grupo {i + 1} da categoria {category.CategoryType}. Boa sorte!"
+                            );
+                        }
+                    }
 
                     groupDto.Players.Add(new GroupPlayerDto
                     {
@@ -293,6 +313,29 @@ namespace GoPlay_Core.Business
 
                 var updatedDoublesOrSingles = await _matchRepository.GetbyRegistrationCategoryAsync(result.RegistrationCategoryId);
                 doublesOrSinglesGroup.Add(updatedDoublesOrSingles);
+
+                var users = await _categoryPlayerRepository.GetByIdAsync(result.RegistrationCategoryId);
+                var firstUser = await _userRepository.GetById(users.FirstUserId);
+                if (firstUser.FCMToken != null)
+                {
+                    await _firebaseService.SendNotificationAsync(
+                        firstUser.FCMToken,
+                        "Resultados do Jogo",
+                        $"O resultado do seu jogo foi registrado. Boa sorte nos próximos desafios!"
+                    );
+                    if (users.SecondUser != null)
+                    {
+                        var secondUser = await _userRepository.GetById(users.SecondUserId);
+                        if (secondUser?.FCMToken != null)
+                        {
+                            await _firebaseService.SendNotificationAsync(
+                                secondUser.FCMToken,
+                                "Resultados do Jogo",
+                                $"O resultado do seu jogo foi registrado. Boa sorte nos próximos desafios!"
+                            );
+                        }
+                    }
+                }
             }
 
             await InsertSetsAndGamesBalance(doublesOrSinglesGroup);
@@ -590,7 +633,7 @@ namespace GoPlay_Core.Business
                 {
                     await _firebaseService.SendNotificationAsync(
                         firstUser.FCMToken,
-                        "Court Number Assigned",
+                        "Chamada de Quadra",
                         $"Seu próximo jogo será na quadra nº {courtNumber}. \nLembre-se !! Você e seu parceiro terão 10min de aquecimento. \nApós o aquecimento o jogo deve ser iniciado imediatamente!"
                     );
 
