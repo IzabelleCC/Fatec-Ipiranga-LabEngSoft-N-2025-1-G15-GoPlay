@@ -586,7 +586,6 @@ namespace GoPlay_Core.Business
                 var users = await _categoryPlayerRepository.GetByIdAsync(match.Competitor1Id ?? 0);
 
                 var firstUser = await _userRepository.GetById(users.FirstUserId);
-
                 if (!string.IsNullOrEmpty(firstUser.FCMToken))
                 {
                     try
@@ -603,27 +602,24 @@ namespace GoPlay_Core.Business
                     {
                         _logger.LogError("Erro ao enviar notificação para {UserName} ({UserId})", firstUser.Name, firstUser.Id);
                     }
+                }
 
-                    if (users.SecondUser != null)
+                var secondUser = await _userRepository.GetById(users.SecondUserId);
+                if (!string.IsNullOrEmpty(secondUser.FCMToken))
+                {
+                    try
                     {
-                        var secondUser = await _userRepository.GetById(users.SecondUserId);
-                        if (!string.IsNullOrEmpty(secondUser.FCMToken))
-                        {
-                            try
-                            {
-                                _logger.LogInformation("Enviando notificação para {UserName} ({UserId}) sobre a quadra nº {CourtNumber}", secondUser.Name, secondUser.Id, courtNumber);
-                                await _firebaseService.SendNotificationAsync(
-                                    secondUser.FCMToken,
-                                    "Court Number Assigned",
-                                    $"Seu próximo jogo será na quadra nº {courtNumber}. \nLembre-se !! Você e seu parceiro terão 10min de aquecimento. \nApós o aquecimento o jogo deve ser iniciado imediatamente!"
-                                );
-                                _logger.LogInformation("Notificação enviada com sucesso para {UserName} ({UserId})", secondUser.Name, secondUser.Id);
-                            }
-                            catch
-                            {
-                                _logger.LogError("Erro ao enviar notificação para {UserName} ({UserId})", secondUser.Name, secondUser.Id);
-                            }
-                        }
+                        _logger.LogInformation("Enviando notificação para {UserName} ({UserId}) sobre a quadra nº {CourtNumber}", secondUser.Name, secondUser.Id, courtNumber);
+                        await _firebaseService.SendNotificationAsync(
+                            secondUser.FCMToken,
+                            "Court Number Assigned",
+                            $"Seu próximo jogo será na quadra nº {courtNumber}. \nLembre-se !! Você e seu parceiro terão 10min de aquecimento. \nApós o aquecimento o jogo deve ser iniciado imediatamente!"
+                        );
+                        _logger.LogInformation("Notificação enviada com sucesso para {UserName} ({UserId})", secondUser.Name, secondUser.Id);
+                    }
+                    catch
+                    {
+                        _logger.LogError("Erro ao enviar notificação para {UserName} ({UserId})", secondUser.Name, secondUser.Id);
                     }
                 }
             }
