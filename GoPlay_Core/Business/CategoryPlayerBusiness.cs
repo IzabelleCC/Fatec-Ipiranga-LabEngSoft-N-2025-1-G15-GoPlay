@@ -4,6 +4,7 @@ using GoPlay_Core.Enum;
 using GoPlay_Core.Models.Dto;
 using GoPlay_Core.Repository.Interfaces;
 using GoPlay_Core.Services;
+using Microsoft.Extensions.Logging;
 
 namespace GoPlay_Core.Business
 {
@@ -15,6 +16,7 @@ namespace GoPlay_Core.Business
         private readonly ITournamentRepository _tournamentRepository;
         private readonly IUserRepository _userRepository;
         private readonly FirebaseNotificationService _firebaseService;
+        private readonly ILogger<CategoryPlayerBusiness> _logger;
 
         public CategoryPlayerBusiness(
             ICategoryPlayerRepository categoryPlayerRepository,
@@ -22,7 +24,8 @@ namespace GoPlay_Core.Business
             IMatchGroupRepository matchRepository,
             ITournamentRepository tournamentRepository,
             IUserRepository userRepository,
-            FirebaseNotificationService firebaseService)
+            FirebaseNotificationService firebaseService,
+            ILogger<CategoryPlayerBusiness> logger)
         {
             _categoryPlayerRepository = categoryPlayerRepository ?? throw new ArgumentNullException(nameof(categoryPlayerRepository));
             _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
@@ -30,6 +33,7 @@ namespace GoPlay_Core.Business
             _tournamentRepository = tournamentRepository;
             _userRepository = userRepository;
             _firebaseService = firebaseService;
+            _logger = logger;
         }
 
         public async Task<List<CategoryPlayerEntity>> GetAllAsync(CancellationToken cancellationToken)
@@ -52,7 +56,7 @@ namespace GoPlay_Core.Business
             var secondUser = await _userRepository.GetById(categoryPlayer.SecondUserId) ?? new UserEntity();
             var category = await _categoryRepository.GetById(categoryPlayer.CategoryId) ?? new CategoryEntity();
             var tournament = await _tournamentRepository.GetById(category.TournamentId) ?? new TournamentEntity();
-            var matchGroups = await _matchRepository.GetbyRegistrationCategoryAsync(categoryPlayer.Id) ?? new MatchGroupEntity() ;
+            var matchGroups = await _matchRepository.GetbyRegistrationCategoryAsync(categoryPlayer.Id) ?? new MatchGroupEntity();
 
 
             return new CategoryPlayerDto
@@ -82,7 +86,7 @@ namespace GoPlay_Core.Business
 
         public async Task<List<CategoryPlayerDto>> GetByCategoryIdAsync(int categoryId, CancellationToken cancellationToken)
         {
-            var categoryPlayerList =  await _categoryPlayerRepository.GetByCategoryIdAsync(categoryId);
+            var categoryPlayerList = await _categoryPlayerRepository.GetByCategoryIdAsync(categoryId);
 
             var categoryPlayerDtoList = new List<CategoryPlayerDto>();
             foreach (var player in categoryPlayerList)
@@ -245,12 +249,18 @@ namespace GoPlay_Core.Business
             {
                 if (string.IsNullOrEmpty(secondUser.FCMToken))
                     throw new InvalidOperationException("O usuário 2 não possui um token Firebase registrado.");
-
-                await _firebaseService.SendNotificationAsync(
-                    secondUser.FCMToken,
-                    $"Nova Inscrição -  {tournament.Name}",
-                    $"Você foi inscrito por {firstUser.Name} na categoria {category.CategoryType}."
-                );
+                try
+                {
+                    await _firebaseService.SendNotificationAsync(
+                        secondUser.FCMToken,
+                        $"Nova Inscrição -  {tournament.Name}",
+                        $"Você foi inscrito por {firstUser.Name} na categoria {category.CategoryType}."
+                    );
+                }
+                catch
+                {
+                    _logger.LogError(categoryId, "Erro ao enviar notificação para o usuário 2: {UserId}", secondUserId);
+                }
             }
 
             return newRegistration;
