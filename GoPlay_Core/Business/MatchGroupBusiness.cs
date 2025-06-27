@@ -133,23 +133,38 @@ namespace GoPlay_Core.Business
                     var firstUser = await _userRepository.GetById(p.FirstUserId);
                     var secondUser = !string.IsNullOrEmpty(p.SecondUserId) ? await _userRepository.GetById(p.SecondUserId) : null;
 
-                    if (firstUser.FCMToken != null)
+                    if (!string.IsNullOrEmpty(firstUser.FCMToken))
                     {
-                        await _firebaseService.SendNotificationAsync(
-                            firstUser.FCMToken,
-                            $"Chave de Grupo Geradas - {tournamentName}",
-                            $"Você está no grupo {i + 1} da categoria {category.CategoryType}. Boa sorte!"
-                        );
-                    }
-                    if (secondUser != null)
-                    {
-                        if (secondUser?.FCMToken != null)
+                        try
                         {
                             await _firebaseService.SendNotificationAsync(
-                                secondUser.FCMToken,
+                                firstUser.FCMToken,
                                 $"Chave de Grupo Geradas - {tournamentName}",
                                 $"Você está no grupo {i + 1} da categoria {category.CategoryType}. Boa sorte!"
                             );
+
+                        }
+                        catch
+                        {
+                            _logger.LogError("Erro ao enviar notificação para o usuário {UserId} do grupo {GroupNumber}.", firstUser.Id, i + 1);
+                        }
+                    }
+                    if (secondUser != null)
+                    {
+                        if (!string.IsNullOrEmpty(secondUser?.FCMToken))
+                        {
+                            try
+                            {
+                                await _firebaseService.SendNotificationAsync(
+                                    secondUser.FCMToken,
+                                    $"Chave de Grupo Geradas - {tournamentName}",
+                                    $"Você está no grupo {i + 1} da categoria {category.CategoryType}. Boa sorte!"
+                                );
+                            }
+                            catch
+                            {
+                                _logger.LogError("Erro ao enviar notificação para o usuário {UserId} do grupo {GroupNumber}.", secondUser.Id, i + 1);
+                            }
                         }
                     }
 
@@ -318,23 +333,37 @@ namespace GoPlay_Core.Business
 
                 var users = await _categoryPlayerRepository.GetByIdAsync(result.RegistrationCategoryId);
                 var firstUser = await _userRepository.GetById(users.FirstUserId);
-                if (firstUser.FCMToken != null)
+                if (string.IsNullOrEmpty(firstUser.FCMToken))
                 {
-                    await _firebaseService.SendNotificationAsync(
-                        firstUser.FCMToken,
-                        $"Resultados do Jogo - {tournament.Name}",
-                        $"O resultado dos jogos da fase de grupo da categoria {category.CategoryType} foi registrado. \nBoa sorte nos próximos desafios!"
-                    );
+                    try
+                    {
+                        await _firebaseService.SendNotificationAsync(
+                            firstUser.FCMToken,
+                            $"Resultados do Jogo - {tournament.Name}",
+                            $"O resultado dos jogos da fase de grupo da categoria {category.CategoryType} foi registrado. \nBoa sorte nos próximos desafios!"
+                        );
+                    }
+                    catch
+                    {
+                        _logger.LogError("Erro ao enviar notificação para o usuário {UserId} do grupo {GroupNumber}.", firstUser.Id, result.GroupNumber);
+                    }
                     if (users.SecondUser != null)
                     {
                         var secondUser = await _userRepository.GetById(users.SecondUserId);
-                        if (secondUser?.FCMToken != null)
+                        if (string.IsNullOrEmpty(secondUser?.FCMToken))
                         {
-                            await _firebaseService.SendNotificationAsync(
-                                secondUser.FCMToken,
-                        $"Resultados do Jogo - {tournament.Name}",
-                        $"O resultado dos jogos da fase de grupo da categoria {category.CategoryType} foi registrado. \nBoa sorte nos próximos desafios!"
-                            );
+                            try
+                            {
+                                await _firebaseService.SendNotificationAsync(
+                                    secondUser.FCMToken,
+                                    $"Resultados do Jogo - {tournament.Name}",
+                                    $"O resultado dos jogos da fase de grupo da categoria {category.CategoryType} foi registrado. \nBoa sorte nos próximos desafios!"
+                                );
+                            }
+                            catch
+                            {
+                                _logger.LogError("Erro ao enviar notificação para o usuário {UserId} do grupo {GroupNumber}.", secondUser.Id, result.GroupNumber);
+                            }
                         }
                     }
                 }
@@ -631,24 +660,38 @@ namespace GoPlay_Core.Business
                 var users = await _categoryPlayerRepository.GetByIdAsync(match.RegistrationCategoryId);
 
                 var firstUser = await _userRepository.GetById(users.FirstUserId);
-                if (firstUser.FCMToken != null)
+                if (string.IsNullOrEmpty(firstUser.FCMToken))
                 {
-                    await _firebaseService.SendNotificationAsync(
-                        firstUser.FCMToken,
-                        "Chamada de Quadra",
-                        $"Seu próximo jogo será na quadra nº {courtNumber}. \nLembre-se !! Você e seu parceiro terão 10min de aquecimento. \nApós o aquecimento o jogo deve ser iniciado imediatamente!"
-                    );
+                    try
+                    {
+                        await _firebaseService.SendNotificationAsync(
+                            firstUser.FCMToken,
+                            "Chamada de Quadra",
+                            $"Seu próximo jogo será na quadra nº {courtNumber}. \nLembre-se !! Você e seu parceiro terão 10min de aquecimento. \nApós o aquecimento o jogo deve ser iniciado imediatamente!"
+                        );
+                    }
+                    catch
+                    {
+                        _logger.LogError("Erro ao enviar notificação para o usuário {UserId} do grupo {GroupNumber}.", firstUser.Id, groupNumber);
+                    }
 
                     if (users.SecondUser != null)
                     {
                         var secondUser = await _userRepository.GetById(users.SecondUserId);
-                        if (secondUser.FCMToken != null)
+                        if (string.IsNullOrEmpty(secondUser.FCMToken))
                         {
-                            await _firebaseService.SendNotificationAsync(
-                                secondUser.FCMToken,
-                                "Court Number Assigned",
-                                $"Seu próximo jogo será na quadra nº {courtNumber}. \nLembre-se !! Você e seu parceiro terão 10min de aquecimento. \nApós o aquecimento o jogo deve ser iniciado imediatamente!"
-                            );
+                            try
+                            {
+                                await _firebaseService.SendNotificationAsync(
+                                    secondUser.FCMToken,
+                                    "Court Number Assigned",
+                                    $"Seu próximo jogo será na quadra nº {courtNumber}. \nLembre-se !! Você e seu parceiro terão 10min de aquecimento. \nApós o aquecimento o jogo deve ser iniciado imediatamente!"
+                                );
+                            }
+                            catch
+                            {
+                                _logger.LogError("Erro ao enviar notificação para o usuário {UserId} do grupo {GroupNumber}.", secondUser.Id, groupNumber);
+                            }
                         }
                     }
                 }
