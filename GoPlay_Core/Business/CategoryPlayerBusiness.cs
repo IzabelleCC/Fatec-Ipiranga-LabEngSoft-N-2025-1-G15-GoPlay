@@ -248,18 +248,19 @@ namespace GoPlay_Core.Business
             if (secondUser != null)
             {
                 if (!string.IsNullOrEmpty(secondUser.FCMToken))
-                    throw new InvalidOperationException("O usuário 2 não possui um token Firebase registrado.");
-                try
                 {
-                    await _firebaseService.SendNotificationAsync(
-                        secondUser.FCMToken,
-                        $"Nova Inscrição -  {tournament.Name}",
-                        $"Você foi inscrito por {firstUser.Name} na categoria {category.CategoryType}."
-                    );
-                }
-                catch
-                {
-                    _logger.LogError(categoryId, "Erro ao enviar notificação para o usuário 2: {UserId}", secondUserId);
+                    try
+                    {
+                        await _firebaseService.SendNotificationAsync(
+                            secondUser.FCMToken,
+                            $"Nova Inscrição -  {tournament.Name}",
+                            $"Você foi inscrito por {firstUser.Name} na categoria {category.CategoryType}."
+                        );
+                    }
+                    catch
+                    {
+                        _logger.LogError(categoryId, "Erro ao enviar notificação para o usuário 2: {UserId}", secondUserId);
+                    }
                 }
             }
 
