@@ -378,11 +378,13 @@ namespace GoPlay_Core.Business
                     {
                         try
                         {
-
+                            _logger.LogInformation("Enviando notificação para {UserName} ({UserId}) sobre o resultado do jogo", user1Duble1.Name, user1Duble1.Id);
                             await _firebaseService.SendNotificationAsync(
                                     user1Duble1.FCMToken,
                                     "Resultado do Jogo",
                                     $"O jogo entre {user1Duble1.Name} e {user2Duble1.Name} terminou com o resultado {results.QtdGames1} X {results.QtdGames2}.");
+
+                            _logger.LogInformation("Notificação enviada com sucesso para {UserName} ({UserId})", user1Duble1.Name, user1Duble1.Id);
                         }
                         catch
                         {
@@ -393,10 +395,12 @@ namespace GoPlay_Core.Business
                     {
                         try
                         {
+                            _logger.LogInformation("Enviando notificação para {UserName} ({UserId}) sobre o resultado do jogo", user1Duble2.Name, user1Duble2.Id);
                             await _firebaseService.SendNotificationAsync(
                                     user1Duble2.FCMToken,
                                     "Resultado do Jogo",
                                     $"O jogo entre {user1Duble1.Name} e {user2Duble1.Name} terminou com o resultado {results.QtdGames1} X {results.QtdGames2}.");
+                            _logger.LogInformation("Notificação enviada com sucesso para {UserName} ({UserId})", user1Duble2.Name, user1Duble2.Id);
                         }
                         catch
                         {
@@ -407,10 +411,12 @@ namespace GoPlay_Core.Business
                     {
                         try
                         {
+                            _logger.LogInformation("Enviando notificação para {UserName} ({UserId}) sobre o resultado do jogo", user2Duble1.Name, user2Duble1.Id);
                             await _firebaseService.SendNotificationAsync(
                                     user2Duble1.FCMToken,
                                     "Resultado do Jogo",
                                     $"O jogo entre {user1Duble1.Name} e {user2Duble1.Name} terminou com o resultado {results.QtdGames1} X {results.QtdGames2}.");
+                            _logger.LogInformation("Notificação enviada com sucesso para {UserName} ({UserId})", user2Duble1.Name, user2Duble1.Id);
                         }
                         catch
                         {
@@ -422,10 +428,12 @@ namespace GoPlay_Core.Business
                         try
                         {
 
+                            _logger.LogInformation("Enviando notificação para {UserName} ({UserId}) sobre o resultado do jogo", user2Duble2.Name, user2Duble2.Id);
                             await _firebaseService.SendNotificationAsync(
                                     user2Duble2.FCMToken,
                                     "Resultado do Jogo",
                                     $"O jogo entre {user1Duble1.Name} e {user2Duble1.Name} terminou com o resultado {results.QtdGames1} X {results.QtdGames2}.");
+                            _logger.LogInformation("Notificação enviada com sucesso para {UserName} ({UserId})", user2Duble2.Name, user2Duble2.Id);
                         }
                         catch
                         {
@@ -578,15 +586,18 @@ namespace GoPlay_Core.Business
                 var users = await _categoryPlayerRepository.GetByIdAsync(match.Competitor1Id ?? 0);
 
                 var firstUser = await _userRepository.GetById(users.FirstUserId);
+
                 if (!string.IsNullOrEmpty(firstUser.FCMToken))
                 {
                     try
                     {
+                        _logger.LogInformation("Enviando notificação para {UserName} ({UserId}) sobre a quadra nº {CourtNumber}", firstUser.Name, firstUser.Id, courtNumber);
                         await _firebaseService.SendNotificationAsync(
                             firstUser.FCMToken,
                             "Chamada de Quadra",
                             $"Seu próximo jogo será na quadra nº {courtNumber}. \nLembre-se !! Você e seu parceiro terão 10min de aquecimento. \nApós o aquecimento o jogo deve ser iniciado imediatamente!"
                         );
+                        _logger.LogInformation("Notificação enviada com sucesso para {UserName} ({UserId})", firstUser.Name, firstUser.Id);
                     }
                     catch
                     {
@@ -600,11 +611,13 @@ namespace GoPlay_Core.Business
                         {
                             try
                             {
+                                _logger.LogInformation("Enviando notificação para {UserName} ({UserId}) sobre a quadra nº {CourtNumber}", secondUser.Name, secondUser.Id, courtNumber);
                                 await _firebaseService.SendNotificationAsync(
                                     secondUser.FCMToken,
                                     "Court Number Assigned",
                                     $"Seu próximo jogo será na quadra nº {courtNumber}. \nLembre-se !! Você e seu parceiro terão 10min de aquecimento. \nApós o aquecimento o jogo deve ser iniciado imediatamente!"
                                 );
+                                _logger.LogInformation("Notificação enviada com sucesso para {UserName} ({UserId})", secondUser.Name, secondUser.Id);
                             }
                             catch
                             {
