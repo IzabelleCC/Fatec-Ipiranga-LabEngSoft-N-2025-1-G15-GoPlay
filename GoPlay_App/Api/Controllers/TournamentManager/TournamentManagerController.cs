@@ -389,6 +389,7 @@ namespace GoPlay_App.Api.Controllers.TournamentManager
 
                 var results = request.Select(r => r.ToMatchGroupEntity()).ToList();
 
+
                 await _matchGroupBusiness.InsertGroupResultsAndReturnWinners(results, cancellationToken);
 
                 return Ok(new { message = "Resultados dos grupos inseridos com sucesso." });
