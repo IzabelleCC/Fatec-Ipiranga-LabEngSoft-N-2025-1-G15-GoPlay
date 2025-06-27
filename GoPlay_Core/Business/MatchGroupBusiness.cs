@@ -305,7 +305,8 @@ namespace GoPlay_Core.Business
             }
 
             var doublesOrSinglesGroup = new List<MatchGroupEntity>();
-            var category = await _categoryRepository.GetById(results.First().CategoryId);
+            var registeredCategoryIds = await _categoryPlayerRepository.GetByIdAsync(results.First().RegistrationCategoryId);
+            var category = await _categoryRepository.GetById(registeredCategoryIds.CategoryId);
             var tournament = await _tournamentRepository.GetById(category.TournamentId);
 
             foreach (var result in results)
@@ -332,7 +333,9 @@ namespace GoPlay_Core.Business
                 doublesOrSinglesGroup.Add(updatedDoublesOrSingles);
 
                 var users = await _categoryPlayerRepository.GetByIdAsync(result.RegistrationCategoryId);
+
                 var firstUser = await _userRepository.GetById(users.FirstUserId);
+
                 if (!string.IsNullOrEmpty(firstUser.FCMToken))
                 {
                     try
