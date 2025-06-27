@@ -691,7 +691,7 @@ namespace GoPlay_Core.Business
                         _logger.LogInformation("Enviando notificação para o usuário {UserId} do grupo {GroupNumber} sobre a quadra número {CourtNumber}.", secondUser.Id, groupNumber, courtNumber);
                         await _firebaseService.SendNotificationAsync(
                             secondUser.FCMToken,
-                            "Court Number Assigned",
+                            "Chamada de Quadra",
                             $"Seu próximo jogo será na quadra nº {courtNumber}. \nLembre-se !! Você e seu parceiro terão 10min de aquecimento. \nApós o aquecimento o jogo deve ser iniciado imediatamente!"
                         );
                         _logger.LogInformation("Notificação enviada com sucesso para o usuário {UserId} do grupo {GroupNumber}.", secondUser.Id, groupNumber);
