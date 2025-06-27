@@ -333,7 +333,7 @@ namespace GoPlay_Core.Business
 
                 var users = await _categoryPlayerRepository.GetByIdAsync(result.RegistrationCategoryId);
                 var firstUser = await _userRepository.GetById(users.FirstUserId);
-                if (string.IsNullOrEmpty(firstUser.FCMToken))
+                if (!string.IsNullOrEmpty(firstUser.FCMToken))
                 {
                     try
                     {
@@ -350,7 +350,7 @@ namespace GoPlay_Core.Business
                     if (users.SecondUser != null)
                     {
                         var secondUser = await _userRepository.GetById(users.SecondUserId);
-                        if (string.IsNullOrEmpty(secondUser?.FCMToken))
+                        if (!string.IsNullOrEmpty(secondUser?.FCMToken))
                         {
                             try
                             {
@@ -660,7 +660,7 @@ namespace GoPlay_Core.Business
                 var users = await _categoryPlayerRepository.GetByIdAsync(match.RegistrationCategoryId);
 
                 var firstUser = await _userRepository.GetById(users.FirstUserId);
-                if (string.IsNullOrEmpty(firstUser.FCMToken))
+                if (!string.IsNullOrEmpty(firstUser.FCMToken))
                 {
                     try
                     {
@@ -678,7 +678,7 @@ namespace GoPlay_Core.Business
                     if (users.SecondUser != null)
                     {
                         var secondUser = await _userRepository.GetById(users.SecondUserId);
-                        if (string.IsNullOrEmpty(secondUser.FCMToken))
+                        if (!string.IsNullOrEmpty(secondUser.FCMToken))
                         {
                             try
                             {
