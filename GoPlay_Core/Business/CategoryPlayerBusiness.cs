@@ -247,7 +247,7 @@ namespace GoPlay_Core.Business
 
             if (secondUser != null)
             {
-                if (string.IsNullOrEmpty(secondUser.FCMToken))
+                if (!string.IsNullOrEmpty(secondUser.FCMToken))
                     throw new InvalidOperationException("O usuário 2 não possui um token Firebase registrado.");
                 try
                 {

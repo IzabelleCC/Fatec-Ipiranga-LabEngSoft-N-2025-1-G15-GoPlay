@@ -374,7 +374,7 @@ namespace GoPlay_Core.Business
                         ? await _userRepository.GetById(duble2.SecondUserId)
                         : null;
 
-                    if (string.IsNullOrEmpty(user1Duble1.FCMToken))
+                    if (!string.IsNullOrEmpty(user1Duble1.FCMToken))
                     {
                         try
                         {
@@ -389,7 +389,7 @@ namespace GoPlay_Core.Business
                             _logger.LogError("Erro ao enviar notificação para {UserName} ({UserId})", user1Duble1.Name, user1Duble1.Id);
                         }
                     }
-                    if (string.IsNullOrEmpty(user1Duble2?.FCMToken))
+                    if (!string.IsNullOrEmpty(user1Duble2?.FCMToken))
                     {
                         try
                         {
@@ -403,7 +403,7 @@ namespace GoPlay_Core.Business
                             _logger.LogError("Erro ao enviar notificação para {UserName} ({UserId})", user1Duble2.Name, user1Duble2.Id);
                         }
                     }
-                    if (string.IsNullOrEmpty(user2Duble1.FCMToken))
+                    if (!string.IsNullOrEmpty(user2Duble1.FCMToken))
                     {
                         try
                         {
@@ -417,7 +417,7 @@ namespace GoPlay_Core.Business
                             _logger.LogError("Erro ao enviar notificação para {UserName} ({UserId})", user2Duble1.Name, user2Duble1.Id);
                         }
                     }
-                    if (string.IsNullOrEmpty(user2Duble2?.FCMToken))
+                    if (!string.IsNullOrEmpty(user2Duble2?.FCMToken))
                     {
                         try
                         {
@@ -578,7 +578,7 @@ namespace GoPlay_Core.Business
                 var users = await _categoryPlayerRepository.GetByIdAsync(match.Competitor1Id ?? 0);
 
                 var firstUser = await _userRepository.GetById(users.FirstUserId);
-                if (string.IsNullOrEmpty(firstUser.FCMToken))
+                if (!string.IsNullOrEmpty(firstUser.FCMToken))
                 {
                     try
                     {
@@ -596,7 +596,7 @@ namespace GoPlay_Core.Business
                     if (users.SecondUser != null)
                     {
                         var secondUser = await _userRepository.GetById(users.SecondUserId);
-                        if (string.IsNullOrEmpty(secondUser.FCMToken))
+                        if (!string.IsNullOrEmpty(secondUser.FCMToken))
                         {
                             try
                             {
