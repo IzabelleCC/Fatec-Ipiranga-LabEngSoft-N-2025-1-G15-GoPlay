@@ -374,33 +374,63 @@ namespace GoPlay_Core.Business
                         ? await _userRepository.GetById(duble2.SecondUserId)
                         : null;
 
-                    if (user1Duble1.FCMToken != null)
+                    if (string.IsNullOrEmpty(user1Duble1.FCMToken))
                     {
-                        await _firebaseService.SendNotificationAsync(
-                                user1Duble1.FCMToken,
-                                "Resultado do Jogo",
-                                $"O jogo entre {user1Duble1.Name} e {user2Duble1.Name} terminou com o resultado {results.QtdGames1} X {results.QtdGames2}.");
+                        try
+                        {
+
+                            await _firebaseService.SendNotificationAsync(
+                                    user1Duble1.FCMToken,
+                                    "Resultado do Jogo",
+                                    $"O jogo entre {user1Duble1.Name} e {user2Duble1.Name} terminou com o resultado {results.QtdGames1} X {results.QtdGames2}.");
+                        }
+                        catch
+                        {
+                            _logger.LogError("Erro ao enviar notificação para {UserName} ({UserId})", user1Duble1.Name, user1Duble1.Id);
+                        }
                     }
-                    if (user1Duble2?.FCMToken != null)
+                    if (string.IsNullOrEmpty(user1Duble2?.FCMToken))
                     {
-                        await _firebaseService.SendNotificationAsync(
-                                user1Duble2.FCMToken,
-                                "Resultado do Jogo",
-                                $"O jogo entre {user1Duble1.Name} e {user2Duble1.Name} terminou com o resultado {results.QtdGames1} X {results.QtdGames2}.");
+                        try
+                        {
+                            await _firebaseService.SendNotificationAsync(
+                                    user1Duble2.FCMToken,
+                                    "Resultado do Jogo",
+                                    $"O jogo entre {user1Duble1.Name} e {user2Duble1.Name} terminou com o resultado {results.QtdGames1} X {results.QtdGames2}.");
+                        }
+                        catch
+                        {
+                            _logger.LogError("Erro ao enviar notificação para {UserName} ({UserId})", user1Duble2.Name, user1Duble2.Id);
+                        }
                     }
-                    if (user2Duble1.FCMToken != null)
+                    if (string.IsNullOrEmpty(user2Duble1.FCMToken))
                     {
-                        await _firebaseService.SendNotificationAsync(
-                                user2Duble1.FCMToken,
-                                "Resultado do Jogo",
-                                $"O jogo entre {user1Duble1.Name} e {user2Duble1.Name} terminou com o resultado {results.QtdGames1} X {results.QtdGames2}.");
+                        try
+                        {
+                            await _firebaseService.SendNotificationAsync(
+                                    user2Duble1.FCMToken,
+                                    "Resultado do Jogo",
+                                    $"O jogo entre {user1Duble1.Name} e {user2Duble1.Name} terminou com o resultado {results.QtdGames1} X {results.QtdGames2}.");
+                        }
+                        catch
+                        {
+                            _logger.LogError("Erro ao enviar notificação para {UserName} ({UserId})", user2Duble1.Name, user2Duble1.Id);
+                        }
                     }
-                    if (user2Duble2?.FCMToken != null)
+                    if (string.IsNullOrEmpty(user2Duble2?.FCMToken))
                     {
-                        await _firebaseService.SendNotificationAsync(
-                                user2Duble2.FCMToken,
-                                "Resultado do Jogo",
-                                $"O jogo entre {user1Duble1.Name} e {user2Duble1.Name} terminou com o resultado {results.QtdGames1} X {results.QtdGames2}.");
+                        try
+                        {
+
+                            await _firebaseService.SendNotificationAsync(
+                                    user2Duble2.FCMToken,
+                                    "Resultado do Jogo",
+                                    $"O jogo entre {user1Duble1.Name} e {user2Duble1.Name} terminou com o resultado {results.QtdGames1} X {results.QtdGames2}.");
+                        }
+                        catch
+                        {
+                            _logger.LogError("Erro ao enviar notificação para {UserName} ({UserId})", user2Duble2.Name, user2Duble2.Id);
+                        }
                     }
 
                     if (noResultZeroOrNull.Count == 0)
@@ -548,24 +578,38 @@ namespace GoPlay_Core.Business
                 var users = await _categoryPlayerRepository.GetByIdAsync(match.Competitor1Id ?? 0);
 
                 var firstUser = await _userRepository.GetById(users.FirstUserId);
-                if (firstUser.FCMToken != null)
+                if (string.IsNullOrEmpty(firstUser.FCMToken))
                 {
-                    await _firebaseService.SendNotificationAsync(
-                        firstUser.FCMToken,
-                        "Chamada de Quadra",
-                        $"Seu próximo jogo será na quadra nº {courtNumber}. \nLembre-se !! Você e seu parceiro terão 10min de aquecimento. \nApós o aquecimento o jogo deve ser iniciado imediatamente!"
-                    );
+                    try
+                    {
+                        await _firebaseService.SendNotificationAsync(
+                            firstUser.FCMToken,
+                            "Chamada de Quadra",
+                            $"Seu próximo jogo será na quadra nº {courtNumber}. \nLembre-se !! Você e seu parceiro terão 10min de aquecimento. \nApós o aquecimento o jogo deve ser iniciado imediatamente!"
+                        );
+                    }
+                    catch
+                    {
+                        _logger.LogError("Erro ao enviar notificação para {UserName} ({UserId})", firstUser.Name, firstUser.Id);
+                    }
 
                     if (users.SecondUser != null)
                     {
                         var secondUser = await _userRepository.GetById(users.SecondUserId);
-                        if (secondUser.FCMToken != null)
+                        if (string.IsNullOrEmpty(secondUser.FCMToken))
                         {
-                            await _firebaseService.SendNotificationAsync(
-                                secondUser.FCMToken,
-                                "Court Number Assigned",
-                                $"Seu próximo jogo será na quadra nº {courtNumber}. \nLembre-se !! Você e seu parceiro terão 10min de aquecimento. \nApós o aquecimento o jogo deve ser iniciado imediatamente!"
-                            );
+                            try
+                            {
+                                await _firebaseService.SendNotificationAsync(
+                                    secondUser.FCMToken,
+                                    "Court Number Assigned",
+                                    $"Seu próximo jogo será na quadra nº {courtNumber}. \nLembre-se !! Você e seu parceiro terão 10min de aquecimento. \nApós o aquecimento o jogo deve ser iniciado imediatamente!"
+                                );
+                            }
+                            catch
+                            {
+                                _logger.LogError("Erro ao enviar notificação para {UserName} ({UserId})", secondUser.Name, secondUser.Id);
+                            }
                         }
                     }
                 }
